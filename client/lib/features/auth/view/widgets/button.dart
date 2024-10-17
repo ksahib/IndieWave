@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
   final String text;
-  const Button({super.key, required this.text});
+  final VoidCallback onPressed;
+  const Button({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
               backgroundColor: Pallete.greenColor,  // Similar to the reference
               minimumSize: Size(screenWidth * 0.8, 50),  // Make button responsive
