@@ -3,23 +3,21 @@ import 'package:client/features/auth/view/widgets/button.dart';
 import 'package:client/features/auth/view/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginPageState extends State<LoginPage> {
   final mailController = TextEditingController();
-  final nameController = TextEditingController();
   final passController = TextEditingController();
   final Formkey = GlobalKey<FormState>();
 
   @override
   void dispose()  {
     mailController.dispose();
-    nameController.dispose();
     passController.dispose();
     super.dispose();
     Formkey.currentState!.validate();
@@ -49,7 +47,7 @@ class _SignupPageState extends State<SignupPage> {
                           RichText(
                             textAlign: TextAlign.center,
                             text: const TextSpan(
-                              text: 'Sign up to\n',
+                              text: 'Sign in to\n',
                               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Pallete.whiteColor),
                               children: [
                                 TextSpan(
@@ -66,29 +64,25 @@ class _SignupPageState extends State<SignupPage> {
                       controller: mailController,
                     ),
                     CustomTextField(
-                      hintText: 'Name',
-                      controller: nameController,
-                    ),
-                    CustomTextField(
                       hintText: 'Password',
                       controller: passController,
                       isObscure: true,
                     ),
                     Button(
-                      text: "Sign Up.",
+                      text: "Sign In.",
                       onPressed: () {
                         
                       },
-                    ),
+                      ),
                     Row(
                       children: [
                         const Text(
-                          "Already have an account? ",
+                          "Don't have an account? ",
                           style: TextStyle(color: Pallete.subtitleText),
                         ),
                         TextButton(
                       onPressed: () {},
-                      child: const Text('Log in here', style: TextStyle(decoration: TextDecoration.underline, color: Colors.white)),
+                      child: const Text('Sign up', style: TextStyle(decoration: TextDecoration.underline, color: Colors.white)),
                     ),
                       ],
                     ),
