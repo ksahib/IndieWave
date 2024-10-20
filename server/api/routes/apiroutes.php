@@ -15,7 +15,8 @@ function handlereq($method, $url)  {
     }
 
     $controllerName = ucfirst($sections[1]).'Controller';
-    $controllerPath = '../controllers/$controllerName.php';
+    $controllerPath = '../controllers/' . $controllerName . '.php';
+
 
     if (!file_exists($controllerPath)) {
         http_response_code(404);
@@ -25,8 +26,7 @@ function handlereq($method, $url)  {
 
     include_once $controllerPath;
     $controller = new $controllerName($db);
-    $id = isset($parts[2]) ? (int)$parts[2] : null;
-
+    $id = isset($sections[2]) ? (int)$sections[2] : null;
     switch ($method) {
         case 'GET':
             if ($id) {
@@ -38,6 +38,11 @@ function handlereq($method, $url)  {
 
         case 'POST':
             $data = json_decode(file_get_contents("php://input"), true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                http_response_code(400);
+                echo json_encode(['message' => 'Invalid JSON']);
+                return;
+            }
             $response = $controller->create($data);
             break;
 
@@ -48,6 +53,11 @@ function handlereq($method, $url)  {
                 return;
             }
             $data = json_decode(file_get_contents("php://input"), true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                http_response_code(400);
+                echo json_encode(['message' => 'Invalid JSON']);
+                return;
+            }
             $response = $controller->update($id, $data);
             break;
 
