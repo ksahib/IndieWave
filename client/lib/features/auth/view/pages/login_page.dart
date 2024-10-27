@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -16,12 +15,13 @@ class _LoginPageState extends State<LoginPage> {
   final Formkey = GlobalKey<FormState>();
 
   @override
-  void dispose()  {
+  void dispose() {
     mailController.dispose();
     passController.dispose();
     super.dispose();
     Formkey.currentState!.validate();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: 600,    
+              maxWidth: 600,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -40,24 +40,30 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Icon(
-                              Icons.music_note,
-                              color: Colors.white,
-                              size: 60,
-                            ),
-                          RichText(
-                            textAlign: TextAlign.center,
-                            text: const TextSpan(
-                              text: 'Sign in to\n',
-                              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Pallete.whiteColor),
-                              children: [
-                                TextSpan(
-                                  text: 'start listening',
-                                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Pallete.whiteColor),
-                                ),
-                              ],
-                            ),
+                      Icons.music_note,
+                      color: Colors.white,
+                      size: 60,
+                    ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: const TextSpan(
+                        text: 'Sign in to\n',
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Pallete.whiteColor),
+                        children: [
+                          TextSpan(
+                            text: 'start listening',
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Pallete.whiteColor),
                           ),
-                          SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     CustomTextField(
                       hintText: 'name@domain.com',
                       labelText: 'Email',
@@ -70,10 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Button(
                       text: "Sign In.",
-                      onPressed: () {
-                        
-                      },
-                      ),
+                      onPressed: () {},
+                    ),
                     Row(
                       children: [
                         const Text(
@@ -81,9 +85,12 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(color: Pallete.subtitleText),
                         ),
                         TextButton(
-                      onPressed: () {},
-                      child: const Text('Sign up', style: TextStyle(decoration: TextDecoration.underline, color: Colors.white)),
-                    ),
+                          onPressed: () {},
+                          child: const Text('Sign up',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.white)),
+                        ),
                       ],
                     ),
                   ],
@@ -91,7 +98,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          
         ),
       ),
     );

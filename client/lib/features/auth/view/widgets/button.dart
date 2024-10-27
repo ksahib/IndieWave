@@ -12,14 +12,14 @@ class Button extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-              backgroundColor: Pallete.greenColor,  // Similar to the reference
-              minimumSize: Size(screenWidth * 0.8, 50),  // Make button responsive
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25),
-            ),
-      
-    ), 
-    child: Text(text, style: TextStyle(fontSize: 18, color: Pallete.whiteColor)),
+        backgroundColor: Pallete.greenColor, // Similar to the reference
+        minimumSize: Size(screenWidth * 0.8, 50), // Make button responsive
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+      ),
+      child:
+          Text(text, style: TextStyle(fontSize: 18, color: Pallete.whiteColor)),
     );
   }
 }
