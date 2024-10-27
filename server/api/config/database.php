@@ -1,10 +1,10 @@
 <?php
 
 class Database {
-    private $host;
-    private $username;
-    private $password;
-    private $db;
+    private $host = 'localhost';
+    private $username = 'root';
+    private $password = '';
+    private $db = 'indiewave';
     public $conn;
 
     public function getConnection()  {
