@@ -1,4 +1,5 @@
 import 'package:client/core/theme/app_pallete.dart';
+import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view/widgets/button.dart';
 import 'package:client/features/auth/view/widgets/custom_text_field.dart';
 import 'package:client/features/auth/repositories/auth_remote_repository.dart';
@@ -15,7 +16,7 @@ class _SignupPageState extends State<SignupPage> {
   final mailController = TextEditingController();
   final nameController = TextEditingController();
   final passController = TextEditingController();
-  final Formkey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -23,7 +24,7 @@ class _SignupPageState extends State<SignupPage> {
     nameController.dispose();
     passController.dispose();
     super.dispose();
-    Formkey.currentState!.validate();
+    //formKey.currentState!.validate();
   }
 
   @override
@@ -39,7 +40,7 @@ class _SignupPageState extends State<SignupPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Form(
-                key: Formkey,
+                key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -84,7 +85,11 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     Button(
                       text: "Sign Up.",
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                            await AuthRemoteRepository().signup(mail: mailController.text, name: nameController.text, password: passController.text);
+                          }
+                      },
                     ),
                     Row(
                       children: [
@@ -94,10 +99,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            await AuthRemoteRepository().signup(
-                                mail: mailController.text,
-                                name: nameController.text,
-                                password: passController.text);
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
                           },
                           child: const Text('Log in here',
                               style: TextStyle(

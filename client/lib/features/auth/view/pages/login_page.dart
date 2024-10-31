@@ -1,4 +1,6 @@
 import 'package:client/core/theme/app_pallete.dart';
+import 'package:client/features/auth/repositories/auth_remote_repository.dart';
+import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/widgets/button.dart';
 import 'package:client/features/auth/view/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +14,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final mailController = TextEditingController();
   final passController = TextEditingController();
-  final Formkey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
+  bool keepLoggedIn = false;
 
   @override
   void dispose() {
     mailController.dispose();
     passController.dispose();
     super.dispose();
-    Formkey.currentState!.validate();
+    //formKey.currentState!.validate();
   }
 
   @override
@@ -35,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Form(
-                key: Formkey,
+                key: formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -74,9 +77,29 @@ class _LoginPageState extends State<LoginPage> {
                       controller: passController,
                       isObscure: true,
                     ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: keepLoggedIn, 
+                          onChanged: (bool ? value) {
+                            setState(() {
+                              keepLoggedIn = value ?? false;
+                            });
+                          }
+                        ),
+                        const Text(
+                          'Keep me logged in.',
+                           style: TextStyle(color: Pallete.whiteColor),
+                        ),
+                      ],
+                    ),
                     Button(
                       text: "Sign In.",
-                      onPressed: () {},
+                      onPressed: () async{
+                        if(formKey.currentState!.validate())  {
+                          await AuthRemoteRepository().login(mail: mailController.text, password: passController.text, keepLoggedIn: keepLoggedIn);
+                        }
+                      },
                     ),
                     Row(
                       children: [
@@ -85,7 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(color: Pallete.subtitleText),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignupPage()));
+                          },
                           child: const Text('Sign up',
                               style: TextStyle(
                                   decoration: TextDecoration.underline,
