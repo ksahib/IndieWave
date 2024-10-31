@@ -1,9 +1,12 @@
 <?php
-include_once '../config/database.php';
-include_once '../models/UserModel.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+include_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/config/database.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/models/UserModel.php';
 include_once 'BaseController.php';
 
-class SignupController extends BaseController {
+class Signup extends BaseController {
     private $userModel;
 
     public function __construct($db) {
@@ -12,15 +15,14 @@ class SignupController extends BaseController {
     }
 
     public function create() {
-        $this->validateRequiredFields(['email', 'name', 'password']);
+        $data = json_decode(file_get_contents("php://input"), true);
+        $this->validateRequiredFields($data, ['email', 'name', 'password']);
+        file_put_contents('log.txt', print_r($_POST, true), FILE_APPEND);
 
-        $data = [
-            'user_id' => uniqid(),
-            'email' => $_POST['email'],
-            'name' => $_POST['name'],
-            'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
-            'profile_pic' => null
-        ];
+        //echo json_encode(["field contents" => $data]);
+        $data['user_id'] = uniqid();
+        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        $data['profile_pic'] = null;
 
         if ($this->userModel->create($data)) {
             $this->sendResponse(201, 'User created successfully.');

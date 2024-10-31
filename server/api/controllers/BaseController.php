@@ -16,9 +16,9 @@ class BaseController {
     }
 
     //validate required fields in POST requests
-    protected function validateRequiredFields($requiredFields) {
+    protected function validateRequiredFields($data, $requiredFields) {
         foreach ($requiredFields as $field) {
-            if (!isset($_POST[$field])) {
+            if (!isset($data[$field])) {
                 $this->sendResponse(400, "Missing required field: $field");
             }
         }

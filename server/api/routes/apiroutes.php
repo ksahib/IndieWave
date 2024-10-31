@@ -1,21 +1,28 @@
 <?php
-include_once '../config/database.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+include_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/config/database.php';
+
 
 $database = new Database();
 $db = $database->getConnection();
 
 function handlereq($method, $url)  {
+    global $db;
     //extract controller and method from url
     $sections = explode('/', trim($url,'/'));
     //url format is /api/{controller}/{id}
-    if(count($sections) < 3 || $sections[0] != 'api')  {
+    if(count($sections) < 3 || $sections[1] != 'api')  {
         http_response_code(404);
         echo json_encode(["message" => "Invalid URL"]);
         return;
     }
 
-    $controllerName = ucfirst($sections[1]).'Controller';
-    $controllerPath = '../controllers/' . $controllerName . '.php';
+    $controllerName = ucfirst($sections[2]);
+    echo json_encode(["controller" => $controllerName]);
+    $controllerPath = $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/controllers/' . $controllerName . '.php';
+    echo json_encode(["controllerPath" => $controllerPath]); // Send controller path as JSON response
 
 
     if (!file_exists($controllerPath)) {
@@ -26,11 +33,15 @@ function handlereq($method, $url)  {
 
     include_once $controllerPath;
     $controller = new $controllerName($db);
-    $id = isset($sections[2]) ? (int)$sections[2] : null;
+    $id = isset($sections[3]) ? (int)$sections[3] : null;
+    echo json_encode(["method" => $method]);
     switch ($method) {
         case 'GET':
             if ($id) {
                 $response = $controller->getUser($id);
+            } elseif (method_exists($controller, 'getAll')) { 
+                // Check if getAll method exists before calling it
+                $response = $controller->getAll();
             } else {
                 $response = $controller->getAll();
             }

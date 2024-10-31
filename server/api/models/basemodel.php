@@ -22,13 +22,17 @@ class BaseModel {
         if ($stmt->execute()) {
             return ['status' => 201, 'message' => 'Record created successfully'];
         } else {
-            return ['status' => 500, 'message' => 'Error creating record'];
+            $errorInfo = $stmt->errorInfo();
+            return ['status' => 500, 'message' => 'Error creating record: ' . implode(", ", $errorInfo)];
         }
     }
 
     // Get a single record
-    public function get($id) {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE id = :id";
+    public function get($column, $id) {
+        if (!preg_match('/^[a-zA-Z_]+$/', $column)) {
+            return ['status' => 400, 'message' => 'Invalid column name'];
+        }
+        $query = "SELECT * FROM " . $this->table_name . " WHERE $column = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
@@ -52,14 +56,17 @@ class BaseModel {
     }
 
     // Update a record
-    public function update($id, $data) {
+    public function update($id, $data, $column) {
+        if (!preg_match('/^[a-zA-Z_]+$/', $column)) {
+            return ['status' => 400, 'message' => 'Invalid column name'];
+        }
         $fields = [];
         foreach ($data as $field => $value) {
             $fields[] = "$field = :$field";
         }
         $fieldList = implode(", ", $fields);
 
-        $query = "UPDATE " . $this->table_name . " SET $fieldList WHERE id = :id";
+        $query = "UPDATE " . $this->table_name . " SET $fieldList WHERE $column = :id";
         $stmt = $this->conn->prepare($query);
 
         foreach ($data as $field => $value) {
