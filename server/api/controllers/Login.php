@@ -47,9 +47,9 @@ class Login extends BaseController {
             setcookie("auth_token", $token, [
                 'expires' => $newExpiresAt,
                 'path' => '/',
-                'secure' => false,
-                'httponly' => true,
-                'samesite' => 'Lax'
+                'secure' => true,
+                'httponly' => false,
+                'samesite' => 'None'
             ]);
         }
     
@@ -91,9 +91,9 @@ class Login extends BaseController {
         setcookie("auth_token", $token, [
             'expires' => $expiry,
             'path' => '/',
-            'secure' => false,
-            'httponly' => true,
-            'samesite' => 'Lax'
+            'secure' => true,
+            'httponly' => false,
+            'samesite' => 'None'
         ]);
 
         $info = [
