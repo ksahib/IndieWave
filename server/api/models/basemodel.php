@@ -62,6 +62,10 @@ class BaseModel {
         }
         $fields = [];
         foreach ($data as $field => $value) {
+            if ($value instanceof DateTime) {
+                // Convert DateTime to string format for MySQL
+                $value = $value->format('Y-m-d H:i:s');
+            }
             $fields[] = "$field = :$field";
         }
         $fieldList = implode(", ", $fields);
@@ -70,10 +74,14 @@ class BaseModel {
         $stmt = $this->conn->prepare($query);
 
         foreach ($data as $field => $value) {
+            if ($value instanceof DateTime) {
+                // Convert DateTime to string format for MySQL
+                $value = $value->format('Y-m-d H:i:s');
+            }
             $stmt->bindValue(":$field", $value);
         }
         $stmt->bindParam(":id", $id);
-
+        //echo json_encode(["Query" => $stmt]);
         if ($stmt->execute()) {
             return ['status' => 200, 'message' => 'Record updated successfully'];
         } else {

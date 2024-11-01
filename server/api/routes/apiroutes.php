@@ -43,7 +43,8 @@ function handlereq($method, $url)  {
                 // Check if getAll method exists before calling it
                 $response = $controller->getAll();
             } else {
-                $response = $controller->getAll();
+                http_response_code(400);
+                echo json_encode(['message' => 'Invalid GET request']);
             }
             break;
 

@@ -20,12 +20,11 @@ class Signup extends BaseController {
         file_put_contents('log.txt', print_r($_POST, true), FILE_APPEND);
 
         //echo json_encode(["field contents" => $data]);
-        $data['user_id'] = uniqid();
         $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         $data['profile_pic'] = null;
 
         if ($this->userModel->create($data)) {
-            $this->sendResponse(201, 'User created successfully.');
+            $this->sendResponse(200, 'User created successfully.');
         } else {
             $this->sendResponse(500, 'Failed to create user.');
         }
