@@ -3,19 +3,42 @@ import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/widgets/button.dart';
 import 'package:client/features/auth/view/widgets/custom_text_field.dart';
+import 'package:client/features/home/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:client/features/auth/view_model/auth_viewmodel.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:client/core/widgets/loader.dart';
+import 'package:client/core/widgets/utils.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final mailController = TextEditingController();
   final passController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool keepLoggedIn = false;
+
+    @override
+  void initState() {
+    super.initState();
+    _checkAutoLogin();
+  }
+
+  // Method to check if the user can be automatically logged in
+  Future<void> _checkAutoLogin() async {
+    final result = await AuthRemoteRepository().autologin(); 
+
+
+    if (result) {
+      // If login is successful, navigate to the main page
+      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+    }
+  }
+
 
   @override
   void dispose() {
@@ -27,9 +50,26 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(authViewmodelProvider) ?.isLoading == true;
+    ref.listen(
+      authViewmodelProvider,
+      (_, next) {
+        next ?. when(data: (data)  {
+          showSnackBar(context, 'Logged In.', Pallete.greenColor);
+          //uncomment after implementation of homepage
+          //Navigator.push(context, MaterialPageRoute(builder: (context) => homepage()));
+        }, 
+        error: (error, st) {
+          showSnackBar(context, error.toString(), Pallete.errorColor);
+        }, 
+        loading: () {}
+        );
+      },
+    );
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
+      body: isLoading ? const Loader() 
+      : Center(
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
@@ -97,7 +137,11 @@ class _LoginPageState extends State<LoginPage> {
                       text: "Sign In.",
                       onPressed: () async{
                         if(formKey.currentState!.validate())  {
-                          await AuthRemoteRepository().login(mail: mailController.text, password: passController.text, keepLoggedIn: keepLoggedIn);
+                          await ref.read(authViewmodelProvider.notifier).loginUser(
+                              email: mailController.text, 
+                              password: passController.text,
+                              keepLoggedIn: keepLoggedIn,
+                              );
                         }
                       },
                     ),

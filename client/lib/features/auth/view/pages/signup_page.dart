@@ -1,18 +1,21 @@
 import 'package:client/core/theme/app_pallete.dart';
+import 'package:client/core/widgets/loader.dart';
+import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view/widgets/button.dart';
 import 'package:client/features/auth/view/widgets/custom_text_field.dart';
-import 'package:client/features/auth/repositories/auth_remote_repository.dart';
+import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignupPage extends StatefulWidget {
+class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  ConsumerState<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends ConsumerState<SignupPage> {
   final mailController = TextEditingController();
   final nameController = TextEditingController();
   final passController = TextEditingController();
@@ -29,9 +32,26 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(authViewmodelProvider) ?.isLoading == true;
+    ref.listen(
+      authViewmodelProvider,
+      (_, next) {
+        next ?. when(data: (data)  {
+          showSnackBar(context, 'Account created succesfully.', Pallete.greenColor);
+          //uncomment after implementation of homepage
+          //Navigator.push(context, MaterialPageRoute(builder: (context) => homepage()));
+        }, 
+        error: (error, st) {
+          showSnackBar(context, error.toString(), Pallete.errorColor);
+        }, 
+        loading: () {}
+        );
+      },
+    );
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
+      body: isLoading ? const Loader() 
+      : Center(
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
@@ -87,7 +107,11 @@ class _SignupPageState extends State<SignupPage> {
                       text: "Sign Up.",
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                            await AuthRemoteRepository().signup(mail: mailController.text, name: nameController.text, password: passController.text);
+                            await ref.read(authViewmodelProvider.notifier).signUpUser(
+                              email: mailController.text, 
+                              name: nameController.text, 
+                              password: passController.text,
+                              );
                           }
                       },
                     ),
