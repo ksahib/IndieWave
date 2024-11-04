@@ -61,18 +61,18 @@ class Login extends BaseController {
    
 
     public function create()  {
-        if (isset($_COOKIE['auth_token'])) {
-            $this->autoLogin();
-            return;
-        }
+        // if (isset($_COOKIE['auth_token'])) {
+        //     $this->autoLogin();
+        //     return;
+        // }
         $data = json_decode(file_get_contents("php://input"), true);
         $this->validateRequiredFields($data, ['email', 'password', 'keepLoggedIn']);
-        echo json_encode(["field contents" => $data]);
+        //echo json_encode(["field contents" => $data]);
         $email = $data['email'];
         $password = $data['password'];
         $token = bin2hex(random_bytes(16));
         $user = $this->userModel->get('email', $email);
-        echo json_encode(["User table:" => $user]);
+        //echo json_encode(["User table:" => $user]);
         if(!$user)  {
             $this->sendResponse(401, 'Invalid email. Account does not exist');
             return;

@@ -20,9 +20,9 @@ function handlereq($method, $url)  {
     }
 
     $controllerName = ucfirst($sections[2]);
-    echo json_encode(["controller" => $controllerName]);
+    //echo json_encode(["controller" => $controllerName]);
     $controllerPath = $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/controllers/' . $controllerName . '.php';
-    echo json_encode(["controllerPath" => $controllerPath]); // Send controller path as JSON response
+    //echo json_encode(["controllerPath" => $controllerPath]); // Send controller path as JSON response
 
 
     if (!file_exists($controllerPath)) {
@@ -34,7 +34,7 @@ function handlereq($method, $url)  {
     include_once $controllerPath;
     $controller = new $controllerName($db);
     $id = isset($sections[3]) ? (int)$sections[3] : null;
-    echo json_encode(["method" => $method]);
+    //echo json_encode(["method" => $method]);
     switch ($method) {
         case 'GET':
             if ($id) {

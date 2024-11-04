@@ -24,7 +24,7 @@ class Signup extends BaseController {
         $data['profile_pic'] = null;
 
         if ($this->userModel->create($data)) {
-            $this->sendResponse(200, 'User created successfully.');
+            $this->sendResponse(201, 'User created successfully.');
         } else {
             $this->sendResponse(500, 'Failed to create user.');
         }
