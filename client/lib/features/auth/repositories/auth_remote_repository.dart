@@ -46,7 +46,7 @@ class AuthRemoteRepository {
     }
   }
 
-    Future<Either<AppFailure, UserModel>> login({
+  Future<Either<AppFailure, UserModel>> login({
     required String mail,
     required String password,
     required bool keepLoggedIn,
@@ -60,7 +60,7 @@ class AuthRemoteRepository {
       );
       final res = jsonDecode(response.body) as Map<String, dynamic>;  
       if (response.statusCode != 200) {
-        return Left(AppFailure(res['detail']));
+        return Left(AppFailure(res['message']));
       } else {
         return Right(UserModel.fromMap(res['data']['user']['data']).copyWith(token: res['data']['token']));
       }
@@ -89,6 +89,29 @@ class AuthRemoteRepository {
         print('Error during auto-login: $e');
         return false;
     }
+  }
+
+  Future<Either<AppFailure, UserModel>> getUser(String? token) async {
+    try {
+      final uri = Uri.parse('${ServerConstant.serverUrl}/Auth');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token ?? "",
+          },
+        
+      );
+      final res = jsonDecode(response.body) as Map<String, dynamic>;  
+      if (response.statusCode != 200) {
+        return Left(AppFailure(res['message']));
+      } else {
+        return Right(UserModel.fromMap(res['data'][0]['data']).copyWith(token: token));
+
+      }
+  } catch (e, stackTrace) {
+     return Left(AppFailure(e.toString()));
+  }
   }
 
 }

@@ -50,11 +50,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewmodelProvider) ?.isLoading == true;
+    final isLoading = ref.watch(authViewmodelProvider.select((val) => val?.isLoading == true));
     ref.listen(
       authViewmodelProvider,
       (_, next) {
-        next ?. when(data: (data)  {
+        next ?. when(
+          data: (data)  {
           showSnackBar(context, 'Logged In.', Pallete.greenColor);
           //uncomment after implementation of homepage
           //Navigator.push(context, MaterialPageRoute(builder: (context) => homepage()));

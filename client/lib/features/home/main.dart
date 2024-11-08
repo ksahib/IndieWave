@@ -1,3 +1,4 @@
+import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/theme/theme.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
@@ -9,6 +10,8 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   final container = ProviderContainer();
   await container.read(authViewmodelProvider.notifier).initSharedPreferences();
+  await container.read(authViewmodelProvider.notifier).getData();
+  
   runApp(
     UncontrolledProviderScope(
       container: container,
@@ -16,15 +19,16 @@ void main() async{
     ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(currentUserNotifierProvider);
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Indiewave',
       theme: AppTheme.darktheme,
-      home: const SignupPage(),
+      home: user == null ? const SignupPage() : const HomePage(),
     );
   }
 }
