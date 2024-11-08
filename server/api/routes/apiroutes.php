@@ -38,14 +38,19 @@ function handlereq($method, $url)  {
     switch ($method) {
         case 'GET':
             if ($id) {
-                $response = $controller->getUser($id);
+                $response = $controller->_get($id);
             } elseif (method_exists($controller, 'getAll')) { 
                 // Check if getAll method exists before calling it
                 $response = $controller->getAll();
-            } else {
+            } elseif (method_exists($controller, '_get')){
+                $response = $controller->_get();
+            }
+            else  {
                 http_response_code(400);
                 echo json_encode(['message' => 'Invalid GET request']);
             }
+            
+
             break;
 
         case 'POST':
