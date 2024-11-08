@@ -25,19 +25,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     @override
   void initState() {
     super.initState();
-    _checkAutoLogin();
+    //_checkAutoLogin();
   }
 
   // Method to check if the user can be automatically logged in
-  Future<void> _checkAutoLogin() async {
-    final result = await AuthRemoteRepository().autologin(); 
+  // Future<void> _checkAutoLogin() async {
+  //   final result = await AuthRemoteRepository().autologin(); 
 
 
-    if (result) {
-      // If login is successful, navigate to the main page
-      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
-    }
-  }
+  //   if (result) {
+  //     // If login is successful, navigate to the main page
+  //     //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+  //   }
+  // }
 
 
   @override

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,7 +14,7 @@ import 'package:client/features/auth/model/user_model.dart';
 part 'auth_remote_repository.g.dart';
 
 @riverpod
-AuthRemoteRepository authRemoteRepository(AuthRemoteRepositoryRef ref) {
+AuthRemoteRepository authRemoteRepository(Ref ref) {
   return AuthRemoteRepository();
 }
 
@@ -51,7 +52,7 @@ class AuthRemoteRepository {
     required bool keepLoggedIn,
   }) async {
     try {
-      final uri = Uri.parse('${ServerConstant.serverUrl}/Login');
+      final uri = Uri.parse('http://localhost/indiewave/api/Login');
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
@@ -61,7 +62,7 @@ class AuthRemoteRepository {
       if (response.statusCode != 200) {
         return Left(AppFailure(res['detail']));
       } else {
-        return Right(UserModel.fromMap(res));
+        return Right(UserModel.fromMap(res['data']['user']['data']).copyWith(token: res['data']['token']));
       }
   } catch (e, stackTrace) {
      return Left(AppFailure(e.toString()));
