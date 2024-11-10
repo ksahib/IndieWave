@@ -5,6 +5,7 @@ import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view/widgets/button.dart';
 import 'package:client/features/auth/view/widgets/custom_text_field.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
+import 'package:client/features/home/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,7 +40,13 @@ class _SignupPageState extends ConsumerState<SignupPage> {
         next ?. when(data: (data)  {
           showSnackBar(context, 'Account created succesfully.', Pallete.greenColor);
           //uncomment after implementation of homepage
-          //Navigator.push(context, MaterialPageRoute(builder: (context) => homepage()));
+          Navigator.pushAndRemoveUntil(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => HomePage()
+            ),
+            (_) => false,
+          );
         }, 
         error: (error, st) {
           showSnackBar(context, error.toString(), Pallete.errorColor);

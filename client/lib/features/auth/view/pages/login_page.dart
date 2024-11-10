@@ -58,7 +58,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           data: (data)  {
           showSnackBar(context, 'Logged In.', Pallete.greenColor);
           //uncomment after implementation of homepage
-          //Navigator.push(context, MaterialPageRoute(builder: (context) => homepage()));
+          Navigator.pushAndRemoveUntil(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => HomePage()
+            ),
+            (_) => false,
+          );
         }, 
         error: (error, st) {
           showSnackBar(context, error.toString(), Pallete.errorColor);
