@@ -12,6 +12,8 @@ class ArtistProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ArtistProfilePageState extends ConsumerState<ArtistProfilePage> {
+  bool _showFields = false;
+  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,8 +129,9 @@ class _ArtistProfilePageState extends ConsumerState<ArtistProfilePage> {
                             color: const Color.fromARGB(7, 255, 255, 255),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 250, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
                                   "Upload new music.",
@@ -138,7 +141,26 @@ class _ArtistProfilePageState extends ConsumerState<ArtistProfilePage> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                ButtonIcon(iconData: Icons.add, onPressed: () {}),
+                                ButtonIcon(iconData: Icons.add, onPressed: () {
+                                  setState(() {
+                                    _showFields = !_showFields;
+                                  });
+                                }),
+
+                                Visibility(
+                                  visible: _showFields,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: TextFormField(
+                                      controller: _controller,
+                                      decoration: InputDecoration(
+                                        labelText: 'Enter Song Name',
+                                        filled: false,
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
