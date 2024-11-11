@@ -21,7 +21,7 @@ class Signup extends BaseController {
 
         //echo json_encode(["field contents" => $data]);
         $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-        $data['profile_pic'] = null;
+        $data['profile_pic'] = 'default';
 
         if ($this->userModel->create($data)) {
             $this->sendResponse(201, 'User created successfully.');
