@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/vendor/autoload.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/config/database.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/models/UserModel.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/models/sessionmodel.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/models/imagemodel.php';
 include_once 'BaseController.php';
 use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -14,17 +15,20 @@ use Firebase\JWT\Key;
 class Auth extends BaseController {
     private $userModel;
     private $sessionmodel;
+    private $imagemodel;
     private $secret_key = "213g3v453tfgr34yvf238erg8evyu";
 
     public function __construct($db) {
         parent::__construct($db); 
         $this->userModel = new UserModel($this->db);
         $this->sessionmodel = new sessionmodel($this->db);
+        $this->imagemodel = new imagemodel($this->db);
     }
 
     public function _get() {
         $headers = apache_request_headers();
         $token = $headers['x-auth-token'];
+        
 
         try {
             if(!$token) {
@@ -45,7 +49,9 @@ class Auth extends BaseController {
                 $this->sendResponse(401, 'User not found');
                 return;
             }
-            $this->sendResponse(200, 'Retrieved user data', [$user]);
+            $imageid = $user["data"]["profile_pic"];
+            $image = $this->imagemodel->get('image_id', $imageid);
+            $this->sendResponse(200, 'Retrieved user data', [$user, $image]);
         }  catch(Exception $e)  {
             http_response_code(500);
             echo json_encode(["error" => $e->getMessage()]);

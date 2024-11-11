@@ -21,14 +21,75 @@ class Login extends BaseController {
         $this->userModel = new UserModel($this->db);
         $this->sessionmodel = new sessionmodel($this->db);
     }
+
+    // public function autoLogin() {
+    //     $headers = apache_request_headers();
+    //     $authHeader = $headers['x-auth-token'] ?? '';
+    //     //echo json_encode(["session data" => $session]);
+
+    //     if($authHeader) {
+    //         $token = $authHeader;
+    //         $session = $this->sessionmodel->get('token_id', $token);
+    //         try {
+    //             $decoded = JWT::decode($token, new Key($this->secret_key, 'HS256'));
+                
+    //             // Check if token is near expiration (e.g., within 2 days)
+    //             $expiryDate = new DateTime($session['data']['expires_at']);
+    //             $currentDate = new DateTime();
+    //             $interval = $currentDate->diff($expiryDate);
+
+    //             if (!$session || new DateTime() > new DateTime($session['data']['expires_at'])) {
+    //                 $this->sendResponse(401, 'Invalid or expired session token. Please log in.');
+    //                 return;
+    //             }
+
+                
+
+    //             if ($interval->days <= 2) { // If close to expiring, extend the expiration
+    //                 $newExpiresAt = time() + (7 * 24 * 60 * 60);
+    //                 $decoded->exp = $newExpiresAt;
+    //                 $expires_at = date('Y-m-d H:i:s', $newExpiresAt);
+    //                 // Update the jwt expiration on the client
+    //                 $decodedArray = json_decode(json_encode($decoded), true);
+    //                 $new_token = JWT::encode($decodedArray, $this->secret_key, 'HS256');
+    //                 $update_list = [
+    //                     'token_id' => $new_token,
+    //                     'expires_at' => $expires_at,
+    //                     'last_used' => $currentDate
+    //                 ];
+    //                 // Update the session expiration in the database
+    //                 $this->sessionmodel->update($session['data']['token_id'], $update_list, 'token_id');
+                    
+    //                 $this->sendResponse(200, 'Token refreshed', ['token' => $new_token]);
+    //                 return;    
+    //             }
+
+    //             $this->sendResponse(200, 'Automatically logged in.');
+    //         } catch (Exception $e) {
+    //             http_response_code(500);
+    //             echo json_encode(["error" => $e->getMessage()]);
+    //         }
+    //     }
     
+        
+    
+        
+        
+        
+    
+    //     // User is authenticated, proceed with auto-login
+    //     $this->sendResponse(200, 'User automatically logged in');
+    // }
+    
+
+   
+
     public function create()  {
         $data = json_decode(file_get_contents("php://input"), true);
         $this->validateRequiredFields($data, ['email', 'password', 'keepLoggedIn']);
         //echo json_encode(["field contents" => $data]);
         $email = $data['email'];
         $password = $data['password'];
-        
         $user = $this->userModel->get('email', $email);
         //echo json_encode(["User table:" => $user]);
         if(!$user)  {
