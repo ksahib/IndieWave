@@ -43,6 +43,7 @@ class Auth extends BaseController {
             $user = $this->userModel->get('email', $email);
             if(!$user) {
                 $this->sendResponse(401, 'User not found');
+                return;
             }
             $this->sendResponse(200, 'Retrieved user data', [$user]);
         }  catch(Exception $e)  {
