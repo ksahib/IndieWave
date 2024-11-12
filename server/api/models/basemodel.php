@@ -90,8 +90,11 @@ class BaseModel {
     }
 
     // Delete a record
-    public function delete($id) {
-        $query = "DELETE FROM " . $this->table_name . " WHERE id = :id";
+    public function delete($column, $id) {
+        if (!preg_match('/^[a-zA-Z_]+$/', $column)) {
+            return ['status' => 400, 'message' => 'Invalid column name'];
+        }
+        $query = "DELETE FROM " . $this->table_name . " WHERE $column = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $id);
 

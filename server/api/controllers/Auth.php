@@ -49,6 +49,19 @@ class Auth extends BaseController {
                 $this->sendResponse(401, 'User not found');
                 return;
             }
+
+            $session = $this->sessionmodel->get('token_id', $token);
+            if (!$session || empty($session["data"])){
+                $this->sendResponse(401, 'Session not found');
+                return;
+            }
+            else if (isset($session["data"]) && $session["data"]['expires_at'] < date('Y-m-d H:i:s')) {
+                $this->sessionmodel->delete('token_id', $session["data"]['token_id']);
+                $this->sendResponse(401, 'Your session has expired');
+                return;
+            }
+            
+
             $imageid = $user["data"]["profile_pic"];
             $image = $this->imagemodel->get('image_id', $imageid);
             $this->sendResponse(200, 'Retrieved user data', [$user, $image]);
