@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Textfield extends StatelessWidget{
 final TextEditingController controller;
-final Text labelText;
+final String labelText;
 
 const Textfield({super.key, required this.controller, required this.labelText});
 

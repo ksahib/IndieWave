@@ -1,9 +1,12 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:client/core/theme/app_pallete.dart';
+import 'package:client/core/widgets/close.dart';
+import 'package:client/core/widgets/maximize.dart';
+import 'package:client/core/widgets/minimize.dart';
 import 'package:client/features/home/view/widgets/Button_icon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-
+import 'package:client/features/home/view/widgets/textfield.dart';
 class ArtistProfilePage extends ConsumerStatefulWidget {
   const ArtistProfilePage({super.key});
 
@@ -14,6 +17,8 @@ class ArtistProfilePage extends ConsumerStatefulWidget {
 class _ArtistProfilePageState extends ConsumerState<ArtistProfilePage> {
   bool _showFields = false;
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,34 +73,12 @@ class _ArtistProfilePageState extends ConsumerState<ArtistProfilePage> {
                               ),
                             ),
                             // Right-aligned icon buttons
-                            Row(
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.minimize_outlined,
-                                    color: Colors.white,
-                                    size: 15.0,
-                                  ),
-                                  onPressed: appWindow.minimize,
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.crop_square,
-                                    color: Colors.white,
-                                    size: 15.0,
-                                  ),
-                                  onPressed: appWindow.isMaximized
-                                      ? appWindow.restore
-                                      : appWindow.maximize,
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                    size: 15.0,
-                                  ),
-                                  onPressed: appWindow.close,
-                                ),
+                                Minimize(),
+                                Maximize(),
+                                Close()
                               ],
                             ),
                           ],
@@ -151,14 +134,15 @@ class _ArtistProfilePageState extends ConsumerState<ArtistProfilePage> {
                                   visible: _showFields,
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 20),
-                                    child: TextFormField(
-                                      controller: _controller,
-                                      decoration: InputDecoration(
-                                        labelText: 'Enter Song Name',
-                                        filled: false,
-                                        border: OutlineInputBorder(),
-                                      ),
+                                    child: Column(
+                                      children: [
+                                        Textfield(controller: _controller, labelText: 'Add track'),
+                                        Textfield(controller: _controller, labelText: 'Add track'),
+                                        Textfield(controller: _controller, labelText: 'Add track'),
+                                        
+                                      ],
                                     ),
+                                    
                                   ),
                                 ),
                               ],

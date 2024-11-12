@@ -13,7 +13,8 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   final container = ProviderContainer();
   await container.read(authViewmodelProvider.notifier).initSharedPreferences();
-  await container.read(authViewmodelProvider.notifier).getData();
+  final ud = await container.read(authViewmodelProvider.notifier).getData();
+  //print(ud);
    // Configure the window manager
   await windowManager.waitUntilReadyToShow();
   await windowManager.setAsFrameless();
@@ -46,9 +47,9 @@ class MyApp extends ConsumerWidget {
     final user = ref.watch(currentUserNotifierProvider);
     return MaterialApp(
       title: 'Indiewave',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.darktheme,
-      home: user == null ? const SignupPage() : const ArtistProfilePage(),
+      home: const SignupPage(),
     );
   }
 }

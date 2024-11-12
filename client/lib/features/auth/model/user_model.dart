@@ -5,11 +5,13 @@ class UserModel {
   final String email;
   final String name;
   final String token;
+  final String image_url;
 
   UserModel({
     required this.email,
     required this.name,
     required this.token,
+    this.image_url = "",
   });
   
 
@@ -17,11 +19,13 @@ class UserModel {
     String? email,
     String? name,
     String? token,
+    String? image_url,
   }) {
     return UserModel(
       email: email ?? this.email,
       name: name ?? this.name,
       token: token ?? this.token,
+      image_url: image_url ?? this.image_url,
     );
   }
 
@@ -30,14 +34,16 @@ class UserModel {
       'email': email,
       'name': name,
       'token': token,
+      'image_url': image_url,
     };
   }
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
+  factory UserModel.fromMap(Map<String, dynamic> map, [String? image = ""]) {
     return UserModel(
-      email: map['email'] ?? '',
-      name: map['name'] ?? '',
-      token: map['token'] ?? '',
+      email: map['email'] ?? "",
+      name: map['name'] ?? "",
+      token: map['token'] ?? "",
+      image_url: image ?? "",
     );
   }
 
@@ -46,7 +52,9 @@ class UserModel {
   factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'UserModel(email: $email, name: $name, token: $token)';
+  String toString() {
+    return 'UserModel(email: $email, name: $name, token: $token, image_url: $image_url)';
+  }
 
   @override
   bool operator ==(covariant UserModel other) {
@@ -55,9 +63,15 @@ class UserModel {
     return 
       other.email == email &&
       other.name == name &&
-      other.token == token;
+      other.token == token &&
+      other.image_url == image_url;
   }
 
   @override
-  int get hashCode => email.hashCode ^ name.hashCode ^ token.hashCode;
+  int get hashCode {
+    return email.hashCode ^
+      name.hashCode ^
+      token.hashCode ^
+      image_url.hashCode;
+  }
 }

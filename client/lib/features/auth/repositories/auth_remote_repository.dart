@@ -69,27 +69,27 @@ class AuthRemoteRepository {
   }
   }
 
-  Future<bool> autologin() async {
-    try {
-      final uri = Uri.parse('${ServerConstant.serverUrl}/Login'); 
-      final response = await http.post(
-          uri,
-          headers: {
-            'Content-Type': 'application/json',
-            },
-          body: jsonEncode({"email": "dummy@example.com", "password": "dummypass", "keepLoggedIn": false}),
-        );
-        if (response.statusCode == 200) {
-          return true;
-        }
-        else  {
-          return false;
-        }
-    } catch(e) {
-        print('Error during auto-login: $e');
-        return false;
-    }
-  }
+  // Future<bool> autologin() async {
+  //   try {
+  //     final uri = Uri.parse('${ServerConstant.serverUrl}/Login'); 
+  //     final response = await http.post(
+  //         uri,
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           },
+  //         body: jsonEncode({"email": "dummy@example.com", "password": "dummypass", "keepLoggedIn": false}),
+  //       );
+  //       if (response.statusCode == 200) {
+  //         return true;
+  //       }
+  //       else  {
+  //         return false;
+  //       }
+  //   } catch(e) {
+  //       print('Error during auto-login: $e');
+  //       return false;
+  //   }
+  // }
 
   Future<Either<AppFailure, UserModel>> getUser(String? token) async {
     try {
@@ -106,7 +106,9 @@ class AuthRemoteRepository {
       if (response.statusCode != 200) {
         return Left(AppFailure(res['message']));
       } else {
-        return Right(UserModel.fromMap(res['data'][0]['data']).copyWith(token: token));
+        final userData = res['data'][0]['data'];
+        final imageUrl = res['data'][1]['data']['image_url'];
+        return Right(UserModel.fromMap(userData, imageUrl).copyWith(token: token));
 
       }
   } catch (e, stackTrace) {
