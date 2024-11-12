@@ -1,5 +1,6 @@
 import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/theme/theme.dart';
+import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:client/features/home/homepage.dart';
@@ -13,7 +14,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   final container = ProviderContainer();
   await container.read(authViewmodelProvider.notifier).initSharedPreferences();
-  final ud = await container.read(authViewmodelProvider.notifier).getData();
+  await container.read(authViewmodelProvider.notifier).getData();
   //print(ud);
    // Configure the window manager
   await windowManager.waitUntilReadyToShow();
@@ -42,14 +43,45 @@ void main() async{
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(currentUserNotifierProvider);
-    return MaterialApp(
-      title: 'Indiewave',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darktheme,
-      home: const SignupPage(),
-    );
-  }
+ @override
+Widget build(BuildContext context, WidgetRef ref) {
+  final userState = ref.watch(authViewmodelProvider);
+
+  return MaterialApp(
+    title: 'Indiewave',
+    debugShowCheckedModeBanner: false,
+    theme: AppTheme.darktheme,
+    home: userState != null ?userState.when(
+      data: (user) => const Homepage(),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) {
+        // Redirect to LoginPage if session is not found or any other error occurs
+        return Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('An error occurred: $error'),
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to login page
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  child: const Text('Login Again'),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    ):
+    const LoginPage(),
+  );
+}
+
 }

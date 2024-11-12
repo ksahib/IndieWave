@@ -16,10 +16,6 @@ dynamic home() async{
   final container = ProviderContainer();
   await container.read(authViewmodelProvider.notifier).initSharedPreferences();
   final userData = await container.read(authViewmodelProvider.notifier).getData(); //returns userModel as object
-  if(userData != null)
-  {
-    print(userData.name);
-  }
   return userData;
 }
 

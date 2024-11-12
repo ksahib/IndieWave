@@ -77,20 +77,26 @@ class AuthViewmodel extends _$AuthViewmodel {
     return state = state = AsyncValue.data(user);
   }
 
-  Future<UserModel?> getData()  async{
-    state = const AsyncValue.loading();
+  Future<UserModel?> getData() async {
+  state = const AsyncValue.loading();
+  try {
     final token = await _authLocalRepository.getToken();
-    if(token != null) {
+    if (token != null) {
       final res = await _authRemoteRepository.getUser(token);
-      final val = switch(res) {
+      final val = switch (res) {
         Left(value: final l) => state = AsyncValue.error(l.message, StackTrace.current),
         Right(value: final r) => state = _getDataSuccess(r),
       };
       return val.value;
-
+    } else {
+      state = AsyncValue.error('No token found', StackTrace.current);
     }
-    return null;
+  } catch (e) {
+    state = AsyncValue.error('An error occurred: $e', StackTrace.current);
   }
+  return null;
+}
+
 
   AsyncValue<UserModel> _getDataSuccess(UserModel user) {
     _currentUserNotifier.addUser(user);
