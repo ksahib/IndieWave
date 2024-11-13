@@ -20,8 +20,7 @@ class AuthViewmodel extends _$AuthViewmodel {
     _authRemoteRepository = ref.watch(authRemoteRepositoryProvider);
     _authLocalRepository = ref.watch(authLocalRepositoryProvider);
     _currentUserNotifier = ref.watch(currentUserNotifierProvider.notifier);
-    getData();
-    return const AsyncValue.loading();
+    return null;
   }
 
   Future<void> initSharedPreferences() async {
@@ -48,31 +47,6 @@ class AuthViewmodel extends _$AuthViewmodel {
         break;
     };
     //print(val);
-  }
-
-  Future<void> signUpArtist({
-    required String email,
-    required String name,
-    required String about,
-    required String imageUrl,
-  }) async {
-    state = const AsyncValue.loading();
-    print("email: ${email}");
-    print("image: ${imageUrl}");
-    final res = await _authRemoteRepository.artistSignup(
-      name: name,
-      mail: email,
-      about: about,
-      imageUrl: imageUrl
-    );
-    switch(res) {
-      case Left(value: final l): 
-        state = AsyncValue.error(l.message, StackTrace.current);
-        break;
-      case Right(value: final r): 
-        state = AsyncValue.data(r);
-        break;
-    }
   }
 
   Future<void> loginUser({

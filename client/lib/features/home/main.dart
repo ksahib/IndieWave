@@ -46,17 +46,15 @@ class MyApp extends ConsumerWidget {
  @override
 Widget build(BuildContext context, WidgetRef ref) {
   final userState = ref.watch(authViewmodelProvider);
-    print(userState);
 
   return MaterialApp(
     title: 'Indiewave',
     debugShowCheckedModeBanner: false,
     theme: AppTheme.darktheme,
-    home: userState != null ? userState.when(
+    home: userState != null ?userState.when(
       data: (user) => const Homepage(),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stackTrace) {
-        print(error);
         // Redirect to LoginPage if session is not found or any other error occurs
         return Scaffold(
           body: Center(

@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:crypto/crypto.dart';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_interceptor/http_interceptor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:client/core/constants/server_constant.dart';
@@ -46,34 +45,6 @@ class AuthRemoteRepository {
       return Left(AppFailure(e.toString()));
     }
   }
-
-    Future<Either<AppFailure, UserModel>> artistSignup({
-    required String mail,
-    required String name,
-    required String about,
-    required String imageUrl,
-  }) async {
-    try {
-      final response = await http.post(
-        Uri.parse('${ServerConstant.serverUrl}/ArtistSignUp'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"email": mail, "artist_name": name, "about": about, "profile_pic": imageUrl}),
-      );
-
-      final res = jsonDecode(response.body) as Map<String, dynamic>;
-      print('API Response Body: ${response.body}');
-
-      if (response.statusCode != 201) {
-        return Left(AppFailure(res['detail']));
-      } else {
-        return Right(UserModel.fromMap(res));
-      }
-    } catch (e) {
-      return Left(AppFailure(e.toString()));
-    }
-  }
-
-  
 
   Future<Either<AppFailure, UserModel>> login({
     required String mail,
