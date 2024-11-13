@@ -4,20 +4,16 @@ import 'package:client/core/theme/theme.dart';
 import 'package:client/core/widgets/close.dart';
 import 'package:client/core/widgets/maximize.dart';
 import 'package:client/core/widgets/minimize.dart';
+import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/auth/model/user_model.dart';
+import 'package:client/features/auth/view/pages/artist_registration.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
 
-dynamic home() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  final container = ProviderContainer();
-  await container.read(authViewmodelProvider.notifier).initSharedPreferences();
-  final userData = await container.read(authViewmodelProvider.notifier).getData(); //returns userModel as object
-  return userData;
-}
+
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -33,17 +29,16 @@ class _Homepage extends ConsumerState<Homepage> {
   @override
   void initState() {
     super.initState();
-    loadData(); // Load data only once
+    loadData();
   }
 
   Future<void> loadData() async {
-    userData = await home(); // Call home() and store the result in userData
-    setState(() {}); // Trigger a rebuild to display the fetched data
+    userData = await checkCreds();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    // Loading indicator while data is being fetched
     if (userData == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -54,9 +49,9 @@ class _Homepage extends ConsumerState<Homepage> {
           constraints: const BoxConstraints(minWidth: 2480, maxHeight: 1200),
           child: Column(
             children: [
+              // Title bar and window controls inside a Stack
               Stack(
                 children: [
-                  // Title bar
                   SizedBox(
                     height: 53,
                     child: WindowTitleBarBox(
@@ -69,7 +64,7 @@ class _Homepage extends ConsumerState<Homepage> {
                             children: [
                               Text(
                                 userData.name,
-                                style: TextStyle(color: Pallete.whiteColor),
+                                style: const TextStyle(color: Pallete.whiteColor),
                               ),
                               const SizedBox(width: 8.0),
                               GestureDetector(
@@ -99,9 +94,11 @@ class _Homepage extends ConsumerState<Homepage> {
                       ),
                     ),
                   ),
-                  Positioned.fill(child: MoveWindow()),
+                  Positioned.fill(child: MoveWindow()), // Ensures the title bar is draggable
                 ],
               ),
+              
+              // The content area with options card and other widgets
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -134,26 +131,76 @@ class _Homepage extends ConsumerState<Homepage> {
                         flex: 1,
                         child: Stack(
                           children: [
-                            Visibility(
-                              visible: _showFields,
-                              child: const Padding(
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                child: SizedBox(
-                                  height: 350.0,
-                                  width: 350.0,
-                                  child: Card(
-                                    color: Color.fromARGB(6, 0, 0, 0),
-                                    shape: RoundedRectangleBorder(),
-                                    elevation: 5.0,
-                                  ),
+                            IgnorePointer(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Container(
+                                  height: double.infinity,
+                                  color: const Color.fromARGB(7, 255, 255, 255),
                                 ),
                               ),
                             ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Container(
-                                height: double.infinity,
-                                color: const Color.fromARGB(7, 255, 255, 255),
+                            AnimatedOpacity(
+                              opacity: _showFields ? 1.0 : 0.0,
+                              duration: const Duration(milliseconds: 150), // Smooth transition
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: SizedBox(
+                                    height: 350.0,
+                                    width: 350.0,
+                                    child: Card(
+                                      color: const Color.fromARGB(6, 0, 0, 0),
+                                      shape: const RoundedRectangleBorder(),
+                                      elevation: 5.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Options",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Pallete.whiteColor,
+                                              ),
+                                            ),
+                                            const Divider(color: Pallete.borderColor),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => const ArtistRegistration()));
+                                              },
+                                              child: const Text(
+                                                "Register as an Artist",
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                // Handle login as artist
+                                              },
+                                              child: const Text(
+                                                "Login as an Artist",
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                // Handle logout
+                                              },
+                                              child: const Text(
+                                                "Logout",
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],

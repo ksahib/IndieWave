@@ -43,7 +43,7 @@ class UserModel {
       email: map['email'] ?? "",
       name: map['name'] ?? "",
       token: map['token'] ?? "",
-      image_url: image ?? "",
+      image_url: map['image_url'] ?? image ?? "",
     );
   }
 
