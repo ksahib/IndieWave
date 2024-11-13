@@ -20,12 +20,12 @@ class ArtistSignUp extends BaseController {
             $data = json_decode(file_get_contents("php://input"), true);
         
             // Validate required fields 
-            $this->validateRequiredFields($data, ['email', 'artist_name', 'about', 'password']);
+            $this->validateRequiredFields($data, ['email', 'artist_name', 'about']);
             
             // Set default values for fields that are not provided
             $data['profile_pic'] = 'default';
             $data['follower_count'] = 0;
-            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+            //$data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
             //$this->sendResponse(201, 'Artist profile creating');
 
             // Call the ArtistModel's create method to insert into the database

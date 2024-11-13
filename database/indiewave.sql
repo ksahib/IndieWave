@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2024 at 02:03 PM
+-- Generation Time: Nov 13, 2024 at 03:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,6 +35,15 @@ CREATE TABLE `album` (
   `artist_name` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `album`
+--
+
+INSERT INTO `album` (`album_id`, `name`, `cover_art`, `price`, `artist_name`) VALUES
+('6733f63484067', 'debut', 'default', 9.99, 'gotcha'),
+('6733f65309965', 'debut', 'default', 9.99, 'gotcha'),
+('6733f6554f47f', 'debut', 'default', 9.99, 'gotcha');
+
 -- --------------------------------------------------------
 
 --
@@ -46,9 +55,21 @@ CREATE TABLE `artist` (
   `follower_count` int(11) DEFAULT NULL,
   `profile_pic` varchar(100) DEFAULT NULL,
   `about` varchar(500) DEFAULT NULL,
-  `email` varchar(60) DEFAULT NULL,
-  `password` varchar(60) DEFAULT NULL
+  `email` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `artist`
+--
+
+INSERT INTO `artist` (`artist_name`, `follower_count`, `profile_pic`, `about`, `email`) VALUES
+('Artist Name', 0, 'default', 'Passion', 'Blablabla'),
+('Artist1 Name', 0, 'default', 'Passion', 'Blablabla'),
+('Artist14 Name', 0, 'default', 'Passion', 'Blablabla'),
+('gotcha', 0, 'default', 'Purr', 'emiya'),
+('gotcha1', 0, 'default', 'Purr', 'dum@gmail.com'),
+('gotcha101', 0, 'default', 'Lucky Lucky', 'emiya'),
+('ME', 0, 'default', 'Psion', 'Blablabla');
 
 -- --------------------------------------------------------
 
@@ -89,7 +110,7 @@ CREATE TABLE `images` (
 --
 
 INSERT INTO `images` (`image_id`, `image_url`, `image_type`) VALUES
-('default', 'https://res.cloudinary.com/your_cloud_name/image/upload/v1234567890/placeholder.jpg', 'profile_pic');
+('default', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731329463/profile_pic/lhjg1rgm4a0c4uedtyzk.jpg', 'profile_pic');
 
 -- --------------------------------------------------------
 
@@ -111,7 +132,8 @@ CREATE TABLE `session` (
 
 INSERT INTO `session` (`token_id`, `email`, `created_at`, `expires_at`, `last_used`) VALUES
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTQzMTksImV4cCI6MTczMzY4NjMxOSwiZGF0YSI6eyJlbWFpbCI6ImdpbDMiLCJ1bmlxdWUiOiI2NzJlNjcyZjVmYzhhIn19.FFctZl3vDCfWAIdM6uijU-A4T-Mhx1ki5pRSz1NN77A', 'gil3', '2024-11-08 19:31:59', '2024-12-08 14:31:59', '2024-11-08 19:31:59'),
-('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTUwMDIsImV4cCI6MTczMzY4NzAwMiwiZGF0YSI6eyJlbWFpbCI6ImdpbDIiLCJ1bmlxdWUiOiI2NzJlNjlkYTAwZGRmIn19.lX-HATApqJ8yQl2YDPEXz69obZrQJZmtGs4RDRPpQ_A', 'gil2', '2024-11-08 19:43:22', '2024-12-08 14:43:22', '2024-11-08 19:43:22');
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTUwMDIsImV4cCI6MTczMzY4NzAwMiwiZGF0YSI6eyJlbWFpbCI6ImdpbDIiLCJ1bmlxdWUiOiI2NzJlNjlkYTAwZGRmIn19.lX-HATApqJ8yQl2YDPEXz69obZrQJZmtGs4RDRPpQ_A', 'gil2', '2024-11-08 19:43:22', '2024-12-08 14:43:22', '2024-11-08 19:43:22'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzODY3MTcsImV4cCI6MTczMTQyOTkxNywiZGF0YSI6eyJlbWFpbCI6InNhaGliNSIsInVuaXF1ZSI6IjY3MzJkZDVkNDdjNTIifX0.GNYLtOnxfcsD6A8jL9vT86UEIHrLYgScFyuaZB_mytU', 'sahib5', '2024-11-12 04:45:17', '2024-11-12 11:45:17', '2024-11-12 04:45:17');
 
 -- --------------------------------------------------------
 
@@ -146,6 +168,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`email`, `name`, `password`, `profile_pic`) VALUES
+('Blablabla', 'Artist Name', '$2y$10$PwPz61rgc3y.tBtoX6A5S.Ai1Rdc3ia5kwucVAxNi3G9LMySZsR7q', 'default'),
 ('dum@gmail.com', 'sds', '$2y$10$saZ3wpXTe5xcJ9TfdsCU1uYtzjdrffI5lsH/Om24d1nZ/ZElTKNjW', NULL),
 ('dummy2@example.com', 'dummy', '$2y$10$g3dskRp5Q5OsikDnlBhYuO2D3HaQ8fqtIfDRSe.ykycnMYv1Ytxhy', NULL),
 ('dummy@example.com', 'dummy', '$2y$10$UumjSHu5UVNUgTJR9dnTvOApM4z3XayRB67KDnPPnvDctrZ1f1J1K', NULL),
@@ -156,6 +179,11 @@ INSERT INTO `users` (`email`, `name`, `password`, `profile_pic`) VALUES
 ('gil@example.com', 'gil', '$2y$10$2ouz5GCe64xVmjgKZZKe4ubAKtS0itW68CGzXhzzE10mURnIG28Zi', NULL),
 ('rin@example.com', 'rin', '$2y$10$pqkOVdju893l9lFahlqRb.c/HLw34RXVOUmlf5Hi1SgIS.hwbDvmG', NULL),
 ('sabre@example.com', 'sabre', '$2y$10$9UERlvXk/0mTm6PrWc5inurL2ZUkBve5HE0MUwOmSAfefWmEYKQzG', NULL),
+('sahib0', 'sahib', '$2y$10$s28xxPL7wGO3BcrI6MJycefPA8PCldTDxjzTiTW0P6Uw3ugPWi3EW', 'default'),
+('sahib1', 'sahib', '$2y$10$cfBMyJT0VmGNpa82HzZUl.Jnb8Tl9hMmwJ/MK2g9bYRCejcrqQN.e', 'default'),
+('sahib10', 'sahib', '$2y$10$qJo2rwTt7XSbE.o349vl/.7rS5bnfKr35U4c36NCISTd87k66mMp6', 'default'),
+('sahib35', 'sahib', '$2y$10$BxpLkkNw0ijIRNjPZ/0Y/u4.ATl9I8ea9YpbxsJzGdyBz6IygWFD6', 'default'),
+('sahib5', 'sahib', '$2y$10$YAUYNU9bUSU56CiFfUKL0OQ5RprXWRhEvhj1K5hlb1bYvDuTUNIqC', 'default'),
 ('sahib@gmail.com', 'sahib', '$2y$10$ZHaudkUPP2SL/vd742DrnuGAoxo20MjJKPOyQ4fw9SZJJ6t5hu4o6', NULL),
 ('sam@example.com', 'dummy', '$2y$10$4KASazqDdvQhOBfqqc3QYeiw8MgfhYoZaqJdy4YLlCi0un1SUxRPK', NULL),
 ('samiha345@gmail.com', 'samiha', '$2y$10$vUx4X8KExsG1cCOxL7bgD.fuBk.ePJehoKYIgOYE.twohfVLeRlVy', NULL),
