@@ -51,7 +51,7 @@ class Artist extends BaseController {
 
             $imageid = $artist["data"]["profile_pic"];
             $image = $this->imagemodel->get('image_id', $imageid);
-            $this->sendResponse(200, 'Retrieved Artist datas', ['artist_name' => $artist["data"]["artist_name"], 'about' => $artist["data"]["about"], 'follower_count' => $artist["data"]["follower_count"], 'image_url' => $image["data"]["image_url"]]);
+            $this->sendResponse(200, 'Retrieved user data', [$artist["data"]["artist_name"], $artist["data"]["about"], $artist["data"]["follower_count"], $image["data"]["image_url"]]);
         }  catch(Exception $e)  {
             http_response_code(500);
             echo json_encode(["error" => $e->getMessage()]);
