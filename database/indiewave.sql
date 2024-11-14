@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2024 at 03:22 AM
+-- Generation Time: Nov 14, 2024 at 03:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,9 +40,9 @@ CREATE TABLE `album` (
 --
 
 INSERT INTO `album` (`album_id`, `name`, `cover_art`, `price`, `artist_name`) VALUES
-('6733f63484067', 'debut', 'default', 9.99, 'gotcha'),
-('6733f65309965', 'debut', 'default', 9.99, 'gotcha'),
-('6733f6554f47f', 'debut', 'default', 9.99, 'gotcha');
+('6734ccee0b4cf', 'dum', '6734ccee0ab15', 17.20, 'Upodeshta'),
+('6734cf378b6b9', 'we Are Nahid', '6734cf378b208', 20.24, 'Upodeshta'),
+('673551242d404', 'meh', '673551242c07c', 12.00, 'Upodeshta');
 
 -- --------------------------------------------------------
 
@@ -63,13 +63,8 @@ CREATE TABLE `artist` (
 --
 
 INSERT INTO `artist` (`artist_name`, `follower_count`, `profile_pic`, `about`, `email`) VALUES
-('Artist Name', 0, 'default', 'Passion', 'Blablabla'),
-('Artist1 Name', 0, 'default', 'Passion', 'Blablabla'),
-('Artist14 Name', 0, 'default', 'Passion', 'Blablabla'),
-('gotcha', 0, 'default', 'Purr', 'emiya'),
-('gotcha1', 0, 'default', 'Purr', 'dum@gmail.com'),
-('gotcha101', 0, 'default', 'Lucky Lucky', 'emiya'),
-('ME', 0, 'default', 'Psion', 'Blablabla');
+('sahib', 0, '67340d49e0807', 'exhausted', 'gil45'),
+('Upodeshta', 0, '67343b7f2860b', 'ffdgfhfg', 'Artoria');
 
 -- --------------------------------------------------------
 
@@ -110,6 +105,11 @@ CREATE TABLE `images` (
 --
 
 INSERT INTO `images` (`image_id`, `image_url`, `image_type`) VALUES
+('67340d49e0807', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731464523/a1avsd23btp9ug8hrhva.png', 'profile_pic'),
+('67343b7f2860b', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731476352/ipdzpucjr4qfwfqhxals.png', 'profile_pic'),
+('6734ccee0ab15', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731513036/gxr0oveotbchhjhxc8jh.jpg', 'cover_art'),
+('6734cf378b208', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731514167/eorwlrtzlk8ts83zbvtj.jpg', 'cover_art'),
+('673551242c07c', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731547427/pnvzfg9lc7p6spsm85lh.jpg', 'cover_art'),
 ('default', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731329463/profile_pic/lhjg1rgm4a0c4uedtyzk.jpg', 'profile_pic');
 
 -- --------------------------------------------------------
@@ -131,9 +131,17 @@ CREATE TABLE `session` (
 --
 
 INSERT INTO `session` (`token_id`, `email`, `created_at`, `expires_at`, `last_used`) VALUES
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE0MjUyMTYsImV4cCI6MTczNDAxNzIxNiwiZGF0YSI6eyJlbWFpbCI6ImdpbDQ1IiwidW5pcXVlIjoiNjczMzczYzBlOTY3ZiJ9fQ.rgW1wUzX_iEKNq9gydIBDjt6yG-MmT56zEgKRhOdfYw', 'gil45', '2024-11-12 15:26:56', '2024-12-12 10:26:56', '2024-11-12 15:26:56'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE0MzAxMjYsImV4cCI6MTczMTQ3MzMyNiwiZGF0YSI6eyJlbWFpbCI6ImdpbDQ1IiwidW5pcXVlIjoiNjczMzg2ZWUwM2RhZCJ9fQ.GtrEozjTUDlGgCPdHvxowVzc5TFbGSg6vvI8Z-wZyKg', 'gil45', '2024-11-12 16:48:46', '2024-11-12 23:48:46', '2024-11-12 16:48:46'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE0NzYzMTEsImV4cCI6MTczMTUxOTUxMSwiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzM0M2I1NzU5ZGIxIn19.6tP1I_53J1ABc0ScO7iNp_H2sW6qClbj8hlxbvqkudc', 'Artoria', '2024-11-13 05:38:31', '2024-11-13 12:38:31', '2024-11-13 05:38:31'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzE1NDM5MTQsImV4cCI6MTczMTU4NzExNCwiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzM1NDM2YTMxZGMzIn19.TygHrYrV3Rj671CHkgwTV3MdJ6WgGqFBmDyl0iRQRoY', 'Artoria', '2024-11-14 00:25:14', '2024-11-14 07:25:14', '2024-11-14 00:25:14'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTQzMTksImV4cCI6MTczMzY4NjMxOSwiZGF0YSI6eyJlbWFpbCI6ImdpbDMiLCJ1bmlxdWUiOiI2NzJlNjcyZjVmYzhhIn19.FFctZl3vDCfWAIdM6uijU-A4T-Mhx1ki5pRSz1NN77A', 'gil3', '2024-11-08 19:31:59', '2024-12-08 14:31:59', '2024-11-08 19:31:59'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTUwMDIsImV4cCI6MTczMzY4NzAwMiwiZGF0YSI6eyJlbWFpbCI6ImdpbDIiLCJ1bmlxdWUiOiI2NzJlNjlkYTAwZGRmIn19.lX-HATApqJ8yQl2YDPEXz69obZrQJZmtGs4RDRPpQ_A', 'gil2', '2024-11-08 19:43:22', '2024-12-08 14:43:22', '2024-11-08 19:43:22'),
-('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzODY3MTcsImV4cCI6MTczMTQyOTkxNywiZGF0YSI6eyJlbWFpbCI6InNhaGliNSIsInVuaXF1ZSI6IjY3MzJkZDVkNDdjNTIifX0.GNYLtOnxfcsD6A8jL9vT86UEIHrLYgScFyuaZB_mytU', 'sahib5', '2024-11-12 04:45:17', '2024-11-12 11:45:17', '2024-11-12 04:45:17');
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzMzE3NDcsImV4cCI6MTczMzkyMzc0NywiZGF0YSI6eyJlbWFpbCI6InNhbXBsZUBleGFtcGxlLmNvbSIsInVuaXF1ZSI6IjY3MzIwNmEzZDFhYjYifX0.czEptwujQAYDrYaX9vWQmiNkiDnjaRVWmKnh8XEAyUE', 'sample@example.com', '2024-11-11 13:29:07', '2024-12-11 08:29:07', '2024-11-11 13:29:07'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzNzM2OTQsImV4cCI6MTczMTQxNjg5NCwiZGF0YSI6eyJlbWFpbCI6ImdpbDQ1IiwidW5pcXVlIjoiNjczMmFhN2VhNTBmZCJ9fQ.6LAar6JZsuxKAHGPEUbY2IavaKwrZqDPkx1cZ_rCgSQ', 'gil45', '2024-11-12 01:08:14', '2024-11-12 08:08:14', '2024-11-12 01:08:14'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzNzM5MTksImV4cCI6MTczMTQxNzExOSwiZGF0YSI6eyJlbWFpbCI6ImdpbDQ1IiwidW5pcXVlIjoiNjczMmFiNWYyMjliMSJ9fQ.XRz8YT2C9aqH2GOnnODadGRgg8u3gpCgFQwVuuqIkvE', 'gil45', '2024-11-12 01:11:59', '2024-11-12 08:11:59', '2024-11-12 01:11:59'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzNzM5ODYsImV4cCI6MTczMTQxNzE4NiwiZGF0YSI6eyJlbWFpbCI6ImdpbDQ1IiwidW5pcXVlIjoiNjczMmFiYTJiNWI3MyJ9fQ.F1fxMi2ECNHiC60iEPeHANr4rHHEav7cYFadaCifg9Y', 'gil45', '2024-11-12 01:13:06', '2024-11-12 08:13:06', '2024-11-12 01:13:06'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzNzUyNjQsImV4cCI6MTczMTQxODQ2NCwiZGF0YSI6eyJlbWFpbCI6ImdpbDQ1IiwidW5pcXVlIjoiNjczMmIwYTBjYTkwYSJ9fQ.YgEU2iQCkP2UJ8oRPraAPrGePchizRsNOExHXG7F7-o', 'gil45', '2024-11-12 01:34:24', '2024-11-12 08:34:24', '2024-11-12 01:34:24');
 
 -- --------------------------------------------------------
 
@@ -168,7 +176,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`email`, `name`, `password`, `profile_pic`) VALUES
-('Blablabla', 'Artist Name', '$2y$10$PwPz61rgc3y.tBtoX6A5S.Ai1Rdc3ia5kwucVAxNi3G9LMySZsR7q', 'default'),
+('Artoria', 'saber', '$2y$10$jqmGQv6yR1N6GbtIXf8UNeVHC5y/5FLhm.Y2o5h6dJNDotEwSReq.', 'default'),
 ('dum@gmail.com', 'sds', '$2y$10$saZ3wpXTe5xcJ9TfdsCU1uYtzjdrffI5lsH/Om24d1nZ/ZElTKNjW', NULL),
 ('dummy2@example.com', 'dummy', '$2y$10$g3dskRp5Q5OsikDnlBhYuO2D3HaQ8fqtIfDRSe.ykycnMYv1Ytxhy', NULL),
 ('dummy@example.com', 'dummy', '$2y$10$UumjSHu5UVNUgTJR9dnTvOApM4z3XayRB67KDnPPnvDctrZ1f1J1K', NULL),
@@ -176,14 +184,10 @@ INSERT INTO `users` (`email`, `name`, `password`, `profile_pic`) VALUES
 ('fgh@gmail.com', 'qwe', '$2y$10$.pCBDE3nmf6vaqk4BAFdnOq8jFqKITRxOPXCq8nVd1g2ruz1hbgge', NULL),
 ('gil2', 'gil2', '$2y$10$FkAHedlBMyNT/aztrwF.IuYzpjWjdFAF8UCSR5kyAE.UfCF098iPy', NULL),
 ('gil3', 'gil3', '$2y$10$ZRzrqvOtl3iQJfY5jxnlfusqiCH4GTJ2foLiwdVUJ1omCHFcxWwxW', NULL),
+('gil45', 'gilgamesh', '$2y$10$RAvw2KD2fQggqNS3Im.7p.mkH2ZM2O7o7pcaLc4rCSACrUdnDPYke', 'default'),
 ('gil@example.com', 'gil', '$2y$10$2ouz5GCe64xVmjgKZZKe4ubAKtS0itW68CGzXhzzE10mURnIG28Zi', NULL),
 ('rin@example.com', 'rin', '$2y$10$pqkOVdju893l9lFahlqRb.c/HLw34RXVOUmlf5Hi1SgIS.hwbDvmG', NULL),
 ('sabre@example.com', 'sabre', '$2y$10$9UERlvXk/0mTm6PrWc5inurL2ZUkBve5HE0MUwOmSAfefWmEYKQzG', NULL),
-('sahib0', 'sahib', '$2y$10$s28xxPL7wGO3BcrI6MJycefPA8PCldTDxjzTiTW0P6Uw3ugPWi3EW', 'default'),
-('sahib1', 'sahib', '$2y$10$cfBMyJT0VmGNpa82HzZUl.Jnb8Tl9hMmwJ/MK2g9bYRCejcrqQN.e', 'default'),
-('sahib10', 'sahib', '$2y$10$qJo2rwTt7XSbE.o349vl/.7rS5bnfKr35U4c36NCISTd87k66mMp6', 'default'),
-('sahib35', 'sahib', '$2y$10$BxpLkkNw0ijIRNjPZ/0Y/u4.ATl9I8ea9YpbxsJzGdyBz6IygWFD6', 'default'),
-('sahib5', 'sahib', '$2y$10$YAUYNU9bUSU56CiFfUKL0OQ5RprXWRhEvhj1K5hlb1bYvDuTUNIqC', 'default'),
 ('sahib@gmail.com', 'sahib', '$2y$10$ZHaudkUPP2SL/vd742DrnuGAoxo20MjJKPOyQ4fw9SZJJ6t5hu4o6', NULL),
 ('sam@example.com', 'dummy', '$2y$10$4KASazqDdvQhOBfqqc3QYeiw8MgfhYoZaqJdy4YLlCi0un1SUxRPK', NULL),
 ('samiha345@gmail.com', 'samiha', '$2y$10$vUx4X8KExsG1cCOxL7bgD.fuBk.ePJehoKYIgOYE.twohfVLeRlVy', NULL),
@@ -296,6 +300,15 @@ ALTER TABLE `tracks`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`profile_pic`) REFERENCES `images` (`image_id`);
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `delete_expired_rows` ON SCHEDULE EVERY 1 MINUTE STARTS '2024-11-11 22:47:41' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM session
+  WHERE NOW() > expires_at$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
