@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_viewmodel.dart';
+part of 'current_album_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authViewmodelHash() => r'509126bdefa7c0377b65436a33d36951e1247186';
+String _$currentAlbumNotifierHash() =>
+    r'8298ef90b74978bbe000916ecca602760252b368';
 
-/// See also [AuthViewmodel].
-@ProviderFor(AuthViewmodel)
-final authViewmodelProvider =
-    AutoDisposeNotifierProvider<AuthViewmodel, AsyncValue<UserModel>?>.internal(
-  AuthViewmodel.new,
-  name: r'authViewmodelProvider',
+/// See also [CurrentAlbumNotifier].
+@ProviderFor(CurrentAlbumNotifier)
+final currentAlbumNotifierProvider =
+    NotifierProvider<CurrentAlbumNotifier, List<AlbumModel>?>.internal(
+  CurrentAlbumNotifier.new,
+  name: r'currentAlbumNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$authViewmodelHash,
+      : _$currentAlbumNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AuthViewmodel = AutoDisposeNotifier<AsyncValue<UserModel>?>;
+typedef _$CurrentAlbumNotifier = Notifier<List<AlbumModel>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

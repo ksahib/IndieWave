@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:client/features/auth/model/album_model.dart';
 import 'package:client/features/auth/model/artist_model.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -119,32 +120,10 @@ class AuthRemoteRepository {
       } else {
         return Right(UserModel.fromMap(res['data']['user']['data']).copyWith(token: res['data']['token']));
       }
-  } catch (e, stackTrace) {
+  } catch (e) {
      return Left(AppFailure(e.toString()));
   }
   }
-
-  // Future<bool> autologin() async {
-  //   try {
-  //     final uri = Uri.parse('${ServerConstant.serverUrl}/Login'); 
-  //     final response = await http.post(
-  //         uri,
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           },
-  //         body: jsonEncode({"email": "dummy@example.com", "password": "dummypass", "keepLoggedIn": false}),
-  //       );
-  //       if (response.statusCode == 200) {
-  //         return true;
-  //       }
-  //       else  {
-  //         return false;
-  //       }
-  //   } catch(e) {
-  //       print('Error during auto-login: $e');
-  //       return false;
-  //   }
-  // }
 
   Future<Either<AppFailure, UserModel>> getUser(String? token) async {
     try {
@@ -166,7 +145,7 @@ class AuthRemoteRepository {
         return Right(UserModel.fromMap(userData, imageUrl).copyWith(token: token));
 
       }
-  } catch (e, stackTrace) {
+  } catch (e) {
      return Left(AppFailure(e.toString()));
   }
   }
@@ -190,9 +169,39 @@ class AuthRemoteRepository {
         return Right(ArtistModel.fromMap(artistData).copyWith(token: token));
 
       }
-  } catch (e, stackTrace) {
+  } catch (e) {
      return Left(AppFailure(e.toString()));
   }
   }
+
+  Future<Either<AppFailure, List<AlbumModel>>> getAllAlbum(String? artistName) async {
+  try {
+    final uri = Uri.parse('${ServerConstant.serverUrl}/AllAlbums');
+    final response = await http.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'artist-name': artistName ?? "",
+      },
+    );
+
+    final res = jsonDecode(response.body) as Map<String, dynamic>;
+    print('API Response Body: ${response.body}');
+    if (response.statusCode != 200) {
+      return Left(AppFailure(res['message']));
+    } else {
+
+      final List<dynamic> albumDataList = res['data'];
+
+      final List<AlbumModel> albums = albumDataList
+          .map((albumData) => AlbumModel.fromMap(albumData))
+          .toList();
+
+      return Right(albums);
+    }
+  } catch (e) {
+    return Left(AppFailure(e.toString()));
+  }
+}
 
 }

@@ -12,8 +12,8 @@ class ButtonIcon extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Pallete.whiteColor, // Similar to the reference
-        minimumSize: Size(screenWidth * 0.8, 50), // Make button responsive
+        backgroundColor: Pallete.whiteColor, 
+        minimumSize: Size(screenWidth * 0.8, 50), 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
         ),

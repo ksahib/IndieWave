@@ -1,5 +1,7 @@
+import 'package:client/core/providers/current_album_notifier.dart';
 import 'package:client/core/providers/current_artist_notifier.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
+import 'package:client/features/auth/model/album_model.dart';
 import 'package:client/features/auth/model/artist_model.dart';
 import 'package:client/features/auth/model/user_model.dart';
 import 'package:client/features/auth/repositories/auth_local_repository.dart';
@@ -16,9 +18,11 @@ class AuthViewmodel extends _$AuthViewmodel {
   late AuthLocalRepository _authLocalRepository;
   late CurrentUserNotifier _currentUserNotifier;
   late CurrentArtistNotifier _currentArtistNotifier;
+  late CurrentAlbumNotifier _currentAlbumNotifier;
 
-  AsyncValue<UserModel>? userState;
+  AsyncValue<AlbumModel>? albumState;
   AsyncValue<ArtistModel>? artistState;
+  AsyncValue<List<AlbumModel>>? allAlbumState;
 
   @override
   AsyncValue<UserModel>? build() {
@@ -26,6 +30,7 @@ class AuthViewmodel extends _$AuthViewmodel {
     _authLocalRepository = ref.watch(authLocalRepositoryProvider);
     _currentUserNotifier = ref.watch(currentUserNotifierProvider.notifier);
     _currentArtistNotifier = ref.watch(currentArtistNotifierProvider.notifier);
+    _currentAlbumNotifier = ref.watch(currentAlbumNotifierProvider.notifier);
     getData();
     return const AsyncValue.loading();
   }
@@ -174,6 +179,26 @@ Future<ArtistModel?> getArtistData() async {
   return null;
 }
 
+// Future<AlbumModel?> getAllAlbumData() async {
+//   albumState = const AsyncValue.loading();
+//   try {
+//     final token = await _authLocalRepository.getToken();
+//     if (token != null) {
+//       final res = await _authRemoteRepository.getArtist(token);
+//       final val = switch (res) {
+//         Left(value: final l) => albumState = AsyncValue.error(l.message, StackTrace.current),
+//         Right(value: final r) => albumState = _getAllAlbumDataSuccess(r),
+//       };
+//       return val.value;
+//     } else {
+//       artistState = AsyncValue.error('No token found', StackTrace.current);
+//     }
+//   } catch (e) {
+//     artistState = AsyncValue.error('An error occurred: $e', StackTrace.current);
+//   }
+//   return null;
+// }
+
 AsyncValue<UserModel> _getDataSuccess(UserModel user) {
     _currentUserNotifier.addUser(user);
     return state = AsyncValue.data(user);
@@ -184,4 +209,40 @@ AsyncValue<UserModel> _getDataSuccess(UserModel user) {
     _currentArtistNotifier.addArtist(artist);
     return artistState = AsyncValue.data(artist);
   }
+
+Future<List<AlbumModel>?> getAllAlbumData({required String artistName}) async {
+  allAlbumState = const AsyncValue.loading();
+  try {
+    final res = await _authRemoteRepository.getAllAlbum(artistName); 
+    print("in view model: ${res}");
+    switch (res) {
+      case Left(value: final l):
+        allAlbumState = AsyncValue.error(l.message, StackTrace.current);
+        return null; 
+
+      case Right(value: final r):
+        allAlbumState = _getAllAlbumDataSuccess(r);
+        return r; 
+    }
+  } catch (e) {
+    allAlbumState = AsyncValue.error('An error occurred: $e', StackTrace.current);
+  }
+  return null;
+}
+
+
+
+AsyncValue<List<AlbumModel>> _getAllAlbumDataSuccess(List<AlbumModel> albums) {
+  _currentAlbumNotifier.addAlbums(albums); 
+  return AsyncValue.data(albums);
+}
+
+
+  
+
+
+  //  AsyncValue<AlbumModel> _getAllAlbumDataSuccess(AlbumModel album) {
+  //   _currentAlbumNotifier.addAlbums(album);
+  //   return albumState = AsyncValue.data(album);
+  // }
 }
