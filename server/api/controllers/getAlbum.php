@@ -40,6 +40,41 @@ class getAlbum extends BaseController {
                 $this->sendResponse(401, 'User not found');
                 return;
             }
+
+            $album['R'] = null;
+            $album['G'] = null;
+            $album['B'] = null;
+
+            $imageData = file_get_contents($album['cover_art']);
+
+            if ($imageData !== false){
+                $imageRGB = imagecreatefromstring($imageData);
+
+                if ($imageRGB !== false) {
+                    $width = imagesx($imageRGB);
+                    $height = imagesy($imageRGB);
+                    $rSum = 0;
+                    $gSum = 0;
+                    $bSum = 0;
+                    
+                    // Iterate through each pixel
+                    for ($x = 0; $x < $width; $x++) {
+                        for ($y = 0; $y < $height; $y++) {
+                            $rgb = imagecolorat($imageRGB, $x, $y);
+                            $r = ($rgb >> 16) & 0xFF; // Red component
+                            $g = ($rgb >> 8) & 0xFF;  // Green component
+                            $b = $rgb & 0xFF;         // Blue component
+                            $rSum += $r;
+                            $gSum += $g;
+                            $bSum += $b;
+                            
+                        }
+                    }
+                    $album['R'] = $rSum / ($width * $height);
+                    $album['G'] = $gSum / ($width * $height);
+                    $album['B'] = $bSum / ($width * $height);
+                } 
+            }
             
             $this->sendResponse(200, 'Retrieved album data', [$album]);
         }  catch(Exception $e)  {
