@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:client/features/album/model/track_model.dart';
+import 'package:client/features/album/view_model/track_viewmodel.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/widgets/utils.dart';
@@ -21,7 +23,12 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
   dynamic albumData;
   String? selectedGenre; // For dropdown selection
   File? selectedAudio;
+  double dpBottom = 0;
+  List<dynamic> tracks = [];
   late final AudioPlayer player;
+
+  final TextEditingController nameController = TextEditingController();
+
 
   final List<String> genres = [
     "Rock",
@@ -74,8 +81,25 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
         .read(albumViewmodelProvider.notifier)
         .getAlbum(artistData.artist_name, widget.albumName);
     print("Album Data: $albumData");
+    loadTracks();
     setState(() {}); // Update UI after fetching album data
   }
+
+  Future<void> loadTracks() async {
+  //print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
+  final response = await ref.read(trackViewmodelProvider.notifier).getAllTrackData(albumid: albumData.album_id);
+
+  if (response is AsyncData<List<TrackModel>>) {
+    setState(() {
+      tracks = response.value;
+      print("Tracks: ${tracks}");
+    });
+  } else if (response is AsyncError) {
+    showSnackBar(context, 'Failed to load tracks: ${response?.error}', Pallete.errorColor);
+  } else {
+    showSnackBar(context, 'Unexpected response format.', Pallete.errorColor);
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +114,7 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     double topContainerHeight = constraints.maxHeight * 0.4;
+                    dpBottom = topContainerHeight - 180; 
 
                     return Stack(
                       children: [
@@ -104,7 +129,33 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                               ),
                             ),
                             Expanded(
-                              child: Container(color: Colors.black),
+                              child: Container(
+                                color: Colors.black,
+                                child: SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.52, // Set a fixed height or wrap in a Flexible
+                                  child: ListView.builder(
+                                    itemCount: tracks.length,
+                                    itemBuilder: (context, index) {
+                                      final track = tracks[index];
+                                      return Column(
+                                        children: [
+                                          SizedBox(
+                                            height: dpBottom,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                            child: ListTile(
+                                              title: Text(track.track_name),
+                                              subtitle: Text('length'),
+                                              
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -195,6 +246,7 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                                                     ),
                                                   const SizedBox(height: 20),
                                                   TextField(
+                                                    controller: nameController,
                                                     decoration: InputDecoration(
                                                       labelText: "Track Name",
                                                       labelStyle: TextStyle(
@@ -222,6 +274,7 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
+                                                      //Genre Field
                                                       const Text(
                                                         "Genre",
                                                         style: TextStyle(
@@ -306,9 +359,15 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                                                     ),
                                                   ),
                                                   const SizedBox(height: 15),
+                                                  //Upload Track Button
                                                   ElevatedButton(
-                                                    onPressed: () {
+                                                    onPressed: () async {
                                                       // Handle track addition logic here
+                                                      await ref.read(trackViewmodelProvider.notifier).uploadTrack(
+                                                        name: nameController.text, 
+                                                        tag: selectedGenre, 
+                                                        track_url: await uploadTrack(selectedAudio), 
+                                                        album_id: albumData.album_id);
                                                       Navigator.of(context)
                                                           .pop(); // Close the dialog
                                                     },

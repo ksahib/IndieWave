@@ -227,6 +227,9 @@ Future<void> loadAlbums() async {
                                                           title: Text(album.name),
                                                           subtitle: Text('Price: \$${album.price}'),
                                                           leading: Image.network(album.cover_art),
+                                                          onTap: () {
+                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumPage(albumName: album.name)));
+                                                          },
                                                         );
                                                       },
                                                     ),

@@ -23,7 +23,6 @@ class TrackRemoteRepositories {
 
   Future<Either<AppFailure, TrackModel>> addTrack({
     required String name,
-    required Duration length,
     required String tag,
     required String track_url,
     required String album_id,
@@ -32,10 +31,11 @@ class TrackRemoteRepositories {
       final response = await http.post(
         Uri.parse('${ServerConstant.serverUrl}/InsertTrack'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"track_name": name, "length": length, "tag": tag, 'track_url': track_url, 'album_id': album_id}),
+        body: jsonEncode({"track_name": name, "tag": tag, 'track_url': track_url, 'album_id': album_id}),
       );
 
       final res = jsonDecode(response.body) as Map<String, dynamic>;
+      print('IN TRACK REMOTE: ${response.body}');
       if (response.statusCode != 201) {
         return Left(AppFailure(res['detail']));
       } else {
@@ -46,14 +46,14 @@ class TrackRemoteRepositories {
     }
   }
 
-  Future<Either<AppFailure, List<TrackModel>>> getAlltracks(String? albumName) async {
+  Future<Either<AppFailure, List<TrackModel>>> getAlltracks(String? albumId) async {
   try {
     final uri = Uri.parse('${ServerConstant.serverUrl}/GetTrack');
     final response = await http.get(
       uri,
       headers: {
         'Content-Type': 'application/json',
-        'album-name': albumName ?? "",
+        'album-id': albumId ?? "",
       },
     );
 

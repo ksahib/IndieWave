@@ -58,35 +58,57 @@ String generateSignature(String apiSecret, String timestamp) {
   return sha1.convert(bytes).toString();
 }
 
-  Future<String?> uploadImage(File? imagefile) async{
-    if(imagefile == null) {
+Future<String?> uploadImage(File? imagefile) async {
+  if(imagefile == null) {
+    return null;
+  }
+  final cloudinaryUrl = "https://api.cloudinary.com/v1_1/doonwj6hd/image/upload";
+  final api = "831262682327616";
+  final apiSecret = "s-Q-z3jVInXRlazQ3VYcxOAaKS0";
+  final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+  final signature = generateSignature(apiSecret, timestamp);
+  final req = http.MultipartRequest('POST', Uri.parse(cloudinaryUrl))
+    ..fields['api_key'] = api
+    ..fields['timestamp'] = timestamp
+    ..fields['signature'] = signature
+    ..files.add(await http.MultipartFile.fromPath('file', imagefile.path));
+    final response = await req.send();
+    if(response.statusCode == 200) {
+      final responseData = await response.stream.bytesToString();
+      final data = jsonDecode(responseData);
+      return data['secure_url'];
+    } else {
+      print("Failed to upload image to Cloudinary");
       return null;
     }
-    final cloudinaryUrl = "https://api.cloudinary.com/v1_1/doonwj6hd/image/upload";
-    final api = "831262682327616";
-    final apiSecret = "s-Q-z3jVInXRlazQ3VYcxOAaKS0";
-    final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+}
 
-    final signature = generateSignature(apiSecret, timestamp);
-
-    final req = http.MultipartRequest('POST', Uri.parse(cloudinaryUrl))
-      ..fields['api_key'] = api
-      ..fields['timestamp'] = timestamp
-      ..fields['signature'] = signature
-      ..files.add(await http.MultipartFile.fromPath('file', imagefile.path));
-
-      final response = await req.send();
-      if(response.statusCode == 200) {
-        final responseData = await response.stream.bytesToString();
-        final data = jsonDecode(responseData);
-        return data['secure_url'];
-      } else {
-        print("Failed to upload image to Cloudinary");
-        return null;
-      }
+Future<String?> uploadTrack(File? audiofile) async {
+  if(audiofile == null) {
+    return null;
   }
+  final cloudinaryUrl = "https://api.cloudinary.com/v1_1/doonwj6hd/video/upload";
+  final api = "831262682327616";
+  final apiSecret = "s-Q-z3jVInXRlazQ3VYcxOAaKS0";
+  final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+  final signature = generateSignature(apiSecret, timestamp);
+  final req = http.MultipartRequest('POST', Uri.parse(cloudinaryUrl))
+    ..fields['api_key'] = api
+    ..fields['timestamp'] = timestamp
+    ..fields['signature'] = signature
+    ..files.add(await http.MultipartFile.fromPath('file', audiofile.path));
+    final response = await req.send();
+    if(response.statusCode == 200) {
+      final responseData = await response.stream.bytesToString();
+      final data = jsonDecode(responseData);
+      return data['secure_url'];
+    } else {
+      print("Failed to upload image to Cloudinary");
+      return null;
+    }
+}
 
-  dynamic checkCreds() async{
+dynamic checkCreds() async{
   WidgetsFlutterBinding.ensureInitialized();
   final container = ProviderContainer();
   await container.read(authViewmodelProvider.notifier).initSharedPreferences();

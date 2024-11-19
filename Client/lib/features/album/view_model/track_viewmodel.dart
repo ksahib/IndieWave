@@ -33,20 +33,19 @@ class TrackViewmodel extends _$TrackViewmodel {
 
   Future<void> uploadTrack({
     required String name,
-    required Duration length,
-    required String tag,
-    required String track_url,
+    required String? tag,
+    required String? track_url,
     required String album_id,
   }) async {
     state = const AsyncValue.loading();
     final res = await _trackRemoteRepository.addTrack(
       name: name,
-      length: length,
-      tag: tag,
-      track_url: track_url,
+      tag: tag ?? '',
+      track_url: track_url ?? '',
       album_id: album_id,
       
     );
+    
     switch(res) {
       case Left(value: final l): 
         state = AsyncValue.error(l.message, StackTrace.current);
