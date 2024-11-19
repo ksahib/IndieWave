@@ -20,7 +20,7 @@ class InsertTrack extends BaseController {
             // Get input data
             $data = json_decode(file_get_contents("php://input"), true);
             // Validate required fields 
-            $this->validateRequiredFields($data, ['track_name', 'tag', 'length', 'album_id']);
+            $this->validateRequiredFields($data, ['track_name', 'tag', 'album_id']);
             
             // Set default values for fields that are not provided
             if(empty($data['track_url'])) {

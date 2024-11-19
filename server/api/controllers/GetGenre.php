@@ -9,6 +9,12 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/indiewave/api/models/genreModel.php';
 include_once 'BaseController.php';
 
 class GetGenre extends BaseController {
+    private $genreModel;
+
+    public function __construct($db) {
+        parent::__construct($db);
+        $this->genreModel = new GenreModel($this->db);
+    }
 
     public function _get() {
         $headers = apache_request_headers();

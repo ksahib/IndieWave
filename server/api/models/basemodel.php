@@ -104,5 +104,25 @@ class BaseModel {
             return ['status' => 500, 'message' => 'Error deleting record'];
         }
     }
+
+    public function SearchByHint($table_name, $colm, $hint) {
+        $query = "SELECT * FROM {$table_name} WHERE {$colm} LIKE :hint";
+        $stmt = $this->conn->prepare($query);
+
+        $searchTerm = $hint . "%";
+        
+        //binds to %hint% to ? in query
+        $stmt->bindParam(":hint", $searchTerm);
+
+        if ($stmt->execute()) {
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (!empty($result))
+                return ['status' => 200, 'data' => $result];
+            else
+                return ['status' => 401, 'message' => 'No row matched'];
+        } else {
+            return ['status' => 401, 'message' => 'Error'];
+        }
+    }
 }
 ?>
