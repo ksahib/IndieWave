@@ -48,33 +48,62 @@ class AlbumViewmodel extends _$AlbumViewmodel {
     );
     switch(res) {
       case Left(value: final l): 
-        albumState = AsyncValue.error(l.message, StackTrace.current);
+        state = AsyncValue.error(l.message, StackTrace.current);
         break;
       case Right(value: final r): 
-        albumState = AsyncValue.data(r);
+        state = AsyncValue.data(r);
         break;
     };
     //print(val);
   }
 
-Future<AsyncValue<List<AlbumModel>>> getAllAlbumData({required String artistName}) async {
+Future<AsyncValue<List<AlbumModel>>?> getAllAlbumData({required String artistName}) async {
   allAlbumState = const AsyncValue.loading();
   try {
-    final res = await _albumRemoteRepository.getAllAlbum(artistName); 
-    print("in view model: ${res}");
-    switch (res) {
-      case Left(value: final l):
-        allAlbumState = AsyncValue.error(l.message, StackTrace.current);
-        return allAlbumState!; 
+    final res = await _albumRemoteRepository.getAllAlbum(artistName);  // API call
+    //print("in view model: ${res}");
 
-      case Right(value: final r):
-        allAlbumState = _getAllAlbumDataSuccess(r);
-        return allAlbumState!; 
+    if (res is Left) {
+      final l = res as Left;  // Cast to Left type
+      //print("Error: ${l.value.message}"); // Log error message
+      allAlbumState = AsyncValue.error(l.value.message, StackTrace.current);  // Handle Left (error)
+    } else if (res is Right) {
+      final r = res as Right;  // Cast to Right type
+      //print("Success: ${r.value}"); // Log successful response
+      allAlbumState = _getAllAlbumDataSuccess(r.value);  // Handle Right (success)
+    } else {
+      //print("Unexpected response format: $res"); // Log unexpected response
     }
+
+    //print("VAL: $allAlbumState");
+    return allAlbumState;
   } catch (e) {
+    // Catch any errors and set the error state
+    print("Error caught: $e"); // Log error
     allAlbumState = AsyncValue.error('An error occurred: $e', StackTrace.current);
+    return allAlbumState;
   }
-  return allAlbumState!;
+}
+
+
+
+
+
+Future<AlbumModel?> getAlbum(artist_name, album_name) async {
+  state = const AsyncValue.loading();
+  try{
+    final res = await _albumRemoteRepository.getCurrentAlbum(artist_name, album_name);
+    final val = switch(res) {
+      Left(value: final l) => state = AsyncValue.error(l.message, StackTrace.current),
+      Right(value: final r) => state = AsyncValue.data(r),
+    };
+    print("ALbum viewmode val: ${val.value}");
+    return val.value;
+  } catch (e) {
+    state = AsyncValue.error('An error occurred: $e', StackTrace.current);
+    print(state);
+    return null;
+  }
 }
 
 AsyncValue<List<AlbumModel>> _getAllAlbumDataSuccess(List<AlbumModel> albums) {

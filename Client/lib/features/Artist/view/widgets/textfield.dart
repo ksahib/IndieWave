@@ -1,4 +1,3 @@
-import 'package:client/core/theme/app_pallete.dart';
 import 'package:flutter/material.dart';
 
 class Textfield extends StatelessWidget{
@@ -14,7 +13,7 @@ const Textfield({super.key, required this.controller, required this.labelText});
       decoration: InputDecoration(
         labelText: "${labelText}",
         filled: false,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }

@@ -6,8 +6,8 @@ import 'package:client/core/widgets/minimize.dart';
 import 'package:flutter/material.dart';
 
 class ArtistTitleBar extends StatelessWidget{
-  String url;
-  ArtistTitleBar({super.key, required this.url});
+  final String url;
+  const ArtistTitleBar({super.key, required this.url});
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -44,13 +44,13 @@ class ArtistTitleBar extends StatelessWidget{
                                     onPressed: () {
                                       Navigator.pop(context);
                                     }, 
-                                    icon: Icon(Icons.arrow_back_ios),
+                                    icon: const Icon(Icons.arrow_back_ios),
                                     ),
                                   IconButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                     }, 
-                                    icon: Icon(Icons.arrow_forward_ios),
+                                    icon: const Icon(Icons.arrow_forward_ios),
                                     ),
                                 ],
                               ),

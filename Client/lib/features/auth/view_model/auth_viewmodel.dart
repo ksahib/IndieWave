@@ -1,6 +1,4 @@
-import 'package:client/core/providers/current_album_notifier.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
-import 'package:client/features/album/model/album_model.dart';
 import 'package:client/features/auth/model/user_model.dart';
 import 'package:client/features/auth/repositories/auth_local_repository.dart';
 import 'package:client/features/auth/repositories/auth_remote_repository.dart';

@@ -37,6 +37,21 @@ Future<File?> pickImage() async{
   }
 }
 
+Future<File?> pickAudio() async{
+  try{
+    final filePicker = await FilePicker.platform.pickFiles(
+      type: FileType.audio,
+    );
+
+    if(filePicker != null) {
+      return File(filePicker.files.first.xFile.path);
+    }
+    return null;
+  } catch(e) {
+    return null;
+  }
+}
+
 String generateSignature(String apiSecret, String timestamp) {
   final data = "timestamp=$timestamp$apiSecret";
   final bytes = utf8.encode(data);

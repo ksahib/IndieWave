@@ -57,7 +57,7 @@ class AlbumRemoteRepository {
     );
 
     final res = jsonDecode(response.body) as Map<String, dynamic>;
-    print('API Response Body: ${response.body}');
+    //print('API Response Body: ${response.body}');
     if (response.statusCode != 200) {
       return Left(AppFailure(res['message']));
     } else {
@@ -88,10 +88,11 @@ Future<Either<AppFailure, AlbumModel>> getCurrentAlbum(String artist_name, Strin
         
       );
       final res = jsonDecode(response.body) as Map<String, dynamic>;  
+      //print('ALBUM API Response Body: ${response.body}');
       if (response.statusCode != 200) {
         return Left(AppFailure(res['message']));
       } else {
-        final artistData = res['data'];
+        final artistData = res['data'][0];
         return Right(AlbumModel.fromMap(artistData).copyWith(name: album_name, artist_name: artist_name));
 
       }

@@ -23,6 +23,7 @@ class _ArtistProfilePageState extends ConsumerState<ArtistProfilePage> {
   List<dynamic> albums = []; 
   File? selectedImage;
   bool _showFields = true;
+  dynamic albumName;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
@@ -52,17 +53,16 @@ class _ArtistProfilePageState extends ConsumerState<ArtistProfilePage> {
   
 
 Future<void> loadAlbums() async {
-  print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
+  //print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
   final response = await ref.read(albumViewmodelProvider.notifier).getAllAlbumData(artistName: artistData.artist_name);
 
-  // Check if response is AsyncData and extract its value
   if (response is AsyncData<List<AlbumModel>>) {
     setState(() {
-      albums = response.value;  // Extract the actual list of AlbumModel
-      print("Albums: ${albums}");
+      albums = response.value;
+      //print("Albums: ${albums}");
     });
   } else if (response is AsyncError) {
-    showSnackBar(context, 'Failed to load albums: ${response.error}', Pallete.errorColor);
+    showSnackBar(context, 'Failed to load albums: ${response?.error}', Pallete.errorColor);
   } else {
     showSnackBar(context, 'Unexpected response format.', Pallete.errorColor);
   }
@@ -91,15 +91,15 @@ Future<void> loadAlbums() async {
     final isLoading = ref.watch(authViewmodelProvider.select((val) => val?.isLoading == true));
 
     ref.listen(
-      authViewmodelProvider,
+      albumViewmodelProvider,
       (_, next) {
         next?.when(
           data: (data) {
             showSnackBar(context, 'Album created.', Pallete.greenColor);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const AlbumPage()),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AlbumPage(albumName: albumName,)),
+            );
           },
           error: (error, st) {
             showSnackBar(context, error.toString(), Pallete.errorColor);
@@ -294,6 +294,7 @@ Future<void> loadAlbums() async {
                                               artist_name: artistData.artist_name,
                                             );
                                             setState(() {
+                                              albumName = nameController.text;
                                               loadAlbums();
                                             });
                                           },
