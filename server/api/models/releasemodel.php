@@ -1,12 +1,13 @@
 <?php
 include_once 'basemodel.php';
-class genremodel extends BaseModel{
+class releasemodel extends BaseModel{
     public function __construct($db)
     {
         parent::__construct($db);
-        $this->table_name = 'genre';
+        $this->table_name = 'released';
     }
     
 }
+
 
 ?>

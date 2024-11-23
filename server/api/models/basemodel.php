@@ -41,7 +41,7 @@ class BaseModel {
         if ($row) {
             return ['status' => 200, 'data' => $row];
         } else {
-            return ['status' => 404, 'message' => 'Record not found'];
+            return false;
         }
     }
 
@@ -57,9 +57,7 @@ class BaseModel {
 
     // Update a record
     public function update($id, $data, $column) {
-        if (!preg_match('/^[a-zA-Z_]+$/', $column)) {
-            return ['status' => 400, 'message' => 'Invalid column name'];
-        }
+        
         $fields = [];
         foreach ($data as $field => $value) {
             if ($value instanceof DateTime) {

@@ -35,7 +35,7 @@ class InsertTrack extends BaseController {
                 $this->sendResponse(500, 'Failed to add Track');
             }
         } catch (Exception $e){
-            $this->sendResponse(500, 'Error / Album may not exist');
+            $this->sendResponse(500, $e);
         }
     }
 
