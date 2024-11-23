@@ -57,6 +57,27 @@ class AlbumViewmodel extends _$AlbumViewmodel {
     //print(val);
   }
 
+  Future<void> release({
+    required String artist_name,
+    required String album_id,
+  }) async {
+    state = const AsyncValue.loading();
+    final res = await _albumRemoteRepository.releaseAlbum(
+      artist_name: artist_name,
+      album_id: album_id
+      
+    );
+    switch(res) {
+      case Left(value: final l): 
+        state = AsyncValue.error(l.message, StackTrace.current);
+        break;
+      case Right(value: final r): 
+        state = AsyncValue.data(r);
+        break;
+    };
+    //print(val);
+  }
+
 Future<AsyncValue<List<AlbumModel>>?> getAllAlbumData({required String artistName}) async {
   allAlbumState = const AsyncValue.loading();
   try {
@@ -103,6 +124,46 @@ Future<AlbumModel?> getAlbum(artist_name, album_name) async {
     state = AsyncValue.error('An error occurred: $e', StackTrace.current);
     print(state);
     return null;
+  }
+}
+
+Future<bool> checkRelease(album_id) async {
+  state = const AsyncValue.loading();
+  try{
+    final res = await _albumRemoteRepository.releaseStatus(album_id);
+    if(res is Left)
+    {
+      final l = res as Left;
+      state = AsyncValue.error(l, StackTrace.current);
+      return false;
+    }
+    else {
+      return true;
+    }
+  } catch (e) {
+    state = AsyncValue.error('An error occurred: $e', StackTrace.current);
+    print(state);
+    return false;
+  }
+}
+
+Future<bool> Unrelease( {required String album_id}) async {
+  state = const AsyncValue.loading();
+  try{
+    final res = await _albumRemoteRepository.unreleaseAlbum(album_id);
+    if(res is Left)
+    {
+      final l = res as Left;
+      state = AsyncValue.error(l, StackTrace.current);
+      return false;
+    }
+    else {
+      return true;
+    }
+  } catch (e) {
+    state = AsyncValue.error('An error occurred: $e', StackTrace.current);
+    print(state);
+    return false;
   }
 }
 

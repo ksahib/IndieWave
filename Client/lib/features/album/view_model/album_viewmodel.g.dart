@@ -6,7 +6,7 @@ part of 'album_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$albumViewmodelHash() => r'10133382511408b1bcff976179e8ed238162c106';
+String _$albumViewmodelHash() => r'07e6a8b8ba00374b7421fb13a1767897a265f6a1';
 
 /// See also [AlbumViewmodel].
 @ProviderFor(AlbumViewmodel)

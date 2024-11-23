@@ -45,6 +45,29 @@ class AlbumRemoteRepository {
     }
   }
 
+    Future<Object> releaseAlbum({
+    required String artist_name,
+    required String album_id,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ServerConstant.serverUrl}/Release'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'artist_name': artist_name, 'album_id': album_id}),
+      );
+
+      final res = jsonDecode(response.body) as Map<String, dynamic>;
+      print("RELEASE: ${res}");
+      if (response.statusCode != 201) {
+        return Left(AppFailure(res['detail']));
+      } else {
+        return true;
+      }
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
+
   Future<Either<AppFailure, List<AlbumModel>>> getAllAlbum(String? artistName) async {
   try {
     final uri = Uri.parse('${ServerConstant.serverUrl}/AllAlbums');
@@ -94,6 +117,53 @@ Future<Either<AppFailure, AlbumModel>> getCurrentAlbum(String artist_name, Strin
       } else {
         final artistData = res['data'][0];
         return Right(AlbumModel.fromMap(artistData).copyWith(name: album_name, artist_name: artist_name));
+
+      }
+  } catch (e) {
+     return Left(AppFailure(e.toString()));
+  }
+}
+
+Future<Either<AppFailure, int>> unreleaseAlbum(String album_id) async {
+    try {
+      final uri = Uri.parse('${ServerConstant.serverUrl}/Unrelease');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'album-id': album_id,
+          },
+        
+      );
+      final res = jsonDecode(response.body) as Map<String, dynamic>;  
+      //print('ALBUM API Response Body: ${response.body}');
+      if (response.statusCode != 200) {
+        return Left(AppFailure(res['message']));
+      } else {
+        return Right(response.statusCode);
+
+      }
+  } catch (e) {
+     return Left(AppFailure(e.toString()));
+  }
+}
+
+  Future<Either<AppFailure, int>> releaseStatus(String album_id) async {
+    try {
+      final uri = Uri.parse('${ServerConstant.serverUrl}/ReleaseStatus');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'album-id': album_id,
+          },
+        
+      );
+      //print('ALBUM API Response Body: ${response.body}');
+      if (response.statusCode != 200) {
+        return Left(AppFailure('Album is now unreleased'));
+      } else {
+        return Right(response.statusCode);
 
       }
   } catch (e) {

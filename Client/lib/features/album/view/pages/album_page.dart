@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:client/features/album/model/genre_model.dart';
 import 'package:client/features/album/model/track_model.dart';
+import 'package:client/features/album/view_model/genre_viewmodel.dart';
 import 'package:client/features/album/view_model/track_viewmodel.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
 import 'package:client/core/theme/app_pallete.dart';
@@ -24,21 +26,15 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
   String? selectedGenre; // For dropdown selection
   File? selectedAudio;
   double dpBottom = 0;
+  bool isReleased = false;
+  bool isLoading = false;
   List<dynamic> tracks = [];
   late final AudioPlayer player;
 
   final TextEditingController nameController = TextEditingController();
 
 
-  final List<String> genres = [
-    "Rock",
-    "Pop",
-    "Hip Hop",
-    "Jazz",
-    "Classical",
-    "Blues"
-    // Populate with api call
-  ];
+  List<GenreModel> genres = [];
 
   @override
   void initState() {
@@ -59,6 +55,19 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
     if (artistData != null) {
       loadCurrentAlbum();
     }
+  }
+
+  Future<void> _checkReleaseStatus() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final result = await ref.read(albumViewmodelProvider.notifier).checkRelease(albumData.album_id);
+
+    setState(() {
+      isReleased = result;
+      isLoading = false;
+    });
   }
 
   void selectAudio() async {
@@ -82,6 +91,8 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
         .getAlbum(artistData.artist_name, widget.albumName);
     print("Album Data: $albumData");
     loadTracks();
+    loadGenre();
+    _checkReleaseStatus();
     setState(() {}); // Update UI after fetching album data
   }
 
@@ -93,6 +104,20 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
     setState(() {
       tracks = response.value;
       print("Tracks: ${tracks}");
+    });
+  } else if (response is AsyncError) {
+    showSnackBar(context, 'Failed to load tracks: ${response?.error}', Pallete.errorColor);
+  } else {
+    showSnackBar(context, 'Unexpected response format.', Pallete.errorColor);
+  }
+}
+
+Future<void> loadGenre() async {
+  final response = await ref.read(genreViewmodelProvider.notifier).getAllGenre();
+  if (response is AsyncData<List<GenreModel>>) {
+    setState(() {
+      genres = response.value;
+      print("Genres: ${tracks}");
     });
   } else if (response is AsyncError) {
     showSnackBar(context, 'Failed to load tracks: ${response?.error}', Pallete.errorColor);
@@ -146,7 +171,7 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                                             padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                                             child: ListTile(
                                               title: Text(track.track_name),
-                                              subtitle: Text('length'),
+                                              subtitle: const Text('length'),
                                               
                                             ),
                                           ),
@@ -190,16 +215,35 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                                     height: 23,
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    //call the delete function for release table with a ternary operator for on pressed.
+                                    onPressed: isReleased
+                                    ? () async {
+                                      await ref.read(albumViewmodelProvider.notifier).Unrelease(album_id: albumData.album_id);
+                                      _checkReleaseStatus();
+                                    }
+                                    : () async {
+                                      await ref.read(albumViewmodelProvider.notifier).release(artist_name: artistData.artist_name, album_id: albumData.album_id);
+                                      _checkReleaseStatus();
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Pallete.greenColor,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25),
                                       ),
                                     ),
-                                    child: const Text(
-                                      "Publish",
-                                      style: TextStyle(color: Colors.black),
+                                    child: Row(
+                                      children: [
+                                        if(isReleased)
+                                          Icon(Icons.check, color: Colors.black),
+                                        if(isReleased)
+                                          const SizedBox(width: 5),
+                                        Text(
+                                          isReleased ? "Published" : "Publish",
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                        if(isReleased)
+                                          const SizedBox(width: 10),
+                                      ],
                                     ),
                                   ),
                                   const SizedBox(
@@ -321,9 +365,9 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
                                                             .map((genre) =>
                                                                 DropdownMenuItem<
                                                                     String>(
-                                                                  value: genre,
+                                                                  value: genre.tag,
                                                                   child: Text(
-                                                                      genre),
+                                                                      genre.tag),
                                                                 ))
                                                             .toList(),
                                                       ),
