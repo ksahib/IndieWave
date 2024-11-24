@@ -13,7 +13,7 @@ class ArtistDisplayWidget extends StatelessWidget{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: height * 0.3,
+                width: height * 0.26,
                 height: height * 0.35,
                 child: CircleAvatar(
                   radius: height * 0.15,
@@ -22,7 +22,7 @@ class ArtistDisplayWidget extends StatelessWidget{
               ),
               Text(
                 name,
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(fontSize: 14, color: Colors.white),
               )
             ],
           );

@@ -1,28 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_local_repository.dart';
+part of 'current_stream_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authLocalRepositoryHash() =>
-    r'4997658913f9b8ca4ef9f6396b78c449ec13991b';
+String _$currentStreamNotifierHash() =>
+    r'22d12aee87678272224b379221ed37efc8708909';
 
-/// See also [authLocalRepository].
-@ProviderFor(authLocalRepository)
-final authLocalRepositoryProvider = Provider<AuthLocalRepository>.internal(
-  authLocalRepository,
-  name: r'authLocalRepositoryProvider',
+/// See also [CurrentStreamNotifier].
+@ProviderFor(CurrentStreamNotifier)
+final currentStreamNotifierProvider =
+    AutoDisposeNotifierProvider<CurrentStreamNotifier, TrendModel?>.internal(
+  CurrentStreamNotifier.new,
+  name: r'currentStreamNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$authLocalRepositoryHash,
+      : _$currentStreamNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AuthLocalRepositoryRef = ProviderRef<AuthLocalRepository>;
+typedef _$CurrentStreamNotifier = AutoDisposeNotifier<TrendModel?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

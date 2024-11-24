@@ -14,13 +14,13 @@ class AlbumDisplayWidget extends StatelessWidget{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: height * 0.3,
+                width: height * 0.255,
                 height: height * 0.32,
                 child: Container(
                   height: height * 0.15,
                   width: height * 0.09,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
                     child: Image(image: NetworkImage(url)),
                   ),
                 ),
@@ -31,11 +31,11 @@ class AlbumDisplayWidget extends StatelessWidget{
                 children: [
                   Text(
                     album,
-                    style: TextStyle(fontSize: 20, color: Colors.white),
+                    style: TextStyle(fontSize: 14, color: Colors.white),
                   ),
                   Text(
                     artist,
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
               )

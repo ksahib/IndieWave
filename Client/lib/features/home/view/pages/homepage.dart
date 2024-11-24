@@ -1,3 +1,4 @@
+import 'package:client/core/providers/current_stream_notifier.dart';
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/auth/model/user_model.dart';
@@ -5,11 +6,13 @@ import 'package:client/features/Artist/view/pages/artist_registration.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:client/features/Artist/view/pages/artist_profile_page.dart';
+import 'package:client/features/home/models/trend_model.dart';
 import 'package:client/features/home/view/widgets/album_display_widget.dart';
 import 'package:client/features/home/view/widgets/artist_display_widget.dart';
 import 'package:client/features/home/view/widgets/list_cards.dart';
 import 'package:client/features/home/view/widgets/pointed_rectangle_clipper.dart';
 import 'package:client/features/home/view/widgets/user_titlebar.dart';
+import 'package:client/features/home/viewmodels/trend_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,18 +30,43 @@ class Homepage extends ConsumerStatefulWidget {
 class _Homepage extends ConsumerState<Homepage> {
   bool _showFields = false;
   dynamic userData;
+  List<dynamic> artistTrendList = [];
+  List<dynamic> trackTrendList = [];
+
 
   @override
   void initState() {
     super.initState();
     
     loadData();
+    loadTrends();
   }
 
   Future<void> loadData() async {
     userData = await checkCreds();
     setState(() {});
   }
+
+  Future<void> loadTrends() async {
+  //print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
+  final artistResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'artist');
+  final trackResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'track');
+
+  if (artistResponse is AsyncData<List<TrendModel>> && trackResponse is AsyncData<List<TrendModel>>) {
+    setState(() {
+      artistTrendList = artistResponse.value;
+      trackTrendList = trackResponse.value;
+      print("Artists: ${artistTrendList}");
+      print("Tracks: ${trackTrendList}");
+    });
+  } else if (artistResponse is AsyncError) {
+    showSnackBar(context, 'Failed to load tracks: ${artistResponse?.error}', Pallete.errorColor);
+  } else if (trackResponse is AsyncError) {
+    showSnackBar(context, 'Failed to load tracks: ${trackResponse?.error}', Pallete.errorColor);
+  } else {
+    showSnackBar(context, 'Unexpected response format.', Pallete.errorColor);
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +76,7 @@ class _Homepage extends ConsumerState<Homepage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('An error occurred.'),
+                const Text('An error occurred.'),
                 ElevatedButton(
                   onPressed: () {
                     // Navigate to login page
@@ -65,7 +93,7 @@ class _Homepage extends ConsumerState<Homepage> {
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 2480, maxHeight: 1200),
+          constraints: const BoxConstraints(minWidth: 2480, maxHeight: 1400),
           child: Column(
             children: [
               // Title bar and window controls
@@ -105,11 +133,11 @@ class _Homepage extends ConsumerState<Homepage> {
                           borderRadius: BorderRadius.circular(5),
                           child: SingleChildScrollView(
                             child: ConstrainedBox(
-                              constraints: const BoxConstraints(maxHeight: 1200),
+                              constraints: const BoxConstraints(maxHeight: 1400),
                               child: Column(
                                 children: [
                                   Container(
-                                    height: 1200,
+                                    height: 1400,
                                     color: const Color.fromARGB(7, 255, 255, 255),
                                     child: LayoutBuilder(
                                       builder: (context, constraints) {
@@ -244,10 +272,10 @@ class _Homepage extends ConsumerState<Homepage> {
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
-                                                  Row(
+                                                  const Row(
                                                     children: [
-                                                      const SizedBox(width: 10,),
-                                                      const Text(
+                                                      SizedBox(width: 10,),
+                                                      Text(
                                                         "Rising Artists.",
                                                         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white),
                                                       ),
@@ -256,11 +284,11 @@ class _Homepage extends ConsumerState<Homepage> {
                                                   Row(
                                                     children: [
                                                       const SizedBox(width: 10,),
-                                                     ArtistDisplayWidget(url: userData.image_url, name: "Artist", height: bannerContainerHeight),
+                                                     ArtistDisplayWidget(url: artistTrendList[0].profile_pic, name: artistTrendList[0].artist_name, height: bannerContainerHeight),
                                                       const SizedBox(width: 10,),
-                                                      ArtistDisplayWidget(url: userData.image_url, name: "Artist", height: bannerContainerHeight),
+                                                       ArtistDisplayWidget(url: artistTrendList[1].profile_pic, name: artistTrendList[1].artist_name, height: bannerContainerHeight),
                                                       const SizedBox(width: 10,),
-                                                      ArtistDisplayWidget(url: userData.image_url, name: "Artist", height: bannerContainerHeight),
+                                                       ArtistDisplayWidget(url: artistTrendList[2].profile_pic, name: artistTrendList[2].artist_name, height: bannerContainerHeight),
                                                     ],
                                                   )
                                                 ],
@@ -273,11 +301,11 @@ class _Homepage extends ConsumerState<Homepage> {
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
-                                                  Row(
+                                                  const Row(
                                                     children: [
-                                                      const SizedBox(width: 10,),
-                                                      const Text(
-                                                        "Top Albums.",
+                                                      SizedBox(width: 10,),
+                                                      Text(
+                                                        "Top Songs.",
                                                         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white),
                                                       ),
                                                     ],
@@ -285,11 +313,15 @@ class _Homepage extends ConsumerState<Homepage> {
                                                   Row(
                                                     children: [
                                                       const SizedBox(width: 10,),
-                                                      AlbumDisplayWidget(url: userData.image_url, album: "album", artist: "artist", height: bannerContainerHeight),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          ref.read(currentStreamNotifierProvider.notifier).updateSong(trackTrendList[0]);
+                                                        },
+                                                        child: AlbumDisplayWidget(url: trackTrendList[0].album_cover, album: trackTrendList[0].track_name, artist: trackTrendList[0].artist_name, height: bannerContainerHeight)),
                                                       const SizedBox(width: 10,),
-                                                      AlbumDisplayWidget(url: userData.image_url, album: "album", artist: "artist", height: bannerContainerHeight),
+                                                      AlbumDisplayWidget(url: trackTrendList[1].album_cover, album: trackTrendList[1].track_name, artist: trackTrendList[1].artist_name, height: bannerContainerHeight),
                                                       const SizedBox(width: 10,),
-                                                      AlbumDisplayWidget(url: userData.image_url, album: "album", artist: "artist", height: bannerContainerHeight),
+                                                      AlbumDisplayWidget(url: trackTrendList[3].album_cover, album: trackTrendList[3].track_name, artist: trackTrendList[3].artist_name, height: bannerContainerHeight),
                                                       const SizedBox(width: 10,),
                                                     ],
                                                   )
@@ -371,6 +403,7 @@ class _Homepage extends ConsumerState<Homepage> {
                                             TextButton(
                                               onPressed: () {
                                                 // Handle logout
+                                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
                                               },
                                               child: const Text(
                                                 "Logout",

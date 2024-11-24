@@ -44,6 +44,8 @@ dependencies:
   crypto: ^3.0.6
   waveform_flutter: ^1.1.0
   audioplayers: ^6.1.0
+  just_audio: ^0.9.42
+  just_audio_windows: ^0.2.2
   
 
   # The following adds the Cupertino Icons font to your application.

@@ -7,6 +7,7 @@ import 'package:client/core/widgets/loader.dart';
 import 'package:client/core/widgets/maximize.dart';
 import 'package:client/core/widgets/minimize.dart';
 import 'package:client/core/widgets/utils.dart';
+import 'package:client/features/Artist/view/pages/artist_profile_page.dart';
 import 'package:client/features/Artist/view_model/artist_auth_viewmodel.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view/widgets/button.dart';
@@ -208,6 +209,7 @@ Widget build(BuildContext context) {
                                             about: aboutController.text,
                                             imageUrl: imageUrl ?? '',
                                           );
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ArtistProfilePage()));
                                         
                                       },
                                     ),
