@@ -1,16 +1,17 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:client/core/theme/app_pallete.dart';
-import 'package:client/core/theme/theme.dart';
-import 'package:client/core/widgets/close.dart';
-import 'package:client/core/widgets/maximize.dart';
-import 'package:client/core/widgets/minimize.dart';
 import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/auth/model/user_model.dart';
 import 'package:client/features/Artist/view/pages/artist_registration.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:client/features/Artist/view/pages/artist_profile_page.dart';
+import 'package:client/features/home/view/widgets/album_display_widget.dart';
+import 'package:client/features/home/view/widgets/artist_display_widget.dart';
+import 'package:client/features/home/view/widgets/list_cards.dart';
+import 'package:client/features/home/view/widgets/pointed_rectangle_clipper.dart';
+import 'package:client/features/home/view/widgets/user_titlebar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
 
@@ -67,53 +68,15 @@ class _Homepage extends ConsumerState<Homepage> {
           constraints: const BoxConstraints(minWidth: 2480, maxHeight: 1200),
           child: Column(
             children: [
-              // Title bar and window controls inside a Stack
-              Stack(
-                children: [
-                  SizedBox(
-                    height: 53,
-                    child: WindowTitleBarBox(
-                      child: Container(
-                        color: Pallete.backgroundColor,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 15.0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                userData.name,
-                                style: const TextStyle(color: Pallete.whiteColor),
-                              ),
-                              const SizedBox(width: 8.0),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _showFields = !_showFields;
-                                  });
-                                },
-                                child: ClipOval(
-                                  child: SizedBox(
-                                    width: 35.0,
-                                    height: 35.0,
-                                    child: CircleAvatar(
-                                      radius: 20.0,
-                                      foregroundImage: NetworkImage(userData.image_url),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 15.0),
-                              const Minimize(),
-                              const Maximize(),
-                              const Close(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(child: MoveWindow()), 
-                ],
+              // Title bar and window controls
+              UserTitlebar(
+                url: userData.image_url, 
+                name: userData.name, 
+                onTap: () {
+                  setState(() {
+                  _showFields = !_showFields;
+                }); 
+                }
               ),
               
               //content area
@@ -123,6 +86,7 @@ class _Homepage extends ConsumerState<Homepage> {
                   child: Row(
                     children: [
                       const SizedBox(width: 5),
+                      //left: Playlists and Libraries
                       Expanded(
                         flex: 1,
                         child: ClipRRect(
@@ -134,17 +98,217 @@ class _Homepage extends ConsumerState<Homepage> {
                         ),
                       ),
                       const SizedBox(width: 5),
+                      //Middle: Main feed
                       Expanded(
                         flex: 2,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
-                          child: Container(
-                            height: double.infinity,
-                            color: const Color.fromARGB(7, 255, 255, 255),
+                          child: SingleChildScrollView(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxHeight: 1200),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 1200,
+                                    color: const Color.fromARGB(7, 255, 255, 255),
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        final bannerContainerHeight = constraints.maxHeight * 0.5;
+                                        return Column(
+                                          children: [
+                                            Container(
+                                              height: bannerContainerHeight,
+                                              width: constraints.maxWidth,
+                                              color: Colors.red,
+                                              child: Column(
+                                                children: [
+                                                  //BANNER
+                                                  SizedBox(
+                                                    height: bannerContainerHeight * 0.5,
+                                                    width: constraints.maxWidth,
+                                                    child: ClipPath(
+                                                      clipper: PointedRectangleClipper(),
+                                                      child: Card(
+                                                        elevation: 10,
+                                                        color: Color.fromARGB(200, 0, 0, 0),
+                                                        child: Row(
+                                                          children: [
+                                                            const SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            ClipRect(
+                                                              child: Container(
+                                                                width: 200,
+                                                                height: 200,
+                                                                child: Image(image: NetworkImage(userData.image_url)),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Expanded(
+                                                              child: Text(
+                                                                "Check Out The Latest Release.",
+                                                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white)
+                                                              )
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      //left side list tiles
+                                                      SizedBox(
+                                                        height: bannerContainerHeight * 0.5,
+                                                        width: constraints.maxWidth * 0.5,
+                                                        child: Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              height: bannerContainerHeight * 0.005,
+                                                            ),
+                                                            ListCards(
+                                                              url: userData.image_url, 
+                                                              title: "album 1", 
+                                                              height: bannerContainerHeight, 
+                                                              width: constraints.maxWidth
+                                                            ),
+                                                            ListCards(
+                                                              url: userData.image_url, 
+                                                              title: "album 2", 
+                                                              height: bannerContainerHeight, 
+                                                              width: constraints.maxWidth
+                                                            ),
+                                                            ListCards(
+                                                              url: userData.image_url, 
+                                                              title: "album 3", 
+                                                              height: bannerContainerHeight, 
+                                                              width: constraints.maxWidth
+                                                            ),
+                                                            ListCards(
+                                                              url: userData.image_url, 
+                                                              title: "album 4", 
+                                                              height: bannerContainerHeight, 
+                                                              width: constraints.maxWidth
+                                                            ),
+                                                            
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      //right side list tiles
+                                                      SizedBox(
+                                                        height: bannerContainerHeight * 0.5,
+                                                        width: constraints.maxWidth * 0.5,
+                                                        child: Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              height: bannerContainerHeight * 0.005,
+                                                            ),
+                                                            ListCards(
+                                                              url: userData.image_url, 
+                                                              title: "album 5", 
+                                                              height: bannerContainerHeight, 
+                                                              width: constraints.maxWidth
+                                                            ),
+                                                            ListCards(
+                                                              url: userData.image_url, 
+                                                              title: "album 6", 
+                                                              height: bannerContainerHeight, 
+                                                              width: constraints.maxWidth
+                                                            ),
+                                                            ListCards(
+                                                              url: userData.image_url, 
+                                                              title: "album 7", 
+                                                              height: bannerContainerHeight, 
+                                                              width: constraints.maxWidth
+                                                            ),
+                                                            ListCards(
+                                                              url: userData.image_url, 
+                                                              title: "album 8", 
+                                                              height: bannerContainerHeight, 
+                                                              width: constraints.maxWidth
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            //Rising artists section
+                                            SizedBox(
+                                              height: bannerContainerHeight * 0.5,
+                                              width: constraints.maxWidth,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const SizedBox(width: 10,),
+                                                      const Text(
+                                                        "Rising Artists.",
+                                                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      const SizedBox(width: 10,),
+                                                     ArtistDisplayWidget(url: userData.image_url, name: "Artist", height: bannerContainerHeight),
+                                                      const SizedBox(width: 10,),
+                                                      ArtistDisplayWidget(url: userData.image_url, name: "Artist", height: bannerContainerHeight),
+                                                      const SizedBox(width: 10,),
+                                                      ArtistDisplayWidget(url: userData.image_url, name: "Artist", height: bannerContainerHeight),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            //TOp albums section
+                                            SizedBox(
+                                              height: bannerContainerHeight * 0.5,
+                                              width: constraints.maxWidth,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const SizedBox(width: 10,),
+                                                      const Text(
+                                                        "Top Albums.",
+                                                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      const SizedBox(width: 10,),
+                                                      AlbumDisplayWidget(url: userData.image_url, album: "album", artist: "artist", height: bannerContainerHeight),
+                                                      const SizedBox(width: 10,),
+                                                      AlbumDisplayWidget(url: userData.image_url, album: "album", artist: "artist", height: bannerContainerHeight),
+                                                      const SizedBox(width: 10,),
+                                                      AlbumDisplayWidget(url: userData.image_url, album: "album", artist: "artist", height: bannerContainerHeight),
+                                                      const SizedBox(width: 10,),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        );
+                                      }
+                                      ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(width: 5),
+                      //right: Now Playing
                       Expanded(
                         flex: 1,
                         child: Stack(
