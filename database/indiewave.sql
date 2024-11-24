@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2024 at 02:11 AM
+-- Generation Time: Nov 24, 2024 at 03:41 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,7 +56,9 @@ INSERT INTO `album` (`album_id`, `name`, `cover_art`, `price`, `artist_name`) VA
 ('673b610885372', 'Euphoria', '673b610885013', 2.00, 'Upodeshta'),
 ('673b65b7be5c9', 'Aerith', '673b65b7be1a8', 12.00, 'Upodeshta'),
 ('673bcf18c7972', 'Aerith2', '673bcf18c7262', 12.00, 'Upodeshta'),
-('673bd3de988e8', 'Aerith3', '673bd3de984b0', 12.00, 'Upodeshta');
+('673bd3de988e8', 'Aerith3', '673bd3de984b0', 12.00, 'Upodeshta'),
+('67432ebdb9b22', 'Never To Be Released', '67432ebdb9631', 12.00, 'Memories Of Nowhere'),
+('674331664048c', 'A Moon Shaped Pool', '674331664016e', 12.00, 'Radiohead');
 
 -- --------------------------------------------------------
 
@@ -77,6 +79,8 @@ CREATE TABLE `artist` (
 --
 
 INSERT INTO `artist` (`artist_name`, `follower_count`, `profile_pic`, `about`, `email`) VALUES
+('Memories Of Nowhere', 0, '67432dbb9b960', 'Post Rock band focusing on instrumentals', 'mon@gmail.com'),
+('Radiohead', 0, '67433138e8149', 'British gloomy rock', 'radio.head@gmail.com'),
 ('Upodeshta', 0, '67343b7f2860b', 'ffdgfhfg', 'Artoria');
 
 -- --------------------------------------------------------
@@ -104,6 +108,13 @@ CREATE TABLE `follows` (
   `artist_name` varchar(60) DEFAULT NULL,
   `email` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `follows`
+--
+
+INSERT INTO `follows` (`artist_name`, `email`) VALUES
+('Upodeshta', 'emiya');
 
 -- --------------------------------------------------------
 
@@ -202,6 +213,11 @@ INSERT INTO `images` (`image_id`, `image_url`, `image_type`) VALUES
 ('6741263fca34b', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731651417/eyxajjcoo00eglms5zso.jpg', 'profile_pic'),
 ('6741266b8c41e', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731651417/eyxajjcoo00eglms5zso.jpg', 'profile_pic'),
 ('6741274f79e08', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731651417/eyxajjcoo00eglms5zso.jpg', 'profile_pic'),
+('67432dbb9b960', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732455873/abxwzsv1snmheq3ke5jq.jpg', 'profile_pic'),
+('67432e24a013b', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732455978/yacrlrojqmndzcy6uqon.jpg', 'profile_pic'),
+('67432ebdb9631', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732456132/yh0fqi57avvfcbizyb4m.jpg', 'cover_art'),
+('67433138e8149', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732456767/d5aqtmxiuq1ykuyq5spj.png', 'profile_pic'),
+('674331664016e', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732456812/zgz3xxfhqnk7qyvi1vj7.jpg', 'cover_art'),
 ('default', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731329463/profile_pic/lhjg1rgm4a0c4uedtyzk.jpg', 'profile_pic');
 
 -- --------------------------------------------------------
@@ -256,7 +272,9 @@ CREATE TABLE `released` (
 --
 
 INSERT INTO `released` (`artist_name`, `album_id`, `release_date`) VALUES
-('Upodeshta', '6738a77934eea', '2024-11-22');
+('Upodeshta', '6738a77934eea', '2024-11-22'),
+('Radiohead', '674331664048c', '2024-11-24'),
+('Memories Of Nowhere', '67432ebdb9b22', '2024-11-24');
 
 -- --------------------------------------------------------
 
@@ -282,6 +300,10 @@ INSERT INTO `session` (`token_id`, `email`, `created_at`, `expires_at`, `last_us
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTQzMTksImV4cCI6MTczMzY4NjMxOSwiZGF0YSI6eyJlbWFpbCI6ImdpbDMiLCJ1bmlxdWUiOiI2NzJlNjcyZjVmYzhhIn19.FFctZl3vDCfWAIdM6uijU-A4T-Mhx1ki5pRSz1NN77A', 'gil3', '2024-11-08 19:31:59', '2024-12-08 14:31:59', '2024-11-08 19:31:59'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTUwMDIsImV4cCI6MTczMzY4NzAwMiwiZGF0YSI6eyJlbWFpbCI6ImdpbDIiLCJ1bmlxdWUiOiI2NzJlNjlkYTAwZGRmIn19.lX-HATApqJ8yQl2YDPEXz69obZrQJZmtGs4RDRPpQ_A', 'gil2', '2024-11-08 19:43:22', '2024-12-08 14:43:22', '2024-11-08 19:43:22'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzMzE3NDcsImV4cCI6MTczMzkyMzc0NywiZGF0YSI6eyJlbWFpbCI6InNhbXBsZUBleGFtcGxlLmNvbSIsInVuaXF1ZSI6IjY3MzIwNmEzZDFhYjYifX0.czEptwujQAYDrYaX9vWQmiNkiDnjaRVWmKnh8XEAyUE', 'sample@example.com', '2024-11-11 13:29:07', '2024-12-11 08:29:07', '2024-11-11 13:29:07'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI0NTcwMTcsImV4cCI6MTczMjUwMDIxNywiZGF0YSI6eyJlbWFpbCI6Im1vbkBnbWFpbC5jb20iLCJ1bmlxdWUiOiI2NzQzMzIzOTU0N2MwIn19.4tsbfWIEK0DgJIzP8J4j_METG346agDjGK6cZyqcUeE', 'mon@gmail.com', '2024-11-24 14:03:37', '2024-11-24 21:03:37', '2024-11-24 14:03:37'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI0NTcwNTMsImV4cCI6MTczMjUwMDI1MywiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzQzMzI1ZGNiOTQzIn19.Rin9_AFbzg7rkRamequ9JFo0t3zVIbnej8ZFDWSoEjc', 'Artoria', '2024-11-24 14:04:13', '2024-11-24 21:04:13', '2024-11-24 14:04:13'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI0NTY0MTgsImV4cCI6MTczMjQ5OTYxOCwiZGF0YSI6eyJlbWFpbCI6Im1vbkBnbWFpbC5jb20iLCJ1bmlxdWUiOiI2NzQzMmZlMmI5ZWQ2In19.RHvbivrylZE1DdZfgs3Hf4JA2cpAl5_tDOkPdqOedKM', 'mon@gmail.com', '2024-11-24 13:53:38', '2024-11-24 20:53:38', '2024-11-24 13:53:38'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI0NTY1OTAsImV4cCI6MTczNTA0ODU5MCwiZGF0YSI6eyJlbWFpbCI6InJhZGlvLmhlYWRAZ21haWwuY29tIiwidW5pcXVlIjoiNjc0MzMwOGVhNDA5OCJ9fQ.lcrR2Lu7sKO0NThDTp6uVxBY25CiRydtNg5bJVtXFBU', 'radio.head@gmail.com', '2024-11-24 13:56:30', '2024-12-24 08:56:30', '2024-11-24 13:56:30'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzIwNjE3NTAsImV4cCI6MTczNDY1Mzc1MCwiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzNkMmEzNjkwM2E5In19.AKEt_ky3C9DoQYgGsER0YZyWtgN2NmzfOMx70ObWGGs', 'Artoria', '2024-11-20 00:15:50', '2024-12-19 19:15:50', '2024-11-20 00:15:50'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzIyNTc1MjcsImV4cCI6MTczNDg0OTUyNywiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzQwMjZmNzEwOWIzIn19.vLVYwtpn9T5XUUleqw43g0Ytc0NR4ja7lqFcPaxIjyE', 'Artoria', '2024-11-22 06:38:47', '2024-12-22 01:38:47', '2024-11-22 06:38:47');
 
@@ -315,7 +337,10 @@ CREATE TABLE `tracks` (
 --
 
 INSERT INTO `tracks` (`track_id`, `track_name`, `tag`, `track_url`, `album_id`) VALUES
-('673d5b1341b60', 'New Riff', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732074261/hkhkxh6uficlvhczkt5v.mp3', '6738a77934eea');
+('673d5b1341b60', 'New Riff', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732074261/hkhkxh6uficlvhczkt5v.mp3', '6738a77934eea'),
+('67432f493655f', 'Starry Death', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732456268/lmcocnh27uduvi4xs3s5.wav', '67432ebdb9b22'),
+('67432f872123b', 'Crunch', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732456331/lsoza3lveazqbfu5t6nf.wav', '67432ebdb9b22'),
+('674331c3ae39c', 'Afterthought', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732456905/dcv03tuuphizq3o3t0s7.mp3', '674331664048c');
 
 -- --------------------------------------------------------
 
@@ -345,6 +370,8 @@ INSERT INTO `users` (`email`, `name`, `password`, `profile_pic`) VALUES
 ('gil3', 'gil3', '$2y$10$ZRzrqvOtl3iQJfY5jxnlfusqiCH4GTJ2foLiwdVUJ1omCHFcxWwxW', NULL),
 ('gil45', 'gilgamesh', '$2y$10$RAvw2KD2fQggqNS3Im.7p.mkH2ZM2O7o7pcaLc4rCSACrUdnDPYke', 'default'),
 ('gil@example.com', 'gil', '$2y$10$2ouz5GCe64xVmjgKZZKe4ubAKtS0itW68CGzXhzzE10mURnIG28Zi', NULL),
+('mon@gmail.com', 'sadik', '$2y$10$IK0dye9A6LsEgTLXDVyZk.oClvYnpD3VggGRXq5xK43x4eBFz3B4W', 'default'),
+('radio.head@gmail.com', 'Radiohead', '$2y$10$Ajc.aqUeUQMJFds9QmyDn.MGhpREDO8y4eQCXQz4agmxQ00xfKrJO', 'default'),
 ('rin@example.com', 'rin', '$2y$10$pqkOVdju893l9lFahlqRb.c/HLw34RXVOUmlf5Hi1SgIS.hwbDvmG', NULL),
 ('sabre@example.com', 'sabre', '$2y$10$9UERlvXk/0mTm6PrWc5inurL2ZUkBve5HE0MUwOmSAfefWmEYKQzG', NULL),
 ('sahib@gmail.com', 'sahib', '$2y$10$ZHaudkUPP2SL/vd742DrnuGAoxo20MjJKPOyQ4fw9SZJJ6t5hu4o6', NULL),
@@ -354,6 +381,30 @@ INSERT INTO `users` (`email`, `name`, `password`, `profile_pic`) VALUES
 ('sample@example.com', 'sample', '$2y$10$E62eAdm.0qzpQtbStYTqFuv/7HjQi67KFi2OYFFxVDo3hfS3alYsS', 'default'),
 ('test345@example.com', 'user345', '$2y$10$LrgGByWlW7Cq/JElICKhpe9cFJkHF4A6/08uI3Qu61I6SCx78g0lO', NULL),
 ('test34@example.com', 'Test User34', '$2y$10$2qjpEgjxU5sT.Of5ayOPTudd40CG2LG9vGoZ/Jm5KQaQ7WsdYE6EW', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_feed`
+--
+
+CREATE TABLE `user_feed` (
+  `email` varchar(60) NOT NULL,
+  `artist_name` varchar(60) DEFAULT NULL,
+  `album_id` varchar(64) DEFAULT NULL,
+  `track_id` varchar(64) NOT NULL,
+  `followers` int(11) DEFAULT 0,
+  `likes` int(11) DEFAULT 0,
+  `streams` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_feed`
+--
+
+INSERT INTO `user_feed` (`email`, `artist_name`, `album_id`, `track_id`, `followers`, `likes`, `streams`, `created_at`) VALUES
+('emiya', 'Upodeshta', '6738a77934eea', '673d5b1341b60', 1, 0, 0, '2024-11-24 14:33:10');
 
 -- --------------------------------------------------------
 
@@ -461,6 +512,15 @@ ALTER TABLE `users`
   ADD KEY `profile_pic` (`profile_pic`);
 
 --
+-- Indexes for table `user_feed`
+--
+ALTER TABLE `user_feed`
+  ADD PRIMARY KEY (`email`,`track_id`),
+  ADD KEY `artist_name_fk` (`artist_name`),
+  ADD KEY `album_id_fk` (`album_id`),
+  ADD KEY `track_id_fk` (`track_id`);
+
+--
 -- Constraints for dumped tables
 --
 
@@ -538,12 +598,42 @@ ALTER TABLE `tracks`
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`profile_pic`) REFERENCES `images` (`image_id`);
 
+--
+-- Constraints for table `user_feed`
+--
+ALTER TABLE `user_feed`
+  ADD CONSTRAINT `album_id_fk` FOREIGN KEY (`album_id`) REFERENCES `album` (`album_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `artist_name_fk` FOREIGN KEY (`artist_name`) REFERENCES `artist` (`artist_name`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_user_feed_email` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `track_id_fk` FOREIGN KEY (`track_id`) REFERENCES `tracks` (`track_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 DELIMITER $$
 --
 -- Events
 --
 CREATE DEFINER=`root`@`localhost` EVENT `delete_expired_rows` ON SCHEDULE EVERY 1 MINUTE STARTS '2024-11-11 22:47:41' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM session
   WHERE NOW() > expires_at$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `populate_user_feed` ON SCHEDULE EVERY 10 MINUTE STARTS '2024-11-24 08:53:10' ON COMPLETION NOT PRESERVE ENABLE DO INSERT INTO user_feed (email, artist_name, album_id, track_id, followers, likes, streams)
+SELECT 
+    fo.email,
+    f.artist_name,
+    f.album_id,
+    f.track_id,
+    COALESCE(f.followers, 0) AS followers,
+    COALESCE(f.likes, 0) AS likes,
+    COALESCE(f.streams, 0) AS streams
+FROM 
+    feed f
+JOIN 
+    follows fo ON f.artist_name = fo.artist_name
+WHERE 
+    fo.email IS NOT NULL
+ON DUPLICATE KEY UPDATE
+    followers = VALUES(followers),
+    likes = VALUES(likes),
+    streams = VALUES(streams),
+    created_at = CURRENT_TIMESTAMP$$
 
 DELIMITER ;
 COMMIT;
