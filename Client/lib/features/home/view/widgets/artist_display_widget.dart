@@ -16,7 +16,7 @@ class ArtistDisplayWidget extends StatelessWidget{
                 width: height * 0.26,
                 height: height * 0.35,
                 child: CircleAvatar(
-                  radius: height * 0.15,
+                  radius: height * 0.25,
                   backgroundImage: NetworkImage(url),
                 ),
               ),

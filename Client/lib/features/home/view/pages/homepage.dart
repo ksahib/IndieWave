@@ -281,16 +281,23 @@ class _Homepage extends ConsumerState<Homepage> {
                                                       ),
                                                     ],
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      const SizedBox(width: 10,),
-                                                     ArtistDisplayWidget(url: artistTrendList[0].profile_pic, name: artistTrendList[0].artist_name, height: bannerContainerHeight),
-                                                      const SizedBox(width: 10,),
-                                                       ArtistDisplayWidget(url: artistTrendList[1].profile_pic, name: artistTrendList[1].artist_name, height: bannerContainerHeight),
-                                                      const SizedBox(width: 10,),
-                                                       ArtistDisplayWidget(url: artistTrendList[2].profile_pic, name: artistTrendList[2].artist_name, height: bannerContainerHeight),
-                                                    ],
-                                                  )
+                                                 
+                                                      Flexible(
+                                                          child: ListView.builder(
+                                                            scrollDirection: Axis.horizontal,
+                                                            itemCount: artistTrendList.length,
+                                                            itemBuilder: (context, index) {
+                                                              final artist = artistTrendList[index];
+                                                              return GestureDetector(
+                                                                onTap: () {
+
+                                                                },
+                                                                child: ArtistDisplayWidget(url: artist.profile_pic, name: artist.artist_name, height: bannerContainerHeight),
+                                                              );
+                                                            }
+                                                          ),
+                                                        ),
+                                                    
                                                 ],
                                               ),
                                             ),
@@ -310,21 +317,23 @@ class _Homepage extends ConsumerState<Homepage> {
                                                       ),
                                                     ],
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      const SizedBox(width: 10,),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          ref.read(currentStreamNotifierProvider.notifier).updateSong(trackTrendList[0]);
-                                                        },
-                                                        child: AlbumDisplayWidget(url: trackTrendList[0].album_cover, album: trackTrendList[0].track_name, artist: trackTrendList[0].artist_name, height: bannerContainerHeight)),
-                                                      const SizedBox(width: 10,),
-                                                      AlbumDisplayWidget(url: trackTrendList[1].album_cover, album: trackTrendList[1].track_name, artist: trackTrendList[1].artist_name, height: bannerContainerHeight),
-                                                      const SizedBox(width: 10,),
-                                                      AlbumDisplayWidget(url: trackTrendList[3].album_cover, album: trackTrendList[3].track_name, artist: trackTrendList[3].artist_name, height: bannerContainerHeight),
-                                                      const SizedBox(width: 10,),
-                                                    ],
-                                                  )
+                                                     
+                                                        
+                                                        Flexible(
+                                                          child: ListView.builder(
+                                                            scrollDirection: Axis.horizontal,
+                                                            itemCount: trackTrendList.length,
+                                                            itemBuilder: (context, index) {
+                                                              final track = trackTrendList[index];
+                                                              return GestureDetector(
+                                                                onTap: () {
+                                                                  ref.read(currentStreamNotifierProvider.notifier).updateSong(track);
+                                                                },
+                                                                child: AlbumDisplayWidget(url: track.album_cover, album: track.track_name, artist: track.artist_name, height: bannerContainerHeight));
+                                                            }
+                                                          ),
+                                                        ),
+                                                      
                                                 ],
                                               ),
                                             )
