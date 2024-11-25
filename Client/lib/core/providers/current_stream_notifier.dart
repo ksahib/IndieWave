@@ -8,6 +8,7 @@ part 'current_stream_notifier.g.dart';
 @riverpod
 class CurrentStreamNotifier extends _$CurrentStreamNotifier{
   AudioPlayer? audioPlayer;
+  bool isPlaying = false;
   @override
   TrendModel? build() {
     return null;
@@ -20,7 +21,18 @@ class CurrentStreamNotifier extends _$CurrentStreamNotifier{
     );
     await audioPlayer!.setAudioSource(audioSource);
     audioPlayer!.play();
+    isPlaying = true;
     state = track;
 
+  }
+
+  void playPause() {
+    if(isPlaying) {
+      audioPlayer?.pause();
+    } else {
+      audioPlayer?.play();
+    }
+    isPlaying = !isPlaying;
+    state = state?.copyWith(album_id: state?.album_id);
   }
 }

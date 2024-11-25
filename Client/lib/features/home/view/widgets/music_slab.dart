@@ -11,6 +11,7 @@ class MusicSlab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentStream = ref.watch(currentStreamNotifierProvider);
+    final StreamNotifier = ref.read(currentStreamNotifierProvider.notifier);
 
     if(currentStream == null) {
       return const SizedBox();
@@ -48,6 +49,13 @@ class MusicSlab extends ConsumerWidget {
                     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Pallete.subtitleText),),
                 ],
               ),
+
+              // Slider(
+              //   min: 0,
+              //   max: dura
+              //   value: value, 
+              //   onChanged: onChanged
+              // ),
             ],
           ),
           Row(
@@ -56,7 +64,10 @@ class MusicSlab extends ConsumerWidget {
                 onPressed: () {},
                 icon: const Icon(CupertinoIcons.heart, color: Pallete.whiteColor,),
               ),
-              IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.play_fill, color: Pallete.whiteColor)),
+              IconButton(
+                onPressed: StreamNotifier.playPause, 
+                icon: Icon( StreamNotifier.isPlaying ? CupertinoIcons.pause_fill : CupertinoIcons.play_fill, color: Pallete.whiteColor)
+              ),
             ],
           ),
         ],
