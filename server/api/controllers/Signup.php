@@ -23,7 +23,7 @@ class Signup extends BaseController {
         $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         $data['profile_pic'] = 'default';
 
-        if ($this->userModel->create($data)) {
+        if (filter_var($data['email'], FILTER_VALIDATE_EMAIL) && $this->userModel->create($data)) {
             $this->sendResponse(201, 'User created successfully.');
         } else {
             $this->sendResponse(500, 'Failed to create user.');
