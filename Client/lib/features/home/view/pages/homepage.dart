@@ -1,23 +1,17 @@
-import 'package:client/core/providers/current_stream_notifier.dart';
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/widgets/utils.dart';
-import 'package:client/features/auth/model/user_model.dart';
 import 'package:client/features/Artist/view/pages/artist_registration.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
-import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:client/features/Artist/view/pages/artist_profile_page.dart';
 import 'package:client/features/home/models/trend_model.dart';
-import 'package:client/features/home/view/widgets/album_display_widget.dart';
-import 'package:client/features/home/view/widgets/artist_display_widget.dart';
-import 'package:client/features/home/view/widgets/list_cards.dart';
+import 'package:client/features/home/view/widgets/main_feed.dart';
 import 'package:client/features/home/view/widgets/music_slab.dart';
-import 'package:client/features/home/view/widgets/pointed_rectangle_clipper.dart';
+import 'package:client/features/home/view/widgets/now_playing.dart';
 import 'package:client/features/home/view/widgets/user_titlebar.dart';
 import 'package:client/features/home/viewmodels/trend_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:client/core/providers/current_user_notifier.dart';
 
 
 
@@ -52,6 +46,7 @@ class _Homepage extends ConsumerState<Homepage> {
   //print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
   final artistResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'artist');
   final trackResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'track');
+  
 
   if (artistResponse is AsyncData<List<TrendModel>> && trackResponse is AsyncData<List<TrendModel>>) {
     setState(() {
@@ -109,7 +104,6 @@ class _Homepage extends ConsumerState<Homepage> {
                     }); 
                     }
                   ),
-                  
                   //content area
                   Expanded(
                     child: Padding(
@@ -119,7 +113,7 @@ class _Homepage extends ConsumerState<Homepage> {
                           const SizedBox(width: 5),
                           //left: Playlists and Libraries
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
                               child: Container(
@@ -130,233 +124,19 @@ class _Homepage extends ConsumerState<Homepage> {
                           ),
                           const SizedBox(width: 5),
                           //Middle: Main feed
-                          Expanded(
-                            flex: 2,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: SingleChildScrollView(
-                                child: ConstrainedBox(
-                                  constraints: const BoxConstraints(maxHeight: 1400),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 1400,
-                                        color: const Color.fromARGB(7, 255, 255, 255),
-                                        child: LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            final bannerContainerHeight = constraints.maxHeight * 0.5;
-                                            return Column(
-                                              children: [
-                                                Container(
-                                                  height: bannerContainerHeight,
-                                                  width: constraints.maxWidth,
-                                                  color: Colors.red,
-                                                  child: Column(
-                                                    children: [
-                                                      //BANNER
-                                                      SizedBox(
-                                                        height: bannerContainerHeight * 0.5,
-                                                        width: constraints.maxWidth,
-                                                        child: ClipPath(
-                                                          clipper: PointedRectangleClipper(),
-                                                          child: Card(
-                                                            elevation: 10,
-                                                            color: Color.fromARGB(200, 0, 0, 0),
-                                                            child: Row(
-                                                              children: [
-                                                                const SizedBox(
-                                                                  width: 20,
-                                                                ),
-                                                                ClipRect(
-                                                                  child: Container(
-                                                                    width: 200,
-                                                                    height: 200,
-                                                                    child: Image(image: NetworkImage(userData.image_url)),
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                Expanded(
-                                                                  child: Text(
-                                                                    "Check Out The Latest Release.",
-                                                                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white)
-                                                                  )
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          //left side list tiles
-                                                          SizedBox(
-                                                            height: bannerContainerHeight * 0.5,
-                                                            width: constraints.maxWidth * 0.5,
-                                                            child: Column(
-                                                              children: [
-                                                                SizedBox(
-                                                                  height: bannerContainerHeight * 0.005,
-                                                                ),
-                                                                ListCards(
-                                                                  url: userData.image_url, 
-                                                                  title: "album 1", 
-                                                                  height: bannerContainerHeight, 
-                                                                  width: constraints.maxWidth
-                                                                ),
-                                                                ListCards(
-                                                                  url: userData.image_url, 
-                                                                  title: "album 2", 
-                                                                  height: bannerContainerHeight, 
-                                                                  width: constraints.maxWidth
-                                                                ),
-                                                                ListCards(
-                                                                  url: userData.image_url, 
-                                                                  title: "album 3", 
-                                                                  height: bannerContainerHeight, 
-                                                                  width: constraints.maxWidth
-                                                                ),
-                                                                ListCards(
-                                                                  url: userData.image_url, 
-                                                                  title: "album 4", 
-                                                                  height: bannerContainerHeight, 
-                                                                  width: constraints.maxWidth
-                                                                ),
-                                                                
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          //right side list tiles
-                                                          SizedBox(
-                                                            height: bannerContainerHeight * 0.5,
-                                                            width: constraints.maxWidth * 0.5,
-                                                            child: Column(
-                                                              children: [
-                                                                SizedBox(
-                                                                  height: bannerContainerHeight * 0.005,
-                                                                ),
-                                                                ListCards(
-                                                                  url: userData.image_url, 
-                                                                  title: "album 5", 
-                                                                  height: bannerContainerHeight, 
-                                                                  width: constraints.maxWidth
-                                                                ),
-                                                                ListCards(
-                                                                  url: userData.image_url, 
-                                                                  title: "album 6", 
-                                                                  height: bannerContainerHeight, 
-                                                                  width: constraints.maxWidth
-                                                                ),
-                                                                ListCards(
-                                                                  url: userData.image_url, 
-                                                                  title: "album 7", 
-                                                                  height: bannerContainerHeight, 
-                                                                  width: constraints.maxWidth
-                                                                ),
-                                                                ListCards(
-                                                                  url: userData.image_url, 
-                                                                  title: "album 8", 
-                                                                  height: bannerContainerHeight, 
-                                                                  width: constraints.maxWidth
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                //Rising artists section
-                                                SizedBox(
-                                                  height: bannerContainerHeight * 0.5,
-                                                  width: constraints.maxWidth,
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const Row(
-                                                        children: [
-                                                          SizedBox(width: 10,),
-                                                          Text(
-                                                            "Rising Artists.",
-                                                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                     
-                                                          Flexible(
-                                                              child: ListView.builder(
-                                                                scrollDirection: Axis.horizontal,
-                                                                itemCount: artistTrendList.length,
-                                                                itemBuilder: (context, index) {
-                                                                  final artist = artistTrendList[index];
-                                                                  return GestureDetector(
-                                                                    onTap: () {
-              
-                                                                    },
-                                                                    child: ArtistDisplayWidget(url: artist.profile_pic, name: artist.artist_name, height: bannerContainerHeight),
-                                                                  );
-                                                                }
-                                                              ),
-                                                            ),
-                                                        
-                                                    ],
-                                                  ),
-                                                ),
-                                                //TOp albums section
-                                                SizedBox(
-                                                  height: bannerContainerHeight * 0.5,
-                                                  width: constraints.maxWidth,
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      const Row(
-                                                        children: [
-                                                          SizedBox(width: 10,),
-                                                          Text(
-                                                            "Top Songs.",
-                                                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                         
-                                                            
-                                                            Flexible(
-                                                              child: ListView.builder(
-                                                                scrollDirection: Axis.horizontal,
-                                                                itemCount: trackTrendList.length,
-                                                                itemBuilder: (context, index) {
-                                                                  final track = trackTrendList[index];
-                                                                  return GestureDetector(
-                                                                    onTap: () {
-                                                                      ref.read(currentStreamNotifierProvider.notifier).updateSong(track);
-                                                                    },
-                                                                    child: AlbumDisplayWidget(url: track.album_cover, album: track.track_name, artist: track.artist_name, height: bannerContainerHeight));
-                                                                }
-                                                              ),
-                                                            ),
-                                                          
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            );
-                                          }
-                                          ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                          MainFeed(
+                            artistTrendList: artistTrendList, 
+                            userData: userData, 
+                            trackTrendList: trackTrendList
                           ),
                           const SizedBox(width: 5),
                           //right: Now Playing
                           Expanded(
-                            flex: 1,
+                            flex: 3,
                             child: Stack(
                               children: [
+                                
+                                NowPlaying(),
                                 IgnorePointer(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
@@ -366,9 +146,8 @@ class _Homepage extends ConsumerState<Homepage> {
                                     ),
                                   ),
                                 ),
-                                AnimatedOpacity(
-                                  opacity: _showFields ? 1.0 : 0.0,
-                                  duration: const Duration(milliseconds: 150), 
+                                Visibility(
+                                  visible: _showFields,
                                   child: Align(
                                     alignment: Alignment.topRight,
                                     child: Padding(
@@ -405,7 +184,7 @@ class _Homepage extends ConsumerState<Homepage> {
                                                 ),
                                                 TextButton(
                                                   onPressed: () {
-                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => ArtistProfilePage()));
+                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ArtistProfilePage()));
                                                   },
                                                   child: const Text(
                                                     "Artist Profile",
@@ -415,7 +194,7 @@ class _Homepage extends ConsumerState<Homepage> {
                                                 TextButton(
                                                   onPressed: () {
                                                     // Handle logout
-                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const LoginPage()));
                                                   },
                                                   child: const Text(
                                                     "Logout",
@@ -440,8 +219,7 @@ class _Homepage extends ConsumerState<Homepage> {
                   ),
                 ],
               ),
-
-              const Positioned(
+              Positioned(
                 bottom: 0,
                 child: MusicSlab()
               ),
