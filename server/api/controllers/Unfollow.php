@@ -18,7 +18,7 @@ class Unfollow extends BaseController {
     public function _get() {
         $headers = apache_request_headers();
         $email = $headers['email'];
-        $artist = $headers['artist_name'];
+        $artist = $headers['artist-name'];
         
         
 

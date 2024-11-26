@@ -44,7 +44,6 @@ class getAvgRGB extends BaseController {
                     $gSum = 0;
                     $bSum = 0;
                     
-                    // Iterate through each pixel
                     for ($x = 0; $x < $width; $x++) {
                         for ($y = 0; $y < $height; $y++) {
                             $rgb = imagecolorat($imageRGB, $x, $y);
