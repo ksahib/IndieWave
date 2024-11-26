@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 24, 2024 at 03:41 PM
+-- Generation Time: Nov 26, 2024 at 11:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,7 +58,9 @@ INSERT INTO `album` (`album_id`, `name`, `cover_art`, `price`, `artist_name`) VA
 ('673bcf18c7972', 'Aerith2', '673bcf18c7262', 12.00, 'Upodeshta'),
 ('673bd3de988e8', 'Aerith3', '673bd3de984b0', 12.00, 'Upodeshta'),
 ('67432ebdb9b22', 'Never To Be Released', '67432ebdb9631', 12.00, 'Memories Of Nowhere'),
-('674331664048c', 'A Moon Shaped Pool', '674331664016e', 12.00, 'Radiohead');
+('674331664048c', 'A Moon Shaped Pool', '674331664016e', 12.00, 'Radiohead'),
+('67439ba2b378e', 'Creepin', '67439ba2b28eb', 13.00, 'The Weeknd'),
+('67439c7bbeb64', 'The House Of Balloons', '67439c7bbe82d', 13.00, 'The Weeknd');
 
 -- --------------------------------------------------------
 
@@ -68,9 +70,8 @@ INSERT INTO `album` (`album_id`, `name`, `cover_art`, `price`, `artist_name`) VA
 
 CREATE TABLE `artist` (
   `artist_name` varchar(60) NOT NULL,
-  `follower_count` int(11) DEFAULT NULL,
   `profile_pic` varchar(100) DEFAULT NULL,
-  `about` varchar(500) DEFAULT NULL,
+  `about` varchar(5000) DEFAULT NULL,
   `email` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -78,10 +79,11 @@ CREATE TABLE `artist` (
 -- Dumping data for table `artist`
 --
 
-INSERT INTO `artist` (`artist_name`, `follower_count`, `profile_pic`, `about`, `email`) VALUES
-('Memories Of Nowhere', 0, '67432dbb9b960', 'Post Rock band focusing on instrumentals', 'mon@gmail.com'),
-('Radiohead', 0, '67433138e8149', 'British gloomy rock', 'radio.head@gmail.com'),
-('Upodeshta', 0, '67343b7f2860b', 'ffdgfhfg', 'Artoria');
+INSERT INTO `artist` (`artist_name`, `profile_pic`, `about`, `email`) VALUES
+('Memories Of Nowhere', '67432dbb9b960', 'Emerging from the shadows of Dhaka, Memories Of Nowhere is a haunting post-rock duo that crafts melancholic soundscapes. Their music, a blend of cinematic instrumentation and raw emotion, feels like a journey through forgotten memories and distant horizons.\n\nFormed in an abandoned theater, the duo\'s spontaneous collaboration gave birth to a unique sound. Driven by swelling guitars, brooding atmospheres, and intricate rhythms, their music paints a picture of beauty within despair. Influenced by both nature\'s grandeur and modern solitude, their sound is vast and intimate.\n\nTheir debut album, Never To Be Released, is a mournful exploration of loss, longing, and solitude. Tracks like Starry Death build layers of instrumentation into emotional crescendos, leaving listeners in a dreamlike haze.\n\nMemories Of Nowhere\'s music speaks directly to the soul, offering solace in the sound of emptiness. Perfect for fans of Mogwai, Explosions in the Sky, and Godspeed You! Black Emperor, their art is an ode to the beauty in darkness.', 'mon@gmail.com'),
+('Radiohead', '67433138e8149', 'Hailing from Abingdon, Oxfordshire, Radiohead is an English rock band renowned for their innovative and boundary-pushing music. Formed in 1985, the band consists of Thom Yorke (vocals, guitar, piano), Jonny Greenwood (lead guitar, keyboards), Colin Greenwood (bass), Ed O’Brien (guitar, backing vocals), and Philip Selway (drums, percussion).\n\nRadiohead achieved international fame with their 1992 debut single, \"Creep,\" a brooding anthem of alienation. Their subsequent albums, including The Bends (1995) and OK Computer (1997), solidified their reputation as a leading band of their generation. OK Computer, in particular, is hailed as a landmark album for its exploration of technology, alienation, and dystopia.\n\nIn 2000, Radiohead released Kid A, a radical departure into experimental electronic sounds and abstract song structures. This reinvention cemented their status as pioneers willing to challenge the conventions of popular music. Subsequent albums like Amnesiac (2001), In Rainbows (2007), and A Moon Shaped Pool (2016) showcase their ability to evolve while maintaining their signature emotional depth and sonic innovation.\n\nRenowned for their electrifying live performances and Thom Yorke\'s haunting vocals, Radiohead continues to influence countless artists. They are celebrated not just for their artistic achievements but also for their commitment to environmental activism and progressive distribution methods.\n\nWith numerous accolades, including inductions into the Rock and Roll Hall of Fame in 2019, Radiohead’s music remains vital and transformative, bridging the emotional and the experimental, the personal and the political.', 'radio.head@gmail.com'),
+('The Weeknd', '67439b082854c', 'The Weeknd (born Abel Makkonen Tesfaye on February 16, 1990) is a Canadian singer, songwriter, and record producer known for his innovative blend of R&B, pop, and electronic music. Emerging from Toronto\'s underground music scene in the early 2010s, The Weeknd gained global recognition with his mixtapes House of Balloons, Thursday, and Echoes of Silence, which introduced his signature falsetto vocals and haunting, atmospheric production.With a career marked by groundbreaking albums like Starboy, ', 'wk@gmail.com'),
+('Upodeshta', '67343b7f2860b', 'ffdgfhfg', 'Artoria');
 
 -- --------------------------------------------------------
 
@@ -96,6 +98,7 @@ CREATE TABLE `feed` (
 ,`followers` bigint(21)
 ,`likes` bigint(21)
 ,`streams` bigint(21)
+,`release_date` date
 );
 
 -- --------------------------------------------------------
@@ -105,8 +108,8 @@ CREATE TABLE `feed` (
 --
 
 CREATE TABLE `follows` (
-  `artist_name` varchar(60) DEFAULT NULL,
-  `email` varchar(60) DEFAULT NULL
+  `artist_name` varchar(60) NOT NULL,
+  `email` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -114,6 +117,9 @@ CREATE TABLE `follows` (
 --
 
 INSERT INTO `follows` (`artist_name`, `email`) VALUES
+('Memories Of Nowhere', 'Artoria'),
+('The Weeknd', 'Artoria'),
+('Upodeshta', 'Artoria'),
 ('Upodeshta', 'emiya');
 
 -- --------------------------------------------------------
@@ -218,6 +224,9 @@ INSERT INTO `images` (`image_id`, `image_url`, `image_type`) VALUES
 ('67432ebdb9631', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732456132/yh0fqi57avvfcbizyb4m.jpg', 'cover_art'),
 ('67433138e8149', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732456767/d5aqtmxiuq1ykuyq5spj.png', 'profile_pic'),
 ('674331664016e', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732456812/zgz3xxfhqnk7qyvi1vj7.jpg', 'cover_art'),
+('67439b082854c', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732483854/eyn2x6lpxsmolspmxdnl.jpg', 'profile_pic'),
+('67439ba2b28eb', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732484008/zrzvumwgpld1wvsnkc9k.webp', 'cover_art'),
+('67439c7bbe82d', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1732484226/iarxmrfbocpg7iqbd8ek.jpg', 'cover_art'),
 ('default', 'https://res.cloudinary.com/doonwj6hd/image/upload/v1731329463/profile_pic/lhjg1rgm4a0c4uedtyzk.jpg', 'profile_pic');
 
 -- --------------------------------------------------------
@@ -227,9 +236,23 @@ INSERT INTO `images` (`image_id`, `image_url`, `image_type`) VALUES
 --
 
 CREATE TABLE `likes` (
-  `email` varchar(60) DEFAULT NULL,
-  `track_id` varchar(64) DEFAULT NULL
+  `email` varchar(60) NOT NULL,
+  `track_id` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `likes`
+--
+
+INSERT INTO `likes` (`email`, `track_id`) VALUES
+('Artoria', '67432f493655f'),
+('Artoria', '674331c3ae39c'),
+('Artoria', '67439c307a4b1'),
+('emiya', '674331c3ae39c'),
+('gil3', '674331c3ae39c'),
+('gil45', '674331c3ae39c'),
+('wk@gmail.com', '674331c3ae39c'),
+('wk@gmail.com', '67439c307a4b1');
 
 -- --------------------------------------------------------
 
@@ -274,7 +297,9 @@ CREATE TABLE `released` (
 INSERT INTO `released` (`artist_name`, `album_id`, `release_date`) VALUES
 ('Upodeshta', '6738a77934eea', '2024-11-22'),
 ('Radiohead', '674331664048c', '2024-11-24'),
-('Memories Of Nowhere', '67432ebdb9b22', '2024-11-24');
+('Memories Of Nowhere', '67432ebdb9b22', '2024-11-24'),
+('The Weeknd', '67439c7bbeb64', '2024-11-25'),
+('The Weeknd', '67439ba2b378e', '2024-11-25');
 
 -- --------------------------------------------------------
 
@@ -300,10 +325,8 @@ INSERT INTO `session` (`token_id`, `email`, `created_at`, `expires_at`, `last_us
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTQzMTksImV4cCI6MTczMzY4NjMxOSwiZGF0YSI6eyJlbWFpbCI6ImdpbDMiLCJ1bmlxdWUiOiI2NzJlNjcyZjVmYzhhIn19.FFctZl3vDCfWAIdM6uijU-A4T-Mhx1ki5pRSz1NN77A', 'gil3', '2024-11-08 19:31:59', '2024-12-08 14:31:59', '2024-11-08 19:31:59'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEwOTUwMDIsImV4cCI6MTczMzY4NzAwMiwiZGF0YSI6eyJlbWFpbCI6ImdpbDIiLCJ1bmlxdWUiOiI2NzJlNjlkYTAwZGRmIn19.lX-HATApqJ8yQl2YDPEXz69obZrQJZmtGs4RDRPpQ_A', 'gil2', '2024-11-08 19:43:22', '2024-12-08 14:43:22', '2024-11-08 19:43:22'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzEzMzE3NDcsImV4cCI6MTczMzkyMzc0NywiZGF0YSI6eyJlbWFpbCI6InNhbXBsZUBleGFtcGxlLmNvbSIsInVuaXF1ZSI6IjY3MzIwNmEzZDFhYjYifX0.czEptwujQAYDrYaX9vWQmiNkiDnjaRVWmKnh8XEAyUE', 'sample@example.com', '2024-11-11 13:29:07', '2024-12-11 08:29:07', '2024-11-11 13:29:07'),
-('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI0NTcwMTcsImV4cCI6MTczMjUwMDIxNywiZGF0YSI6eyJlbWFpbCI6Im1vbkBnbWFpbC5jb20iLCJ1bmlxdWUiOiI2NzQzMzIzOTU0N2MwIn19.4tsbfWIEK0DgJIzP8J4j_METG346agDjGK6cZyqcUeE', 'mon@gmail.com', '2024-11-24 14:03:37', '2024-11-24 21:03:37', '2024-11-24 14:03:37'),
-('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI0NTcwNTMsImV4cCI6MTczMjUwMDI1MywiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzQzMzI1ZGNiOTQzIn19.Rin9_AFbzg7rkRamequ9JFo0t3zVIbnej8ZFDWSoEjc', 'Artoria', '2024-11-24 14:04:13', '2024-11-24 21:04:13', '2024-11-24 14:04:13'),
-('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI0NTY0MTgsImV4cCI6MTczMjQ5OTYxOCwiZGF0YSI6eyJlbWFpbCI6Im1vbkBnbWFpbC5jb20iLCJ1bmlxdWUiOiI2NzQzMmZlMmI5ZWQ2In19.RHvbivrylZE1DdZfgs3Hf4JA2cpAl5_tDOkPdqOedKM', 'mon@gmail.com', '2024-11-24 13:53:38', '2024-11-24 20:53:38', '2024-11-24 13:53:38'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI0NTY1OTAsImV4cCI6MTczNTA0ODU5MCwiZGF0YSI6eyJlbWFpbCI6InJhZGlvLmhlYWRAZ21haWwuY29tIiwidW5pcXVlIjoiNjc0MzMwOGVhNDA5OCJ9fQ.lcrR2Lu7sKO0NThDTp6uVxBY25CiRydtNg5bJVtXFBU', 'radio.head@gmail.com', '2024-11-24 13:56:30', '2024-12-24 08:56:30', '2024-11-24 13:56:30'),
+('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzI2MTQ2ODYsImV4cCI6MTczNTIwNjY4NiwiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzQ1OWExZTAwM2RhIn19.Ty3UOvBDHM7khr2tmLe4dDXVf_hqVAQJChm_3I5pG1I', 'Artoria', '2024-11-26 09:51:26', '2024-12-26 04:51:26', '2024-11-26 09:51:26'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzIwNjE3NTAsImV4cCI6MTczNDY1Mzc1MCwiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzNkMmEzNjkwM2E5In19.AKEt_ky3C9DoQYgGsER0YZyWtgN2NmzfOMx70ObWGGs', 'Artoria', '2024-11-20 00:15:50', '2024-12-19 19:15:50', '2024-11-20 00:15:50'),
 ('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzIyNTc1MjcsImV4cCI6MTczNDg0OTUyNywiZGF0YSI6eyJlbWFpbCI6IkFydG9yaWEiLCJ1bmlxdWUiOiI2NzQwMjZmNzEwOWIzIn19.vLVYwtpn9T5XUUleqw43g0Ytc0NR4ja7lqFcPaxIjyE', 'Artoria', '2024-11-22 06:38:47', '2024-12-22 01:38:47', '2024-11-22 06:38:47');
 
@@ -315,8 +338,55 @@ INSERT INTO `session` (`token_id`, `email`, `created_at`, `expires_at`, `last_us
 
 CREATE TABLE `streams` (
   `email` varchar(60) DEFAULT NULL,
-  `track_id` varchar(64) DEFAULT NULL
+  `track_id` varchar(64) DEFAULT NULL,
+  `streamed_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `streams`
+--
+
+INSERT INTO `streams` (`email`, `track_id`, `streamed_at`) VALUES
+('Artoria', '67439cab9f2b1', '2024-11-26 13:52:15'),
+('Artoria', '67432f493655f', '2024-11-26 13:52:15'),
+('Artoria', '67432f493655f', '2024-11-26 13:52:15'),
+('Artoria', '67432f872123b', '2024-11-26 13:52:15'),
+('Artoria', '67432f872123b', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '67432f493655f', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '67432f493655f', '2024-11-26 13:52:15'),
+('Artoria', '67432f872123b', '2024-11-26 13:52:15'),
+('Artoria', '67439cab9f2b1', '2024-11-26 13:52:15'),
+('Artoria', '67432f872123b', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '673d5b1341b60', '2024-11-26 13:52:15'),
+('Artoria', '67432f872123b', '2024-11-26 13:52:15'),
+('Artoria', '673d5b1341b60', '2024-11-26 13:52:15'),
+('Artoria', '67439cab9f2b1', '2024-11-26 13:52:15'),
+('Artoria', '67432f872123b', '2024-11-26 13:52:15'),
+('Artoria', '67432f493655f', '2024-11-26 13:52:15'),
+('Artoria', '67432f493655f', '2024-11-26 13:52:15'),
+('Artoria', '673d5b1341b60', '2024-11-26 13:52:15'),
+('Artoria', '67432f493655f', '2024-11-26 13:52:15'),
+('Artoria', '673d5b1341b60', '2024-11-26 13:52:15'),
+('Artoria', '67432f493655f', '2024-11-26 13:52:15'),
+('Artoria', '67432f872123b', '2024-11-26 13:52:15'),
+('Artoria', '67439cab9f2b1', '2024-11-26 13:52:15'),
+('Artoria', '67439c307a4b1', '2024-11-26 13:52:15'),
+('Artoria', '67432f872123b', '2024-11-26 13:52:15'),
+('Artoria', '67439cab9f2b1', '2024-11-26 13:52:15'),
+('Artoria', '67439cab9f2b1', '2024-11-26 13:52:15'),
+('Artoria', '674331c3ae39c', '2024-11-26 13:52:15'),
+('Artoria', '67439cab9f2b1', '2024-11-26 13:52:15'),
+('Artoria', '67439cab9f2b1', '2024-11-26 13:59:07');
 
 -- --------------------------------------------------------
 
@@ -340,7 +410,9 @@ INSERT INTO `tracks` (`track_id`, `track_name`, `tag`, `track_url`, `album_id`) 
 ('673d5b1341b60', 'New Riff', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732074261/hkhkxh6uficlvhczkt5v.mp3', '6738a77934eea'),
 ('67432f493655f', 'Starry Death', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732456268/lmcocnh27uduvi4xs3s5.wav', '67432ebdb9b22'),
 ('67432f872123b', 'Crunch', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732456331/lsoza3lveazqbfu5t6nf.wav', '67432ebdb9b22'),
-('674331c3ae39c', 'Afterthought', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732456905/dcv03tuuphizq3o3t0s7.mp3', '674331664048c');
+('674331c3ae39c', 'Afterthought', 'Rock', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732456905/dcv03tuuphizq3o3t0s7.mp3', '674331664048c'),
+('67439c307a4b1', 'Creepin', 'R&B', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732484150/ti1g7u9o2hh8zgujdncc.mp3', '67439ba2b378e'),
+('67439cab9f2b1', 'Wicked Games', 'R&B', 'https://res.cloudinary.com/doonwj6hd/video/upload/v1732484272/sqioc7gs6c44ycbbrhgx.mp3', '67439c7bbeb64');
 
 -- --------------------------------------------------------
 
@@ -380,7 +452,8 @@ INSERT INTO `users` (`email`, `name`, `password`, `profile_pic`) VALUES
 ('samiha@gmail.com', 'samiha', '$2y$10$9XZtr0D4MLl4q.IjmJRE4u6r.iE9CsgS70BzAvetI3G9N0B8hvd.2', NULL),
 ('sample@example.com', 'sample', '$2y$10$E62eAdm.0qzpQtbStYTqFuv/7HjQi67KFi2OYFFxVDo3hfS3alYsS', 'default'),
 ('test345@example.com', 'user345', '$2y$10$LrgGByWlW7Cq/JElICKhpe9cFJkHF4A6/08uI3Qu61I6SCx78g0lO', NULL),
-('test34@example.com', 'Test User34', '$2y$10$2qjpEgjxU5sT.Of5ayOPTudd40CG2LG9vGoZ/Jm5KQaQ7WsdYE6EW', NULL);
+('test34@example.com', 'Test User34', '$2y$10$2qjpEgjxU5sT.Of5ayOPTudd40CG2LG9vGoZ/Jm5KQaQ7WsdYE6EW', NULL),
+('wk@gmail.com', 'Abel', '$2y$10$0gnxp/.YDvQoLxKO1MIf1OvXuRENMUdX/KCsLypSaSZOY6a8UwCtK', 'default');
 
 -- --------------------------------------------------------
 
@@ -404,7 +477,12 @@ CREATE TABLE `user_feed` (
 --
 
 INSERT INTO `user_feed` (`email`, `artist_name`, `album_id`, `track_id`, `followers`, `likes`, `streams`, `created_at`) VALUES
-('emiya', 'Upodeshta', '6738a77934eea', '673d5b1341b60', 1, 0, 0, '2024-11-24 14:33:10');
+('Artoria', 'Upodeshta', '6738a77934eea', '673d5b1341b60', 2, 0, 1, '2024-11-26 10:43:10'),
+('Artoria', 'Memories Of Nowhere', '67432ebdb9b22', '67432f493655f', 1, 1, 1, '2024-11-26 10:43:10'),
+('Artoria', 'Memories Of Nowhere', '67432ebdb9b22', '67432f872123b', 1, 0, 1, '2024-11-26 10:43:10'),
+('Artoria', 'The Weeknd', '67439ba2b378e', '67439c307a4b1', 1, 2, 1, '2024-11-26 10:43:10'),
+('Artoria', 'The Weeknd', '67439c7bbeb64', '67439cab9f2b1', 1, 0, 2, '2024-11-26 10:43:10'),
+('emiya', 'Upodeshta', '6738a77934eea', '673d5b1341b60', 2, 0, 1, '2024-11-26 10:43:10');
 
 -- --------------------------------------------------------
 
@@ -413,7 +491,7 @@ INSERT INTO `user_feed` (`email`, `artist_name`, `album_id`, `track_id`, `follow
 --
 DROP TABLE IF EXISTS `feed`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `feed`  AS SELECT `r`.`artist_name` AS `artist_name`, `r`.`album_id` AS `album_id`, `t`.`track_id` AS `track_id`, coalesce(count(`f`.`artist_name`),0) AS `followers`, coalesce(count(`l`.`track_id`),0) AS `likes`, coalesce(count(`s`.`track_id`),0) AS `streams` FROM ((((`released` `r` join `tracks` `t` on(`r`.`album_id` = `t`.`album_id`)) left join `follows` `f` on(`r`.`artist_name` = `f`.`artist_name`)) left join `likes` `l` on(`t`.`track_id` = `l`.`track_id`)) left join `streams` `s` on(`t`.`track_id` = `s`.`track_id`)) GROUP BY `r`.`artist_name`, `r`.`album_id`, `t`.`track_id` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `feed`  AS SELECT `r`.`artist_name` AS `artist_name`, `r`.`album_id` AS `album_id`, `t`.`track_id` AS `track_id`, coalesce(count(distinct `f`.`email`),0) AS `followers`, coalesce(count(distinct `l`.`email`),0) AS `likes`, coalesce(count(distinct concat(`s`.`email`,'-',`s`.`track_id`,'-',`s`.`streamed_at`)),0) AS `streams`, `r`.`release_date` AS `release_date` FROM ((((`released` `r` join `tracks` `t` on(`r`.`album_id` = `t`.`album_id`)) left join `follows` `f` on(`r`.`artist_name` = `f`.`artist_name`)) left join `likes` `l` on(`t`.`track_id` = `l`.`track_id`)) left join `streams` `s` on(`t`.`track_id` = `s`.`track_id`)) GROUP BY `r`.`artist_name`, `r`.`album_id`, `t`.`track_id` ;
 
 --
 -- Indexes for dumped tables
@@ -439,6 +517,7 @@ ALTER TABLE `artist`
 -- Indexes for table `follows`
 --
 ALTER TABLE `follows`
+  ADD PRIMARY KEY (`artist_name`,`email`),
   ADD KEY `artist_name` (`artist_name`),
   ADD KEY `email` (`email`);
 
@@ -458,7 +537,7 @@ ALTER TABLE `images`
 -- Indexes for table `likes`
 --
 ALTER TABLE `likes`
-  ADD KEY `email` (`email`),
+  ADD PRIMARY KEY (`email`,`track_id`),
   ADD KEY `track_id` (`track_id`);
 
 --
@@ -616,19 +695,32 @@ CREATE DEFINER=`root`@`localhost` EVENT `delete_expired_rows` ON SCHEDULE EVERY 
 
 CREATE DEFINER=`root`@`localhost` EVENT `populate_user_feed` ON SCHEDULE EVERY 10 MINUTE STARTS '2024-11-24 08:53:10' ON COMPLETION NOT PRESERVE ENABLE DO INSERT INTO user_feed (email, artist_name, album_id, track_id, followers, likes, streams)
 SELECT 
-    fo.email,
-    f.artist_name,
-    f.album_id,
-    f.track_id,
-    COALESCE(f.followers, 0) AS followers,
-    COALESCE(f.likes, 0) AS likes,
-    COALESCE(f.streams, 0) AS streams
-FROM 
-    feed f
-JOIN 
-    follows fo ON f.artist_name = fo.artist_name
-WHERE 
-    fo.email IS NOT NULL
+    ordered_data.email,
+    ordered_data.artist_name,
+    ordered_data.album_id,
+    ordered_data.track_id,
+    ordered_data.followers,
+    ordered_data.likes,
+    ordered_data.streams
+FROM (
+    SELECT 
+        fo.email,
+        f.artist_name,
+        f.album_id,
+        f.track_id,
+        COALESCE(f.followers, 0) AS followers,
+        COALESCE(f.likes, 0) AS likes,
+        COALESCE(f.streams, 0) AS streams,
+        f.release_date
+    FROM 
+        feed f
+    JOIN 
+        follows fo ON f.artist_name = fo.artist_name
+    WHERE 
+        fo.email IS NOT NULL
+    ORDER BY 
+        f.release_date DESC
+) AS ordered_data
 ON DUPLICATE KEY UPDATE
     followers = VALUES(followers),
     likes = VALUES(likes),
