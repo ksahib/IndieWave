@@ -8,6 +8,7 @@ import 'package:client/features/home/view/widgets/main_feed.dart';
 import 'package:client/features/home/view/widgets/music_slab.dart';
 import 'package:client/features/home/view/widgets/now_playing.dart';
 import 'package:client/features/home/view/widgets/user_titlebar.dart';
+import 'package:client/features/home/viewmodels/banner_viewmodel.dart';
 import 'package:client/features/home/viewmodels/trend_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -27,6 +28,7 @@ class _Homepage extends ConsumerState<Homepage> {
   dynamic userData;
   List<dynamic> artistTrendList = [];
   List<dynamic> trackTrendList = [];
+  dynamic banner;
 
 
   @override
@@ -46,14 +48,16 @@ class _Homepage extends ConsumerState<Homepage> {
   //print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
   final artistResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'artist');
   final trackResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'track');
+  final bannerResponse = await ref.read(bannerViewmodelProvider.notifier).banner(userData.email);
   
 
   if (artistResponse is AsyncData<List<TrendModel>> && trackResponse is AsyncData<List<TrendModel>>) {
     setState(() {
       artistTrendList = artistResponse.value;
       trackTrendList = trackResponse.value;
-      print("Artists: ${artistTrendList}");
-      print("Tracks: ${trackTrendList}");
+      banner = bannerResponse;
+      // print("Artists: ${artistTrendList}");
+      // print("Tracks: ${trackTrendList}");
     });
   } else if (artistResponse is AsyncError) {
     showSnackBar(context, 'Failed to load tracks: ${artistResponse?.error}', Pallete.errorColor);
@@ -75,7 +79,6 @@ class _Homepage extends ConsumerState<Homepage> {
                 const Text('An error occurred.'),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to login page
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
                   },
                   child: const Text('Login Again'),
@@ -127,7 +130,8 @@ class _Homepage extends ConsumerState<Homepage> {
                           MainFeed(
                             artistTrendList: artistTrendList, 
                             userData: userData, 
-                            trackTrendList: trackTrendList
+                            trackTrendList: trackTrendList,
+                            bannerData: banner,
                           ),
                           const SizedBox(width: 5),
                           //right: Now Playing

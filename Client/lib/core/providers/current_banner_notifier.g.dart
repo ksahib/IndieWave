@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'current_stream_notifier.dart';
+part of 'current_banner_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentStreamNotifierHash() =>
-    r'b4face3f38dec1f7a010c9507ec25ec9c1068578';
+String _$currentBannerNotifierHash() =>
+    r'436aeb54daa0ef303e2fb5210cff24141f09bb8c';
 
-/// See also [CurrentStreamNotifier].
-@ProviderFor(CurrentStreamNotifier)
-final currentStreamNotifierProvider =
-    AutoDisposeNotifierProvider<CurrentStreamNotifier, TrendModel?>.internal(
-  CurrentStreamNotifier.new,
-  name: r'currentStreamNotifierProvider',
+/// See also [CurrentBannerNotifier].
+@ProviderFor(CurrentBannerNotifier)
+final currentBannerNotifierProvider =
+    NotifierProvider<CurrentBannerNotifier, AlbumModel?>.internal(
+  CurrentBannerNotifier.new,
+  name: r'currentBannerNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$currentStreamNotifierHash,
+      : _$currentBannerNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CurrentStreamNotifier = AutoDisposeNotifier<TrendModel?>;
+typedef _$CurrentBannerNotifier = Notifier<AlbumModel?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

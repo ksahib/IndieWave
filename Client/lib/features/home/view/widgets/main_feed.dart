@@ -11,7 +11,8 @@ class MainFeed extends ConsumerWidget{
   final dynamic artistTrendList;
   final dynamic userData;
   final dynamic trackTrendList;
-  MainFeed({super.key, required this.artistTrendList, required this.userData, required this.trackTrendList});
+  final dynamic bannerData;
+  MainFeed({super.key, required this.artistTrendList, required this.userData, required this.trackTrendList, required this.bannerData});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return 
@@ -56,17 +57,29 @@ class MainFeed extends ConsumerWidget{
                                             child: Container(
                                               width: 200,
                                               height: 200,
-                                              child: Image(image: NetworkImage(userData.image_url)),
+                                              child: Image(image: NetworkImage(bannerData.cover_art)),
                                             ),
                                           ),
                                           const SizedBox(
                                             width: 10,
                                           ),
-                                          Expanded(
-                                            child: Text(
-                                              "Check Out The Latest Release.",
-                                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30, color: Colors.white)
-                                            )
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 70,),
+                                              const Text(
+                                                "Check Out \nThe Latest Release.",
+                                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 25, color: Colors.white),
+                                              ),
+                                              Text(
+                                                bannerData.name,
+                                                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white)
+                                              ),
+                                              Text(
+                                                bannerData.artist_name,
+                                                style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 15, color: Colors.white)
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
