@@ -24,30 +24,54 @@ class UserTitlebar extends StatelessWidget{
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 15.0, 0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      name,
-                      style: const TextStyle(color: Pallete.whiteColor),
-                    ),
-                    const SizedBox(width: 8.0),
-                    GestureDetector(
-                      onTap: onTap,
-                      child: ClipOval(
-                        child: SizedBox(
-                          width: 35.0,
-                          height: 35.0,
-                          child: CircleAvatar(
-                            radius: 20.0,
-                            foregroundImage: NetworkImage(url),
-                          ),
-                        ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(width: 10),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            }, 
+                            icon: const Icon(Icons.arrow_back_ios),
+                            ),
+                          IconButton(
+                            onPressed: () {
+                              //Navigator.pop(context);
+                            }, 
+                            icon: const Icon(Icons.arrow_forward_ios),
+                            ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 15.0),
-                    const Minimize(),
-                    const Maximize(),
-                    const Close(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          name,
+                          style: const TextStyle(color: Pallete.whiteColor),
+                        ),
+                        const SizedBox(width: 8.0),
+                        GestureDetector(
+                          onTap: onTap,
+                          child: ClipOval(
+                            child: SizedBox(
+                              width: 35.0,
+                              height: 35.0,
+                              child: CircleAvatar(
+                                radius: 20.0,
+                                foregroundImage: NetworkImage(url),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 15.0),
+                        const Minimize(),
+                        const Maximize(),
+                        const Close(),
+                      ],
+                    ),
                   ],
                 ),
               ),

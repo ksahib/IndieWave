@@ -139,7 +139,6 @@ class _Homepage extends ConsumerState<Homepage> {
                             flex: 3,
                             child: Stack(
                               children: [
-                                
                                 NowPlaying(),
                                 IgnorePointer(
                                   child: ClipRRect(

@@ -1,4 +1,5 @@
 import 'package:client/core/providers/current_stream_notifier.dart';
+import 'package:client/features/home/view/pages/artist_page.dart';
 import 'package:client/features/home/view/widgets/album_display_widget.dart';
 import 'package:client/features/home/view/widgets/artist_display_widget.dart';
 import 'package:client/features/home/view/widgets/list_cards.dart';
@@ -190,6 +191,7 @@ class MainFeed extends ConsumerWidget{
                                       final artist = artistTrendList[index];
                                       return GestureDetector(
                                         onTap: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ArtistPage(artistData: artist)));
                                         },
                                         child: Row(
                                           children: [

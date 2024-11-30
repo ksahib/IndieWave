@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:client/core/constants/server_constant.dart';
 import 'package:client/core/providers/current_stream_notifier.dart';
+import 'package:client/core/providers/current_track_notifier.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/providers/like_status_provider.dart';
 import 'package:client/core/theme/app_pallete.dart';
