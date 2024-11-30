@@ -41,7 +41,7 @@ class BaseModel {
         if ($row) {
             return ['status' => 200, 'data' => $row];
         } else {
-            return ['status' => 404, 'message' => 'Record not found'];
+            return false;
         }
     }
 
@@ -57,9 +57,7 @@ class BaseModel {
 
     // Update a record
     public function update($id, $data, $column) {
-        if (!preg_match('/^[a-zA-Z_]+$/', $column)) {
-            return ['status' => 400, 'message' => 'Invalid column name'];
-        }
+        
         $fields = [];
         foreach ($data as $field => $value) {
             if ($value instanceof DateTime) {
@@ -90,8 +88,11 @@ class BaseModel {
     }
 
     // Delete a record
-    public function delete($id) {
-        $query = "DELETE FROM " . $this->table_name . " WHERE id = :id";
+    public function delete($column, $id) {
+        if (!preg_match('/^[a-zA-Z_]+$/', $column)) {
+            return ['status' => 400, 'message' => 'Invalid column name'];
+        }
+        $query = "DELETE FROM " . $this->table_name . " WHERE $column = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $id);
 
@@ -101,5 +102,7 @@ class BaseModel {
             return ['status' => 500, 'message' => 'Error deleting record'];
         }
     }
+
+    
 }
 ?>
