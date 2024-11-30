@@ -30,7 +30,7 @@ class CurrentArtistViewNotifier extends _$CurrentArtistViewNotifier{
     );
 
     final res = jsonDecode(response.body) as Map<String, dynamic>;
-    //print('API Response Body: ${response.body}');
+    print('API Response Body: ${response.body}');
     if (response.statusCode != 200) {
       throw Failure(res['message']);
     } else {

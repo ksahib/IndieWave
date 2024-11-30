@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'dart:io';
+
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -18,6 +20,7 @@ void main() async{
   final container = ProviderContainer();
   await container.read(authViewmodelProvider.notifier).initSharedPreferences();
   await container.read(authViewmodelProvider.notifier).getData();
+  HttpOverrides.global = new MyHttpOverrides();
   //print(ud);
    // Configure the window manager
   await windowManager.waitUntilReadyToShow();
@@ -41,6 +44,14 @@ void main() async{
 
   
   
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true; // Ignore bad certificates
+  }
 }
 
 class MyApp extends ConsumerWidget {

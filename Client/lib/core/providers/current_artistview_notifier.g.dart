@@ -7,7 +7,7 @@ part of 'current_artistview_notifier.dart';
 // **************************************************************************
 
 String _$currentArtistViewNotifierHash() =>
-    r'ca180ca539f4e1c0fd73cff835299fbd57971f21';
+    r'2b50bcad8f1841a2510e8a8d72d3a38491c8cb44';
 
 /// See also [CurrentArtistViewNotifier].
 @ProviderFor(CurrentArtistViewNotifier)

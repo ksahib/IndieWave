@@ -41,6 +41,7 @@ class _Homepage extends ConsumerState<Homepage> {
 
   Future<void> loadData() async {
     userData = await checkCreds();
+    print(userData.image_url);
     setState(() {});
   }
 
