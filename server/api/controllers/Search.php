@@ -33,7 +33,8 @@ class Search extends BaseController {
             if (empty($Hint))
                 $Hint = "";
             // Fetch genres based on the hint
-            $query = "SELECT track_name FROM feed NATURAL JOIN tracks NATURAL JOIN album WHERE track_name LIKE :hint AND track_id IN (SELECT track_id FROM feed)";
+            $query = "SELECT track_name FROM feed NATURAL JOIN tracks NATURAL JOIN album WHERE track_name LIKE :hint AND track_id IN (SELECT track_id FROM feed)
+                      GROUP BY (track_name)";
             $stmt = $this->db->prepare($query);
 
             $searchTerm = $Hint . "%";
@@ -43,7 +44,8 @@ class Search extends BaseController {
             $stmt->execute();
             $tracks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $query = "SELECT album.name FROM feed NATURAL JOIN tracks NATURAL JOIN album WHERE album.name LIKE :hint AND album_id IN (SELECT album_id FROM feed)";
+            $query = "SELECT album.name FROM feed NATURAL JOIN tracks NATURAL JOIN album WHERE album.name LIKE :hint AND album_id IN (SELECT album_id FROM feed)
+                      GROUP BY (album.name)";
             $stmt = $this->db->prepare($query);
 
             $searchTerm = $Hint . "%";
@@ -53,7 +55,8 @@ class Search extends BaseController {
             $stmt->execute();
             $albums = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            $query = "SELECT artist_name FROM feed NATURAL JOIN tracks NATURAL JOIN album WHERE artist_name LIKE :hint AND artist_name IN (SELECT artist_name FROM feed)";
+            $query = "SELECT artist_name FROM feed NATURAL JOIN tracks NATURAL JOIN album WHERE artist_name LIKE :hint AND artist_name IN (SELECT artist_name FROM feed)
+                      GROUP BY (artist_name)";
             $stmt = $this->db->prepare($query);
 
             $searchTerm = $Hint . "%";
