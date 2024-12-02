@@ -87,9 +87,9 @@ class TrendModel {
       album_id: map['album_id'] ?? '',
       album_name: map['album_name'] ?? '',
       album_cover: map['album_cover'] ?? '',
-      followers: map['followers'] ?? '',
-      likes: map['likes'] ?? '',
-      streams: map['streams'] ?? '',
+      followers: map['followers'] ?? 0,
+      likes: map['likes'] ?? 0,
+      streams: map['streams'] ?? 0,
     );
   }
 

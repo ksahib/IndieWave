@@ -77,7 +77,7 @@ class _AlbumViewState extends ConsumerState<AlbumView> {
     print("Album Data: $albumData");
     loadTracks();
     _checkReleaseStatus();
-    setState(() {}); // Update UI after fetching album data
+    setState(() {}); 
   }
 
   Future<void> loadTracks() async {
