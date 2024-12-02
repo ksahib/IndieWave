@@ -16,18 +16,31 @@ class Trending extends BaseController {
 
         try {
             if ($trendType == 'artist') {
-                $query = "SELECT artist_name, album_id, track_id,
-                                MAX(followers) AS followers,
-                                MAX(likes) AS likes,
-                                MAX(streams) AS streams
-                          FROM feed
-                          GROUP BY artist_name
-                          ORDER BY followers DESC, likes DESC, streams DESC
-                          LIMIT 10";
+                $query = "
+                SELECT 
+                    artist_name, 
+                    album_id, 
+                    track_id,
+                    MAX(followers) AS followers,
+                    MAX(likes) AS likes,
+                    MAX(streams) AS streams
+                FROM 
+                    feed
+                GROUP BY 
+                    artist_name
+                ORDER BY 
+                    followers DESC, likes DESC, streams DESC
+                LIMIT 10
+                ";
             } else {
-                $query = "SELECT * FROM feed
-                          ORDER BY followers DESC, likes DESC, streams DESC
-                          LIMIT 10";
+                $query = "
+                SELECT 
+                    * 
+                FROM 
+                    feed
+                ORDER BY 
+                    followers DESC, likes DESC, streams DESC
+                LIMIT 10";
             }
 
             $stmt = $this->db->prepare($query);
@@ -43,7 +56,15 @@ class Trending extends BaseController {
             foreach ($feedResults as $row) {
                 $albumId = $row['album_id'];
 
-                $albumQuery = "SELECT name, cover_art FROM album WHERE album_id = :album_id";
+                $albumQuery = "
+                SELECT 
+                    name, 
+                    cover_art 
+                FROM 
+                    album 
+                WHERE 
+                    album_id = :album_id
+                ";
                 $albumStmt = $this->db->prepare($albumQuery);
                 $albumStmt->bindParam(':album_id', $albumId);
                 $albumStmt->execute();
@@ -54,7 +75,14 @@ class Trending extends BaseController {
 
                 $imageUrl = null;
                 if ($imageId) {
-                    $imageQuery = "SELECT image_url FROM images WHERE image_id = :image_id";
+                    $imageQuery = "
+                    SELECT 
+                        image_url 
+                    FROM 
+                        images 
+                    WHERE 
+                        image_id = :image_id
+                    ";
                     $imageStmt = $this->db->prepare($imageQuery);
                     $imageStmt->bindParam(':image_id', $imageId);
                     $imageStmt->execute();
@@ -63,7 +91,15 @@ class Trending extends BaseController {
                 }
 
                 $trackId = $row['track_id'];
-                $trackQuery = "SELECT track_name, track_url FROM tracks WHERE track_id = :track_id";
+                $trackQuery = "
+                SELECT 
+                    track_name, 
+                    track_url 
+                FROM 
+                    tracks 
+                WHERE  
+                    track_id = :track_id
+                ";
                 $trackStmt = $this->db->prepare($trackQuery);
                 $trackStmt->bindParam(':track_id', $trackId);
                 $trackStmt->execute();
@@ -72,7 +108,15 @@ class Trending extends BaseController {
                 $trackUrl = $trackData['track_url'] ?? '';
 
                 $artistName = $row['artist_name'];
-                $artistQuery = "SELECT profile_pic, about FROM artist WHERE artist_name = :artist_name";
+                $artistQuery = "
+                    SELECT 
+                        profile_pic, 
+                        about 
+                    FROM 
+                        artist 
+                    WHERE 
+                        artist_name = :artist_name
+                    ";
                 $artistStmt = $this->db->prepare($artistQuery);
                 $artistStmt->bindParam(':artist_name', $artistName);
                 $artistStmt->execute();
@@ -80,7 +124,14 @@ class Trending extends BaseController {
                 $profilePicId = $artistData['profile_pic'] ?? "";
                 $about = $artistData['about'] ?? "";
 
-                $profilePicQuery = "SELECT image_url FROM images WHERE image_id = :image_id";
+                $profilePicQuery = "
+                SELECT 
+                    image_url 
+                FROM 
+                    images 
+                WHERE 
+                    image_id = :image_id
+                ";
                 $profilePicStmt = $this->db->prepare($profilePicQuery);
                 $profilePicStmt->bindParam(':image_id', $profilePicId);
                 $profilePicStmt->execute();
