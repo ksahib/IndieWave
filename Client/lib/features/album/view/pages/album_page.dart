@@ -171,7 +171,6 @@ Future<void> loadGenre() async {
                                             padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                                             child: ListTile(
                                               title: Text(track.track_name),
-                                              subtitle: const Text('length'),
                                               
                                             ),
                                           ),

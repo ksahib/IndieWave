@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/Artist/view/pages/artist_registration.dart';
@@ -11,6 +13,8 @@ import 'package:client/features/home/view/widgets/now_playing.dart';
 import 'package:client/features/home/view/widgets/user_titlebar.dart';
 import 'package:client/features/home/viewmodels/banner_viewmodel.dart';
 import 'package:client/features/home/viewmodels/trend_viewmodel.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,8 +33,9 @@ class _Homepage extends ConsumerState<Homepage> {
   dynamic userData;
   List<dynamic> artistTrendList = [];
   List<dynamic> trackTrendList = [];
+  final tracks = [];
   dynamic banner;
-
+  final TextEditingController nameController = TextEditingController();
 
   @override
   void initState() {
@@ -51,7 +56,11 @@ class _Homepage extends ConsumerState<Homepage> {
   final artistResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'artist');
   final trackResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'track');
   final bannerResponse = await ref.read(bannerViewmodelProvider.notifier).banner(userData.email);
-  
+  // File? selectedImage;
+
+  // void selectImage() async {
+    
+  // }
 
   if (artistResponse is AsyncData<List<TrendModel>> && trackResponse is AsyncData<List<TrendModel>>) {
     setState(() {
@@ -104,21 +113,243 @@ class _Homepage extends ConsumerState<Homepage> {
                           //left: Playlists and Libraries
                           Expanded(
                             flex: 2,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Container(
-                                height: double.infinity,
-                                color: const Color.fromARGB(7, 255, 255, 255),
-                              ),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Container(
+                                    height: double.infinity,
+                                    color: const Color.fromARGB(7, 255, 255, 255),
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          CupertinoIcons.music_albums,
+                                        ),
+                                        const SizedBox(width: 10,),
+                                        const Text(
+                                          "Your Library",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        SizedBox(width: MediaQuery.sizeOf(context).width * 0.06),
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          //add playlist
+                                          child: IconButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return StatefulBuilder(
+                                                    builder: (BuildContext context, void Function(void Function()) setDialogState) {
+                                                      return AlertDialog(
+                                                    contentPadding:
+                                                        const EdgeInsets.all(20),
+                                                    backgroundColor: Colors.grey[900],
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(20),
+                                                    ),
+                                                    content: SizedBox(
+                                                      width: 300,
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          const Text(
+                                                            "Add New Playlist",
+                                                            style: TextStyle(
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight.bold,
+                                                                color: Colors.white),
+                                                          ),
+                                                          const SizedBox(height: 20),
+                                                          
+                                                          
+                                                          const SizedBox(height: 20),
+                                                          TextField(
+                                                            controller: nameController,
+                                                            decoration: InputDecoration(
+                                                              labelText: "Track Name",
+                                                              labelStyle: TextStyle(
+                                                                  color:
+                                                                      Colors.grey[400]),
+                                                              enabledBorder:
+                                                                  OutlineInputBorder(
+                                                                borderSide: BorderSide(
+                                                                    color: Colors
+                                                                        .grey[700]!),
+                                                              ),
+                                                              focusedBorder:
+                                                                  const OutlineInputBorder(
+                                                                borderSide: BorderSide(
+                                                                    color: Pallete
+                                                                        .greenColor),
+                                                              ),
+                                                            ),
+                                                            style: const TextStyle(
+                                                                color: Colors.white),
+                                                          ),
+                                                          const SizedBox(height: 15),
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              // Handle file picker logic here
+                                                              selectImage();
+                                                              setDialogState(() {
+                                                                
+                                                              },);
+                                                              
+                                                              
+                                                              
+                                                            },
+                                                            style: ElevatedButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  Pallete.greenColor,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(20),
+                                                              ),
+                                                            ),
+                                                            child: const Text(
+                                                              "Pick a File",
+                                                              style: TextStyle(
+                                                                  color: Colors.black),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 15),
+                                                          ElevatedButton(
+                                                            onPressed: () {
+                                                              // call create playlist api
+                                                              
+                                                              setDialogState(() {
+                                                                
+                                                              },);
+                                                              
+                                                              
+                                                              
+                                                            },
+                                                            style: ElevatedButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  Pallete.greenColor,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(20),
+                                                              ),
+                                                            ),
+                                                            child: const Text(
+                                                              "Create",
+                                                              style: TextStyle(
+                                                                  color: Colors.black),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            }, 
+                                            icon: const Icon(CupertinoIcons.add)
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(width: 5),
                           //Middle: Main feed
-                          MainFeed(
-                            artistTrendList: artistTrendList, 
-                            userData: userData, 
-                            trackTrendList: trackTrendList,
-                            bannerData: banner,
+                          // MainFeed(
+                          //   artistTrendList: artistTrendList, 
+                          //   userData: userData, 
+                          //   trackTrendList: trackTrendList,
+                          //   bannerData: banner,
+                          // ),
+                          Expanded(
+                            flex:4,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      width: double.infinity,
+                                      color: Colors.blue,
+                                      child: Stack(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(15.0),
+                                                child: Card(
+                                                  elevation: 10,
+                                                  child: SizedBox(
+                                                    height: 170,
+                                                    width: 170,
+                                                    child: Container(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 20,),
+                                              Text(
+                                                "Your Playlist",
+                                                style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.w600
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: SingleChildScrollView(
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(maxHeight: 1200),
+                                        child: Container(
+                                          color: Colors.amber,
+                                          child: ListView.builder(
+                                            itemCount: tracks.length,
+                                            itemBuilder: (context, index) {
+                                            final track = tracks[index];
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: ListTile(
+                                                title: Text(track.name),
+                                                
+                                              ),
+                                            );
+                                          })
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 5),
                           //right: Now Playing
@@ -183,7 +414,6 @@ class _Homepage extends ConsumerState<Homepage> {
                                                 ),
                                                 TextButton(
                                                   onPressed: () async {
-                                                    // Handle logout
                                                     ref.read(authViewmodelProvider.notifier).logoutUser();
                                                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const LoginPage()));
                                                   },
@@ -219,5 +449,19 @@ class _Homepage extends ConsumerState<Homepage> {
         ),
       ),
     );
+  }
+  File? selectedImage;
+  
+  void selectImage() async {
+    final pickedImage = await pickImage();
+    if(pickedImage != null) {
+      setState(() {
+        selectedImage = pickedImage;
+      });
+    }
+    await Future.delayed(Duration(milliseconds: 200));
+    if (selectedImage != null) {
+      //await player.play(DeviceFileSource(selectedAudio!.path));
+    }
   }
 }
