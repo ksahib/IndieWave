@@ -3,6 +3,7 @@ import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/Artist/view/pages/artist_registration.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/Artist/view/pages/artist_profile_page.dart';
+import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:client/features/home/models/trend_model.dart';
 import 'package:client/features/home/view/widgets/main_feed.dart';
 import 'package:client/features/home/view/widgets/music_slab.dart';
@@ -41,7 +42,7 @@ class _Homepage extends ConsumerState<Homepage> {
 
   Future<void> loadData() async {
     userData = await checkCreds();
-    print(userData.image_url);
+    print(userData);
     setState(() {});
   }
 
@@ -72,22 +73,7 @@ class _Homepage extends ConsumerState<Homepage> {
   @override
   Widget build(BuildContext context) {
     if (userData == null) {
-      return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('An error occurred.'),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
-                  },
-                  child: const Text('Login Again'),
-                )
-              ],
-            ),
-          ),
-        );
+      return const LoginPage();
     }
 
     return Scaffold(
@@ -196,8 +182,9 @@ class _Homepage extends ConsumerState<Homepage> {
                                                   ),
                                                 ),
                                                 TextButton(
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     // Handle logout
+                                                    ref.read(authViewmodelProvider.notifier).logoutUser();
                                                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const LoginPage()));
                                                   },
                                                   child: const Text(

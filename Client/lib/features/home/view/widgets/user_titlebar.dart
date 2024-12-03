@@ -189,7 +189,7 @@ Widget _buildPillButton(String text, {required VoidCallback onPressed}) {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), 
     ),
     child: Text(
       text,

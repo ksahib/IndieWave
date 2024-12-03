@@ -76,25 +76,26 @@ Widget build(BuildContext context, WidgetRef ref) {
       error: (error, stackTrace) {
         print(error);
         // Redirect to LoginPage if session is not found or any other error occurs
-        return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('An error occurred: $error'),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to login page
-                    navigatorKey.currentState?.pushReplacement(
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                  },
-                  child: const Text('Login Again'),
-                )
-              ],
-            ),
-          ),
-        );
+        return const LoginPage();
+        // return Scaffold(
+        //   body: Center(
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         Text('An error occurred: $error'),
+        //         ElevatedButton(
+        //           onPressed: () {
+        //             // Navigate to login page
+        //             navigatorKey.currentState?.pushReplacement(
+        //             MaterialPageRoute(builder: (context) => const LoginPage()),
+        //           );
+        //           },
+        //           child: const Text('Login Again'),
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // );
       },
     ):
     const LoginPage(),

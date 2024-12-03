@@ -50,6 +50,9 @@ class UserModel {
   String toJson() => json.encode(toMap());
 
   factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserModel.empty() {
+    return UserModel(name: '', email: '', image_url: '', token: '');
+  }
 
   @override
   String toString() {

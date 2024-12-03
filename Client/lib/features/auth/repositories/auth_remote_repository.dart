@@ -43,7 +43,7 @@ class AuthRemoteRepository {
     }
   }
 
-  Future<Either<AppFailure, UserModel>> login({
+Future<Either<AppFailure, UserModel>> login({
     required String mail,
     required String password,
     required bool keepLoggedIn,
@@ -64,9 +64,11 @@ class AuthRemoteRepository {
   } catch (e) {
      return Left(AppFailure(e.toString()));
   }
-  }
+}
 
-  Future<Either<AppFailure, UserModel>> getUser(String? token) async {
+  
+
+Future<Either<AppFailure, UserModel>> getUser(String? token) async {
     try {
       final uri = Uri.parse('${ServerConstant.serverUrl}/Auth');
       final response = await http.get(
@@ -89,6 +91,29 @@ class AuthRemoteRepository {
   } catch (e) {
      return Left(AppFailure(e.toString()));
   }
+}
+
+Future<Either<AppFailure, void>> logout(String? token) async {
+    try {
+      final uri = Uri.parse('${ServerConstant.serverUrl}/Logout');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token ?? "",
+          },
+        
+      );
+      final res = jsonDecode(response.body) as Map<String, dynamic>;  
+      if (response.statusCode != 200) {
+        return Left(AppFailure(res['message']));
+      } else {
+        return const Right(null);
+
+      }
+  } catch (e) {
+     return Left(AppFailure(e.toString()));
   }
+}
 
 }
