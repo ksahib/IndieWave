@@ -7,6 +7,7 @@ import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/Artist/view/pages/artist_profile_page.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:client/features/home/models/trend_model.dart';
+import 'package:client/features/home/repositories/playlist_remote_repository.dart';
 import 'package:client/features/home/view/widgets/main_feed.dart';
 import 'package:client/features/home/view/widgets/music_slab.dart';
 import 'package:client/features/home/view/widgets/now_playing.dart';
@@ -228,9 +229,9 @@ class _Homepage extends ConsumerState<Homepage> {
                                                           ),
                                                           const SizedBox(height: 15),
                                                           ElevatedButton(
-                                                            onPressed: () {
+                                                            onPressed: () async {
                                                               // call create playlist api
-                                                              
+                                                              await ref.read(playlistRemoteRepositoryProvider).createPlaylist(name: nameController.text, image_url: 'default');
                                                               setDialogState(() {
                                                                 
                                                               },);
