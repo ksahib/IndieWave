@@ -19,14 +19,14 @@ class getAvgRGB extends BaseController {
 
     public function _get() {
         $headers = apache_request_headers();
-        $imagehd = $headers['image-id'];
+        $imagehd = $headers['image-url'];
         try {
             if(!$imagehd) {
                 $this->sendResponse(401, 'No valid token found');
                 return;
             }
 
-            $image = $this->imagemodel->get("image_id", $imagehd);
+            $image = $this->imagemodel->get("image_url", $imagehd);
 
             $image['R'] = null;
             $image['G'] = null;
@@ -62,7 +62,7 @@ class getAvgRGB extends BaseController {
                 } 
             }
             
-            $this->sendResponse(200, 'Retrieved inage RGB data', [$image['R'], $image['G'], $image['B']]);
+            $this->sendResponse(200, 'Retrieved image RGB data', [$image['R'], $image['G'], $image['B']]);
         }  catch(Exception $e)  {
             http_response_code(500);
             echo json_encode(["error" => $e->getMessage()]);
