@@ -62,7 +62,7 @@ class getAvgRGB extends BaseController {
                 } 
             }
             
-            $this->sendResponse(200, 'Retrieved image RGB data', [$image['R'], $image['G'], $image['B']]);
+            $this->sendResponse(200, 'Retrieved image RGB data', ['R' => $image['R'], 'G' => $image['G'], 'B' => $image['B']]);
         }  catch(Exception $e)  {
             http_response_code(500);
             echo json_encode(["error" => $e->getMessage()]);
