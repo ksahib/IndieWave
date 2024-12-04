@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:client/features/album/model/album_model.dart';
 import 'package:client/features/home/models/playlist_model.dart';
+import 'package:client/features/home/models/queue_model.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -10,43 +11,21 @@ import 'package:client/core/constants/server_constant.dart';
 import 'package:client/core/failure/failure.dart';
 
 
-part 'playlist_remote_repository.g.dart';
+part 'queue_remote_repository.g.dart';
 
 @riverpod
-PlaylistRemoteRepository playlistRemoteRepository(Ref ref) {
-  return PlaylistRemoteRepository();
+QueueRemoteRepository queueRemoteRepository(Ref ref) {
+  return QueueRemoteRepository();
 }
 
-class PlaylistRemoteRepository {
+class QueueRemoteRepository {
 
   final http.Client client = http.Client();
   final CookieJar cookieJar = CookieJar();
 
-  Future<Either<AppFailure, PlaylistModel>> createPlaylist({
-    required String name,
-    required String image_url,
-    required String email,
-  }) async {
-    try {
-      final response = await http.post(
-        Uri.parse('${ServerConstant.serverUrl}/PlaylistAdd'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"name": name, "cover_pic": image_url, "email": email}),
-      );
+  
 
-      final res = jsonDecode(response.body) as Map<String, dynamic>;
-      print("'response: ${res}");
-      if (response.statusCode != 201) {
-        return Left(AppFailure(res['detail']));
-      } else {
-        return Right(PlaylistModel.fromMap(res));
-      }
-    } catch (e) {
-      return Left(AppFailure(e.toString()));
-    }
-  }
-
-  Future<Either<AppFailure, PlaylistModel>> addToPlaylist({
+  Future<Either<AppFailure, QueueModel>> addToPlaylist({
     required String playlist_id,
     required String track_id,
   }) async {
@@ -62,7 +41,7 @@ class PlaylistRemoteRepository {
       if (response.statusCode != 201) {
         return Left(AppFailure(res['detail']));
       } else {
-        return Right(PlaylistModel.fromMap(res));
+        return Right(QueueModel.fromMap(res));
       }
     } catch (e) {
       return Left(AppFailure(e.toString()));
@@ -92,14 +71,14 @@ class PlaylistRemoteRepository {
 //     }
 //   }
 
-  Future<Either<AppFailure, List<PlaylistModel>>> getAllPlaylist(String? email) async {
+  Future<Either<AppFailure, List<QueueModel>>> inPlaylist(String? playlist_id) async {
   try {
-    final uri = Uri.parse('${ServerConstant.serverUrl}/AllPlaylist');
+    final uri = Uri.parse('${ServerConstant.serverUrl}/InPlaylist');
     final response = await http.get(
       uri,
       headers: {
         'Content-Type': 'application/json',
-        'email': email ?? "",
+        'playlist-id': playlist_id ?? "",
       },
     );
 
@@ -109,13 +88,13 @@ class PlaylistRemoteRepository {
       return Left(AppFailure(res['message']));
     } else {
 
-      final List<dynamic> playlistDataList = res['data'];
+      final List<dynamic> enquedDataList = res['data'];
 
-      final List<PlaylistModel> playlists = playlistDataList
-          .map((playlistData) => PlaylistModel.fromMap(playlistData))
+      final List<QueueModel> tracks = enquedDataList
+          .map((playlistData) => QueueModel.fromMap(playlistData))
           .toList();
 
-      return Right(playlists);
+      return Right(tracks);
     }
   } catch (e) {
     return Left(AppFailure(e.toString()));

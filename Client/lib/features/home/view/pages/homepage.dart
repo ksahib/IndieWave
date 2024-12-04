@@ -7,14 +7,17 @@ import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/Artist/view/pages/artist_profile_page.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:client/features/home/models/playlist_model.dart';
+import 'package:client/features/home/models/queue_model.dart';
 import 'package:client/features/home/models/trend_model.dart';
 import 'package:client/features/home/repositories/playlist_remote_repository.dart';
 import 'package:client/features/home/view/widgets/main_feed.dart';
 import 'package:client/features/home/view/widgets/music_slab.dart';
 import 'package:client/features/home/view/widgets/now_playing.dart';
+import 'package:client/features/home/view/widgets/playlist_view_widget.dart';
 import 'package:client/features/home/view/widgets/user_titlebar.dart';
 import 'package:client/features/home/viewmodels/banner_viewmodel.dart';
 import 'package:client/features/home/viewmodels/playlist_viewmodel.dart';
+import 'package:client/features/home/viewmodels/queue_viewmodel.dart';
 import 'package:client/features/home/viewmodels/trend_viewmodel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,8 +41,12 @@ class _Homepage extends ConsumerState<Homepage> {
   List<dynamic> trackTrendList = [];
   final tracks = [];
   List<dynamic> playlists = [];
+  List<dynamic> Inplaylists = [];
+  bool _default = true;
   dynamic banner;
+  dynamic selectedPlaylist;
   final TextEditingController nameController = TextEditingController();
+  File? selectedImage;
 
   @override
   void initState() {
@@ -97,6 +104,38 @@ Future<void> loadPlaylists() async {
     showSnackBar(context, 'Unexpected response format.', Pallete.errorColor);
   }
 }
+
+  void selectImage() async{
+    final pickedImage = await pickImage();
+    if(pickedImage != null) {
+      setState(() {
+        selectedImage = pickedImage;
+      });
+    }
+  }
+
+Future<void> loadPlaylistsTracks(String playlistid) async {
+  //print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
+  final response = await ref.read(queueViewmodelProvider.notifier).getInPlaylistkData(playlistid: playlistid);
+
+  if (response is AsyncData<List<QueueModel>>) {
+    setState(() {
+      Inplaylists = response.value;
+      print("Tracks: ${playlists}");
+    });
+  } else if (response is AsyncError) {
+    setState(() {
+      Inplaylists = [];
+    });
+    showSnackBar(context, 'Failed to load tracks: ${response?.error}', Pallete.errorColor);
+  } else {
+    setState(() {
+      Inplaylists = [];
+    });
+    showSnackBar(context, 'Unexpected response format.', Pallete.errorColor);
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +228,57 @@ Future<void> loadPlaylists() async {
                                                                     FontWeight.bold,
                                                                 color: Colors.white),
                                                           ),
+                                                          Stack(
+                                                            children: [
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  print("Tap that");
+                                                                },
+                                                                child: selectedImage != null
+                                                                    ? Center(
+                                                                        child: SizedBox(
+                                                                          height: 150,
+                                                                          width: 140,
+                                                                          child: Image.file(
+                                                                            selectedImage!,
+                                                                            fit: BoxFit.cover,
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : const SizedBox(
+                                                                        height: 200, // Ensures tap area is properly defined
+                                                                        width: 400,
+                                                                      ),
+                                                              ),
+                                                              Center(
+                                                                // Wrapping the Card in GestureDetector to make it clickable
+                                                                child: GestureDetector(
+                                                                  onTap: () {
+                                                                    selectImage();
+                                                                    setState(() {
+                                                                      
+                                                                    });
+                                                                  },
+                                                                  child: Card(
+                                                                    elevation: 10,
+                                                                    shadowColor: const Color.fromARGB(255, 51, 51, 51),
+                                                                    color: const Color.fromARGB(25, 255, 255, 255),
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(20),
+                                                                    ),
+                                                                    child: const SizedBox(
+                                                                      width: 150,
+                                                                      height: 140,
+                                                                      child: Icon(
+                                                                        Icons.add,
+                                                                        size: 50,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                           const SizedBox(height: 20),
                                                           TextField(
                                                             controller: nameController,
@@ -214,34 +304,12 @@ Future<void> loadPlaylists() async {
                                                                 color: Colors.white),
                                                           ),
                                                           const SizedBox(height: 15),
-                                                          ElevatedButton(
-                                                            onPressed: () {
-                                                              // Handle file picker logic here
-                                                              selectImage();
-                                                              setDialogState(() {},);
-                                                            },
-                                                            style: ElevatedButton
-                                                                .styleFrom(
-                                                              backgroundColor:
-                                                                  Pallete.greenColor,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(20),
-                                                              ),
-                                                            ),
-                                                            child: const Text(
-                                                              "Pick a File",
-                                                              style: TextStyle(
-                                                                  color: Colors.black),
-                                                            ),
-                                                          ),
                                                           const SizedBox(height: 15),
                                                           ElevatedButton(
                                                             onPressed: () async {
-                                                              // call create playlist api
-                                                              await ref.read(playlistViewmodelProvider.notifier).addPlaylist(name: nameController.text, cover_pic: 'default', email: userData.email);
+                                                              // calling create playlist api
+                                                              String? imageUrl = await uploadImage(selectedImage); 
+                                                              await ref.read(playlistViewmodelProvider.notifier).addPlaylist(name: nameController.text, cover_pic: imageUrl!, email: userData.email);
                                                               setDialogState(() {},);
                                                               Navigator.pop(context);
                                                             },
@@ -288,7 +356,14 @@ Future<void> loadPlaylists() async {
                                               padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                                               child: ListTile(
                                                 title: Text(playlist.name),
-                                                //leading: 
+                                                leading:Image(image: NetworkImage(playlist.cover_pic)), 
+                                                onTap: () async {
+                                                  setState(() {
+                                                    selectedPlaylist = playlist;
+                                                    _default = !_default;
+                                                  });
+                                                  await loadPlaylistsTracks(playlist.playlist_id);
+                                                },
                                               ),
                                             ),
                                           ],
@@ -303,81 +378,15 @@ Future<void> loadPlaylists() async {
                           ),
                           const SizedBox(width: 5),
                           //Middle: Main feed
+                          if(_default)
                           MainFeed(
                             artistTrendList: artistTrendList, 
                             userData: userData, 
                             trackTrendList: trackTrendList,
                             bannerData: banner,
                           ),
-                          // Expanded(
-                          //   flex:4,
-                          //   child: ClipRRect(
-                          //     borderRadius: BorderRadius.circular(5),
-                          //     child: Column(
-                          //       children: [
-                          //         Expanded(
-                          //           flex: 2,
-                          //           child: Container(
-                          //             width: double.infinity,
-                          //             color: Colors.blue,
-                          //             child: Stack(
-                          //               children: [
-                          //                 Row(
-                          //                   children: [
-                          //                     Padding(
-                          //                       padding: const EdgeInsets.all(15.0),
-                          //                       child: Card(
-                          //                         elevation: 10,
-                          //                         child: SizedBox(
-                          //                           height: 170,
-                          //                           width: 170,
-                          //                           child: Container(
-                          //                             color: Colors.black,
-                          //                           ),
-                          //                         ),
-                          //                       ),
-                          //                     ),
-                          //                     const SizedBox(width: 20,),
-                          //                     Text(
-                          //                       "Your Playlist",
-                          //                       style: TextStyle(
-                          //                         fontSize: 30,
-                          //                         fontWeight: FontWeight.w600
-                          //                       ),
-                          //                     ),
-                          //                   ],
-                          //                 ),
-                          //               ],
-                          //             ),
-                          //           ),
-                          //         ),
-                          //         Expanded(
-                          //           flex: 3,
-                          //           child: SingleChildScrollView(
-                          //             child: ConstrainedBox(
-                          //               constraints: const BoxConstraints(maxHeight: 1200),
-                          //               child: Container(
-                          //                 color: Colors.amber,
-                          //                 child: ListView.builder(
-                          //                   itemCount: tracks.length,
-                          //                   itemBuilder: (context, index) {
-                          //                   final track = tracks[index];
-                          //                   return Padding(
-                          //                     padding: const EdgeInsets.all(8),
-                          //                     child: ListTile(
-                          //                       title: Text(track.name),
-                                                
-                          //                     ),
-                          //                   );
-                          //                 })
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
+                          if(!_default)
+                          PlaylistViewWidget(Inplaylists: Inplaylists, selectedPlaylist: selectedPlaylist, userData: userData,),
                           const SizedBox(width: 5),
                           //right: Now Playing
                           Expanded(
@@ -477,21 +486,5 @@ Future<void> loadPlaylists() async {
       ),
     );
   }
-  File? selectedImage;
-  
-  void selectImage() async {
-    final pickedImage = await pickImage();
-    if(pickedImage != null) {
-      setState(() {
-        selectedImage = pickedImage;
-      });
-    }
-    await Future.delayed(Duration(milliseconds: 200));
-    if (selectedImage != null) {
-      //await player.play(DeviceFileSource(selectedAudio!.path));
-    }
-  }
 }
 
-void loadPlaylists() {
-}

@@ -99,14 +99,14 @@ class MainFeed extends ConsumerWidget{
                                             height: bannerContainerHeight * 0.005,
                                           ),
                                           ListCards(
-                                            url: userData.image_url, 
-                                            title: "album 1", 
+                                            url: trackTrendList[1].album_cover, 
+                                            title: trackTrendList[1].album_name, 
                                             height: bannerContainerHeight, 
                                             width: constraints.maxWidth
                                           ),
                                           ListCards(
-                                            url: userData.image_url, 
-                                            title: "album 2", 
+                                            url: trackTrendList[2].album_cover, 
+                                            title: trackTrendList[2].album_name, 
                                             height: bannerContainerHeight, 
                                             width: constraints.maxWidth
                                           ),
@@ -258,5 +258,7 @@ class MainFeed extends ConsumerWidget{
       ),
     );
   }
+
+  
   
 }

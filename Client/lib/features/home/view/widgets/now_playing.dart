@@ -5,6 +5,7 @@ import 'package:client/core/providers/current_stream_notifier.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/providers/follow_status_provider.dart';
 import 'package:client/core/theme/app_pallete.dart';
+import 'package:client/features/home/viewmodels/queue_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -157,6 +158,11 @@ Future<void> follow(WidgetRef ref, String email, String artist) async {
                                                       final playlist = playlists[index];
                                                       return ListTile(
                                                         title: Text(playlist.name),
+                                                        onTap: () async {
+                                                          //add to playlist logic
+                                                          await ref.read(queueViewmodelProvider.notifier).addToQueue(track_id: currentStream.track_id, playlist_id: playlist.playlist_id);
+                                                          Navigator.pop(context);
+                                                        },
                                                       );
                                                     },
                                                   ),

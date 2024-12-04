@@ -172,22 +172,25 @@ Future<void> loadAlbums() async {
                                                           style: TextStyle(color: Colors.white, fontSize: 18),
                                                         ),
                                                       )
-                                                    : SizedBox(
-                                                        height: MediaQuery.of(context).size.height * 0.52, // Set a fixed height or wrap in a Flexible
-                                                        child: ListView.builder(
-                                                          itemCount: albums.length,
-                                                          itemBuilder: (context, index) {
-                                                            final album = albums[index];
-                                                            return Column(
-                                                              children: [
-                                                                ListTile(
+                                                    : Column(
+                                                      children: [
+                                                        SizedBox(
+                                                            height: MediaQuery.of(context).size.height * 0.3, // Set a fixed height or wrap in a Flexible
+                                                            child: ListView.builder(
+                                                              itemCount: albums.length,
+                                                              itemBuilder: (context, index) {
+                                                                final album = albums[index];
+                                                                return ListTile(
                                                                   title: Text(album.name),
                                                                   leading: Image.network(album.cover_art),
                                                                   onTap: () {
                                                                     Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: album.name, artist: widget.artistData,)));
                                                                   },
-                                                                ),
-                                                                const SizedBox(height: 50,),
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 50,),
                                                                 Padding(
                                                                   padding: const EdgeInsets.fromLTRB(10,10,10,10),
                                                                   child: Column(
@@ -267,11 +270,8 @@ Future<void> loadAlbums() async {
                                                                     ],
                                                                   ),
                                                                 ),
-                                                              ],
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
+                                                      ],
+                                                    ),
                                               ),                       
                                             ],
                                           ),
