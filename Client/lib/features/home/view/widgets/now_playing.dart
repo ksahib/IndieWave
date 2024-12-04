@@ -5,14 +5,15 @@ import 'package:client/core/providers/current_stream_notifier.dart';
 import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/providers/follow_status_provider.dart';
 import 'package:client/core/theme/app_pallete.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 class NowPlaying extends ConsumerWidget{
- 
-  NowPlaying({super.key});
+  List<dynamic> playlists;
+  NowPlaying({super.key, required this.playlists});
 
 Future<void> fetchFollowStatus(WidgetRef ref, String email, String artist) async {
     try {
@@ -128,13 +129,53 @@ Future<void> follow(WidgetRef ref, String email, String artist) async {
                                 child: Image(image: NetworkImage(currentStream.album_cover)),
                               ),
                               const SizedBox(height: 10,),
-                              Text(
-                                currentStream.track_name,
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    currentStream.track_name,
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                       showDialog(
+                                        context: context,
+                                         builder: (BuildContext context){
+                                           return AlertDialog(
+                                            title: Text('Add to Playlist'),
+                                            content: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 300,
+                                                  width: 300,
+                                                  child: ListView.builder(
+                                                    itemCount: playlists.length,
+                                                    itemBuilder: (context, index) {
+                                                      final playlist = playlists[index];
+                                                      return ListTile(
+                                                        title: Text(playlist.name),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context); // Close dialog
+                                                    },
+                                                    child: Text('Cancel'),
+                                                  ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                       );
+                                    }, 
+                                    icon: Icon(CupertinoIcons.add_circled)
+                                  ),
+                                ],
                               ),
                               //const SizedBox(height: 10,),
                               Text(

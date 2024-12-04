@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:client/features/album/model/album_model.dart';
+import 'package:client/features/home/models/playlist_model.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -21,22 +22,24 @@ class PlaylistRemoteRepository {
   final http.Client client = http.Client();
   final CookieJar cookieJar = CookieJar();
 
-  Future<Either<AppFailure, AlbumModel>> createPlaylist({
+  Future<Either<AppFailure, PlaylistModel>> createPlaylist({
     required String name,
     required String image_url,
+    required String email,
   }) async {
     try {
       final response = await http.post(
         Uri.parse('${ServerConstant.serverUrl}/PlaylistAdd'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"name": name, "cover_pic": image_url}),
+        body: jsonEncode({"name": name, "cover_pic": image_url, "email": email}),
       );
 
       final res = jsonDecode(response.body) as Map<String, dynamic>;
+      print("'response: ${res}");
       if (response.statusCode != 201) {
         return Left(AppFailure(res['detail']));
       } else {
-        return Right(AlbumModel.fromMap(res));
+        return Right(PlaylistModel.fromMap(res));
       }
     } catch (e) {
       return Left(AppFailure(e.toString()));
@@ -66,35 +69,35 @@ class PlaylistRemoteRepository {
 //     }
 //   }
 
-//   Future<Either<AppFailure, List<AlbumModel>>> getAllAlbum(String? artistName) async {
-//   try {
-//     final uri = Uri.parse('${ServerConstant.serverUrl}/AllAlbums');
-//     final response = await http.get(
-//       uri,
-//       headers: {
-//         'Content-Type': 'application/json',
-//         'artist-name': artistName ?? "",
-//       },
-//     );
+  Future<Either<AppFailure, List<PlaylistModel>>> getAllPlaylist(String? email) async {
+  try {
+    final uri = Uri.parse('${ServerConstant.serverUrl}/AllPlaylist');
+    final response = await http.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'email': email ?? "",
+      },
+    );
 
-//     final res = jsonDecode(response.body) as Map<String, dynamic>;
-//     //print('API Response Body: ${response.body}');
-//     if (response.statusCode != 200) {
-//       return Left(AppFailure(res['message']));
-//     } else {
+    final res = jsonDecode(response.body) as Map<String, dynamic>;
+    print('playlist API Response Body: ${response.body}');
+    if (response.statusCode != 200) {
+      return Left(AppFailure(res['message']));
+    } else {
 
-//       final List<dynamic> albumDataList = res['data'];
+      final List<dynamic> playlistDataList = res['data'];
 
-//       final List<AlbumModel> albums = albumDataList
-//           .map((albumData) => AlbumModel.fromMap(albumData))
-//           .toList();
+      final List<PlaylistModel> playlists = playlistDataList
+          .map((playlistData) => PlaylistModel.fromMap(playlistData))
+          .toList();
 
-//       return Right(albums);
-//     }
-//   } catch (e) {
-//     return Left(AppFailure(e.toString()));
-//   }
-// }
+      return Right(playlists);
+    }
+  } catch (e) {
+    return Left(AppFailure(e.toString()));
+  }
+}
 
 // Future<Either<AppFailure, AlbumModel>> getCurrentAlbum(String artist_name, String album_name) async {
 //     try {

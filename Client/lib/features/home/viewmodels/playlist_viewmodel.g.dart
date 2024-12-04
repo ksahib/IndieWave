@@ -6,12 +6,12 @@ part of 'playlist_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$playlistViewmodelHash() => r'b9498f5568cf15cbad857fff8e78a33825ccc93d';
+String _$playlistViewmodelHash() => r'4a1bd4672e9e468efbf13867c6d723655a1d8ba4';
 
 /// See also [PlaylistViewmodel].
 @ProviderFor(PlaylistViewmodel)
 final playlistViewmodelProvider = AutoDisposeNotifierProvider<PlaylistViewmodel,
-    AsyncValue<AlbumModel>?>.internal(
+    AsyncValue<PlaylistModel>?>.internal(
   PlaylistViewmodel.new,
   name: r'playlistViewmodelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,6 +21,6 @@ final playlistViewmodelProvider = AutoDisposeNotifierProvider<PlaylistViewmodel,
   allTransitiveDependencies: null,
 );
 
-typedef _$PlaylistViewmodel = AutoDisposeNotifier<AsyncValue<AlbumModel>?>;
+typedef _$PlaylistViewmodel = AutoDisposeNotifier<AsyncValue<PlaylistModel>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

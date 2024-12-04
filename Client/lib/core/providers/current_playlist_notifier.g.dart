@@ -7,7 +7,7 @@ part of 'current_playlist_notifier.dart';
 // **************************************************************************
 
 String _$currentPlaylistNotifierHash() =>
-    r'6e6888b9420a603978f90794b4a47b042db384c7';
+    r'836299d69684e06129aabe251218765897b91471';
 
 /// See also [CurrentPlaylistNotifier].
 @ProviderFor(CurrentPlaylistNotifier)

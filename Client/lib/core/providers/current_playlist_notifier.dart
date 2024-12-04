@@ -11,9 +11,9 @@ class CurrentPlaylistNotifier extends _$CurrentPlaylistNotifier {
     return [];
   }
 
-  // void addPlaylist(List<PlaylistModel> albums) {
-  //   state = albums;
-  // }
+  void allPlaylist(List<PlaylistModel> playlists) {
+    state = playlists;
+  }
 
   void addPlaylist(PlaylistModel playlist) {
     state = [...state ?? [], playlist];

@@ -6,6 +6,7 @@ import 'package:client/features/Artist/view/pages/artist_registration.dart';
 import 'package:client/features/auth/view/pages/login_page.dart';
 import 'package:client/features/Artist/view/pages/artist_profile_page.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
+import 'package:client/features/home/models/playlist_model.dart';
 import 'package:client/features/home/models/trend_model.dart';
 import 'package:client/features/home/repositories/playlist_remote_repository.dart';
 import 'package:client/features/home/view/widgets/main_feed.dart';
@@ -13,6 +14,7 @@ import 'package:client/features/home/view/widgets/music_slab.dart';
 import 'package:client/features/home/view/widgets/now_playing.dart';
 import 'package:client/features/home/view/widgets/user_titlebar.dart';
 import 'package:client/features/home/viewmodels/banner_viewmodel.dart';
+import 'package:client/features/home/viewmodels/playlist_viewmodel.dart';
 import 'package:client/features/home/viewmodels/trend_viewmodel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,6 +37,7 @@ class _Homepage extends ConsumerState<Homepage> {
   List<dynamic> artistTrendList = [];
   List<dynamic> trackTrendList = [];
   final tracks = [];
+  List<dynamic> playlists = [];
   dynamic banner;
   final TextEditingController nameController = TextEditingController();
 
@@ -44,12 +47,16 @@ class _Homepage extends ConsumerState<Homepage> {
     
     loadData();
     loadTrends();
+    
   }
 
   Future<void> loadData() async {
     userData = await checkCreds();
     print(userData);
     setState(() {});
+    if (userData != null) {
+      loadPlaylists();
+    }
   }
 
   Future<void> loadTrends() async {
@@ -57,11 +64,6 @@ class _Homepage extends ConsumerState<Homepage> {
   final artistResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'artist');
   final trackResponse = await ref.read(trendViewmodelProvider.notifier).getAllTrendData(type: 'track');
   final bannerResponse = await ref.read(bannerViewmodelProvider.notifier).banner(userData.email);
-  // File? selectedImage;
-
-  // void selectImage() async {
-    
-  // }
 
   if (artistResponse is AsyncData<List<TrendModel>> && trackResponse is AsyncData<List<TrendModel>>) {
     setState(() {
@@ -75,6 +77,22 @@ class _Homepage extends ConsumerState<Homepage> {
     showSnackBar(context, 'Failed to load tracks: ${artistResponse?.error}', Pallete.errorColor);
   } else if (trackResponse is AsyncError) {
     showSnackBar(context, 'Failed to load tracks: ${trackResponse?.error}', Pallete.errorColor);
+  } else {
+    showSnackBar(context, 'Unexpected response format.', Pallete.errorColor);
+  }
+}
+
+Future<void> loadPlaylists() async {
+  //print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
+  final response = await ref.read(playlistViewmodelProvider.notifier).getAllPlaylistData(email: userData.email);
+
+  if (response is AsyncData<List<PlaylistModel>>) {
+    setState(() {
+      playlists = response.value;
+      print("Tracks: ${playlists}");
+    });
+  } else if (response is AsyncError) {
+    showSnackBar(context, 'Failed to load tracks: ${response?.error}', Pallete.errorColor);
   } else {
     showSnackBar(context, 'Unexpected response format.', Pallete.errorColor);
   }
@@ -172,9 +190,6 @@ class _Homepage extends ConsumerState<Homepage> {
                                                                 color: Colors.white),
                                                           ),
                                                           const SizedBox(height: 20),
-                                                          
-                                                          
-                                                          const SizedBox(height: 20),
                                                           TextField(
                                                             controller: nameController,
                                                             decoration: InputDecoration(
@@ -203,12 +218,7 @@ class _Homepage extends ConsumerState<Homepage> {
                                                             onPressed: () {
                                                               // Handle file picker logic here
                                                               selectImage();
-                                                              setDialogState(() {
-                                                                
-                                                              },);
-                                                              
-                                                              
-                                                              
+                                                              setDialogState(() {},);
                                                             },
                                                             style: ElevatedButton
                                                                 .styleFrom(
@@ -231,13 +241,9 @@ class _Homepage extends ConsumerState<Homepage> {
                                                           ElevatedButton(
                                                             onPressed: () async {
                                                               // call create playlist api
-                                                              await ref.read(playlistRemoteRepositoryProvider).createPlaylist(name: nameController.text, image_url: 'default');
-                                                              setDialogState(() {
-                                                                
-                                                              },);
-                                                              
-                                                              
-                                                              
+                                                              await ref.read(playlistViewmodelProvider.notifier).addPlaylist(name: nameController.text, cover_pic: 'default', email: userData.email);
+                                                              setDialogState(() {},);
+                                                              Navigator.pop(context);
                                                             },
                                                             style: ElevatedButton
                                                                 .styleFrom(
@@ -270,6 +276,26 @@ class _Homepage extends ConsumerState<Homepage> {
                                         )
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height * 0.52,
+                                      child: ListView.builder(
+                                        itemCount: playlists.length,
+                                        itemBuilder: (context, index) {
+                                          final playlist =  playlists[index];
+                                          return Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                              child: ListTile(
+                                                title: Text(playlist.name),
+                                                //leading: 
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                        },
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
@@ -277,88 +303,88 @@ class _Homepage extends ConsumerState<Homepage> {
                           ),
                           const SizedBox(width: 5),
                           //Middle: Main feed
-                          // MainFeed(
-                          //   artistTrendList: artistTrendList, 
-                          //   userData: userData, 
-                          //   trackTrendList: trackTrendList,
-                          //   bannerData: banner,
-                          // ),
-                          Expanded(
-                            flex:4,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      width: double.infinity,
-                                      color: Colors.blue,
-                                      child: Stack(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.all(15.0),
-                                                child: Card(
-                                                  elevation: 10,
-                                                  child: SizedBox(
-                                                    height: 170,
-                                                    width: 170,
-                                                    child: Container(
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20,),
-                                              Text(
-                                                "Your Playlist",
-                                                style: TextStyle(
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight.w600
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: SingleChildScrollView(
-                                      child: ConstrainedBox(
-                                        constraints: const BoxConstraints(maxHeight: 1200),
-                                        child: Container(
-                                          color: Colors.amber,
-                                          child: ListView.builder(
-                                            itemCount: tracks.length,
-                                            itemBuilder: (context, index) {
-                                            final track = tracks[index];
-                                            return Padding(
-                                              padding: const EdgeInsets.all(8),
-                                              child: ListTile(
-                                                title: Text(track.name),
-                                                
-                                              ),
-                                            );
-                                          })
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          MainFeed(
+                            artistTrendList: artistTrendList, 
+                            userData: userData, 
+                            trackTrendList: trackTrendList,
+                            bannerData: banner,
                           ),
+                          // Expanded(
+                          //   flex:4,
+                          //   child: ClipRRect(
+                          //     borderRadius: BorderRadius.circular(5),
+                          //     child: Column(
+                          //       children: [
+                          //         Expanded(
+                          //           flex: 2,
+                          //           child: Container(
+                          //             width: double.infinity,
+                          //             color: Colors.blue,
+                          //             child: Stack(
+                          //               children: [
+                          //                 Row(
+                          //                   children: [
+                          //                     Padding(
+                          //                       padding: const EdgeInsets.all(15.0),
+                          //                       child: Card(
+                          //                         elevation: 10,
+                          //                         child: SizedBox(
+                          //                           height: 170,
+                          //                           width: 170,
+                          //                           child: Container(
+                          //                             color: Colors.black,
+                          //                           ),
+                          //                         ),
+                          //                       ),
+                          //                     ),
+                          //                     const SizedBox(width: 20,),
+                          //                     Text(
+                          //                       "Your Playlist",
+                          //                       style: TextStyle(
+                          //                         fontSize: 30,
+                          //                         fontWeight: FontWeight.w600
+                          //                       ),
+                          //                     ),
+                          //                   ],
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ),
+                          //         Expanded(
+                          //           flex: 3,
+                          //           child: SingleChildScrollView(
+                          //             child: ConstrainedBox(
+                          //               constraints: const BoxConstraints(maxHeight: 1200),
+                          //               child: Container(
+                          //                 color: Colors.amber,
+                          //                 child: ListView.builder(
+                          //                   itemCount: tracks.length,
+                          //                   itemBuilder: (context, index) {
+                          //                   final track = tracks[index];
+                          //                   return Padding(
+                          //                     padding: const EdgeInsets.all(8),
+                          //                     child: ListTile(
+                          //                       title: Text(track.name),
+                                                
+                          //                     ),
+                          //                   );
+                          //                 })
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           const SizedBox(width: 5),
                           //right: Now Playing
                           Expanded(
                             flex: 3,
                             child: Stack(
                               children: [
-                                NowPlaying(),
+                                NowPlaying(playlists: playlists,),
                                 IgnorePointer(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
@@ -465,4 +491,7 @@ class _Homepage extends ConsumerState<Homepage> {
       //await player.play(DeviceFileSource(selectedAudio!.path));
     }
   }
+}
+
+void loadPlaylists() {
 }

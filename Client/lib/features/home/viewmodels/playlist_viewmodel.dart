@@ -1,7 +1,9 @@
 import 'package:client/core/providers/current_album_notifier.dart';
+import 'package:client/core/providers/current_playlist_notifier.dart';
 import 'package:client/features/album/model/album_model.dart';
 import 'package:client/features/album/repositories/album_remote_repository.dart';
 import 'package:client/features/auth/repositories/auth_local_repository.dart';
+import 'package:client/features/home/models/playlist_model.dart';
 import 'package:client/features/home/repositories/playlist_remote_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -13,26 +15,31 @@ part 'playlist_viewmodel.g.dart';
 @riverpod
 class PlaylistViewmodel extends _$PlaylistViewmodel {
   late PlaylistRemoteRepository _playlistRemoteRepository;
+  late CurrentPlaylistNotifier _currentPlaylistNotifier;
 
-  AsyncValue<AlbumModel>? albumState;
-  AsyncValue<List<AlbumModel>>? allAlbumState;
+  // AsyncValue<AlbumModel>? albumState;
+  AsyncValue<List<PlaylistModel>>? allPlaylistState;
 
   @override
-  AsyncValue<AlbumModel>? build() {
+  AsyncValue<PlaylistModel>? build() {
     _playlistRemoteRepository = ref.watch(playlistRemoteRepositoryProvider);
+    _currentPlaylistNotifier = ref.watch(currentPlaylistNotifierProvider.notifier);
     return const AsyncValue.loading();
   }
 
   Future<void> addPlaylist({
     required String name,
     required String cover_pic,
+    required String email,
   }) async {
     state = const AsyncValue.loading();
+    print(email);
     final res = await _playlistRemoteRepository.createPlaylist(
       name: name,
       image_url: cover_pic,
-      
+      email: email,
     );
+    print(res);
     switch(res) {
       case Left(value: final l): 
         state = AsyncValue.error(l.message, StackTrace.current);
@@ -46,33 +53,33 @@ class PlaylistViewmodel extends _$PlaylistViewmodel {
 
   
 
-// Future<AsyncValue<List<AlbumModel>>?> getAllAlbumData({required String artistName}) async {
-//   allAlbumState = const AsyncValue.loading();
-//   try {
-//     final res = await _albumRemoteRepository.getAllAlbum(artistName);  // API call
-//     //print("in view model: ${res}");
+Future<AsyncValue<List<PlaylistModel>>?> getAllPlaylistData({required String email}) async {
+  allPlaylistState = const AsyncValue.loading();
+  try {
+    final res = await _playlistRemoteRepository.getAllPlaylist(email);
+    //print("in view model: ${res}");
 
-//     if (res is Left) {
-//       final l = res as Left;  // Cast to Left type
-//       //print("Error: ${l.value.message}"); // Log error message
-//       allAlbumState = AsyncValue.error(l.value.message, StackTrace.current);  // Handle Left (error)
-//     } else if (res is Right) {
-//       final r = res as Right;  // Cast to Right type
-//       //print("Success: ${r.value}"); // Log successful response
-//       allAlbumState = _getAllAlbumDataSuccess(r.value);  // Handle Right (success)
-//     } else {
-//       //print("Unexpected response format: $res"); // Log unexpected response
-//     }
+    if (res is Left) {
+      final l = res as Left;
+      //print("Error: ${l.value.message}");
+      allPlaylistState = AsyncValue.error(l.value.message, StackTrace.current);
+    } else if (res is Right) {
+      final r = res as Right;  // Cast to Right type
+      //print("Success: ${r.value}"); // Log successful response
+      allPlaylistState = _getAllPlaylistDataSuccess(r.value);  // Handle Right (success)
+    } else {
+      //print("Unexpected response format: $res"); // Log unexpected response
+    }
 
-//     //print("VAL: $allAlbumState");
-//     return allAlbumState;
-//   } catch (e) {
-//     // Catch any errors and set the error state
-//     print("Error caught: $e"); // Log error
-//     allAlbumState = AsyncValue.error('An error occurred: $e', StackTrace.current);
-//     return allAlbumState;
-//   }
-// }
+    //print("VAL: $allPlaylistState");
+    return allPlaylistState;
+  } catch (e) {
+    // Catch any errors and set the error state
+    print("Error caught: $e"); // Log error
+    allPlaylistState = AsyncValue.error('An error occurred: $e', StackTrace.current);
+    return allPlaylistState;
+  }
+}
 
 
 
@@ -135,8 +142,8 @@ class PlaylistViewmodel extends _$PlaylistViewmodel {
 //   }
 // }
 
-// AsyncValue<List<AlbumModel>> _getAllAlbumDataSuccess(List<AlbumModel> albums) {
-//   _currentAlbumNotifier.addAlbums(albums); 
-//   return AsyncValue.data(albums);
-// }
+AsyncValue<List<PlaylistModel>> _getAllPlaylistDataSuccess(List<PlaylistModel> playlists) {
+  _currentPlaylistNotifier.allPlaylist(playlists); 
+  return AsyncValue.data(playlists);
+}
 }
