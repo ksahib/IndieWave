@@ -26,7 +26,8 @@ class AllPlaylist extends BaseController {
             if (empty($Hint))
                 $Hint = "";
             // Fetch genres based on the hint
-            $query = "SELECT * FROM playlists WHERE email = :hint AND playlist_id != :hint";
+            $query = "SELECT playlist_id, email, name, image_url as cover_pic FROM playlists JOIN images ON playlists.cover_pic = images.image_id WHERE email = :hint AND playlist_id != :hint
+                        GROUP BY playlist_id";
             $stmt = $this->db->prepare($query);
 
             $searchTerm = $Hint;
