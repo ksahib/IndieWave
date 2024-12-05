@@ -52,4 +52,9 @@ class CurrentStreamNotifier extends _$CurrentStreamNotifier{
     isPlaying = !isPlaying;
     state = state?.copyWith(album_id: state?.album_id);
   }
+
+  void stop() {
+    audioPlayer?.stop();
+    state = state?.copyWith(album_id: state?.album_id);
+  }
 }
