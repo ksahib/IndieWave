@@ -40,7 +40,7 @@ class Trending extends BaseController {
                     feed
                 ORDER BY 
                     followers DESC, likes DESC, streams DESC
-                LIMIT 10";
+                LIMIT 30";
             }
 
             $stmt = $this->db->prepare($query);

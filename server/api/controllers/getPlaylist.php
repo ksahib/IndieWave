@@ -75,7 +75,6 @@ class getplaylist extends BaseController {
                     $playlist['B'] = $bSum / ($width * $height);
                 } 
             }
-            
             $this->sendResponse(200, 'Retrieved playlist data', [$playlist]);
         }  catch(Exception $e)  {
             http_response_code(500);

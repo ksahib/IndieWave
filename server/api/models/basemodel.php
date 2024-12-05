@@ -55,6 +55,17 @@ class BaseModel {
         return ['status' => 200, 'data' => $rows];
     }
 
+    // Get all records
+    public function getAllById($id, $column) {
+        $query = "SELECT * FROM " . $this->table_name ."WHERE $column = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return ['status' => 200, 'data' => $rows];
+    }
+
     // Update a record
     public function update($id, $data, $column) {
         

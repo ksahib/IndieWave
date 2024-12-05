@@ -44,7 +44,6 @@ class ArtistSignUp extends BaseController {
                 $this->sendResponse(500, "Failed to upload image");
                 echo json_encode(['images'=>$info]);
             }
-            $data['follower_count'] = 0;
 
             // Call the ArtistModel's create method to insert into the database
             if ($this->artistModel->create($data)) {
@@ -53,7 +52,7 @@ class ArtistSignUp extends BaseController {
                 $this->sendResponse(500, 'Failed to create artist profile.');
             }
         } catch (PDOException $e){
-            $this->sendResponse(500, 'Artist already exists.');
+            $this->sendResponse(500, $e);
         }
     }
 

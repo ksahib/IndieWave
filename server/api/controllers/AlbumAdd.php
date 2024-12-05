@@ -24,7 +24,7 @@ class AlbumAdd extends BaseController {
             $data = json_decode(file_get_contents("php://input"), true);
         
             // Validate required fields 
-            $this->validateRequiredFields($data, ['name', 'price', 'artist_name']);
+            $this->validateRequiredFields($data, ['name', 'artist_name']);
             
             // Set default values for fields that are not provided
             if($data['cover_art'] === '') {
