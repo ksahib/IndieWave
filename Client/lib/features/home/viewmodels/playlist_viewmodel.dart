@@ -122,25 +122,25 @@ Future<AsyncValue<List<PlaylistModel>>?> getAllPlaylistData({required String ema
 //   }
 // }
 
-// Future<bool> Unrelease( {required String album_id}) async {
-//   state = const AsyncValue.loading();
-//   try{
-//     final res = await _albumRemoteRepository.unreleaseAlbum(album_id);
-//     if(res is Left)
-//     {
-//       final l = res as Left;
-//       state = AsyncValue.error(l, StackTrace.current);
-//       return false;
-//     }
-//     else {
-//       return true;
-//     }
-//   } catch (e) {
-//     state = AsyncValue.error('An error occurred: $e', StackTrace.current);
-//     print(state);
-//     return false;
-//   }
-// }
+Future<bool> removePlaylist( {required String playlist_id}) async {
+  state = const AsyncValue.loading();
+  try{
+    final res = await _playlistRemoteRepository.deletePlaylist(playlist_id);
+    if(res is Left)
+    {
+      final l = res as Left;
+      state = AsyncValue.error(l, StackTrace.current);
+      return false;
+    }
+    else {
+      return true;
+    }
+  } catch (e) {
+    state = AsyncValue.error('An error occurred: $e', StackTrace.current);
+    print(state);
+    return false;
+  }
+}
 
 AsyncValue<List<PlaylistModel>> _getAllPlaylistDataSuccess(List<PlaylistModel> playlists) {
   _currentPlaylistNotifier.allPlaylist(playlists); 

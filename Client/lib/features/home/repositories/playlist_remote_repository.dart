@@ -148,29 +148,29 @@ class PlaylistRemoteRepository {
 //   }
 // }
 
-// Future<Either<AppFailure, int>> unreleaseAlbum(String album_id) async {
-//     try {
-//       final uri = Uri.parse('${ServerConstant.serverUrl}/Unrelease');
-//       final response = await http.get(
-//         uri,
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'album-id': album_id,
-//           },
+Future<Either<AppFailure, int>> deletePlaylist(String playlist_id) async {
+    try {
+      final uri = Uri.parse('${ServerConstant.serverUrl}/PlaylistRemove');
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'playlist-id': playlist_id,
+          },
         
-//       );
-//       final res = jsonDecode(response.body) as Map<String, dynamic>;  
-//       //print('ALBUM API Response Body: ${response.body}');
-//       if (response.statusCode != 200) {
-//         return Left(AppFailure(res['message']));
-//       } else {
-//         return Right(response.statusCode);
+      );
+      final res = jsonDecode(response.body) as Map<String, dynamic>;  
+      //print('ALBUM API Response Body: ${response.body}');
+      if (response.statusCode != 200) {
+        return Left(AppFailure(res['message']));
+      } else {
+        return Right(response.statusCode);
 
-//       }
-//   } catch (e) {
-//      return Left(AppFailure(e.toString()));
-//   }
-// }
+      }
+  } catch (e) {
+     return Left(AppFailure(e.toString()));
+  }
+}
 
 //   Future<Either<AppFailure, int>> releaseStatus(String album_id) async {
 //     try {

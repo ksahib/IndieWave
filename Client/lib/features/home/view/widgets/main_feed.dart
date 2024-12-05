@@ -354,6 +354,11 @@ class MainFeed extends ConsumerWidget{
                                       final track = trackTrendList[index];
                                       return GestureDetector(
                                         onTap: () {
+                                          try{
+                                            ref.read(currentStreamNotifierProvider.notifier).stop();
+                                          } catch($e) {
+                                            print($e);
+                                          }
                                           ref.read(currentStreamNotifierProvider.notifier).updateSong(track);
                                           ref.read(currentStreamNotifierProvider.notifier).countStreams(userData.email, track.track_id);
                                         },

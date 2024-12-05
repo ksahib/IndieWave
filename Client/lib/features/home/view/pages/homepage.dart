@@ -349,10 +349,19 @@ Future<void> loadPlaylistsTracks(String playlistid) async {
                                           return Column(
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.fromLTRB(30, 0, 0, 20),
+                                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
                                               child: ListTile(
                                                 title: Text(playlist.name),
-                                                leading:Image(image: NetworkImage(playlist.cover_pic)), 
+                                                leading:Image(image: NetworkImage(playlist.cover_pic)),
+                                                trailing: IconButton(
+                                                  onPressed: () async {
+                                                    //implement delete here
+                                                    await ref.read(playlistViewmodelProvider.notifier).removePlaylist(playlist_id: playlist.playlist_id);
+                                                    setState(() { playlists.removeAt(index);});
+                                                    loadPlaylists();
+                                                  }, 
+                                                  icon: Icon(CupertinoIcons.delete, color: Colors.red,),
+                                                ), 
                                                 onTap: () async {
                                                   setState(() {
                                                     selectedPlaylist = playlist;
