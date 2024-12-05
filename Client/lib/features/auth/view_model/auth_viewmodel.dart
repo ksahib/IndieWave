@@ -97,6 +97,26 @@ Future<UserModel?> getData() async {
   return null;
 }
 
+Future<void> changeDp({
+    required String email,
+    required String image_url,
+  }) async {
+    state = const AsyncValue.loading();
+    final res = await _authRemoteRepository.uploadDp(
+      mail: email,
+      image_url: image_url,
+    );
+    switch(res) {
+      case Left(value: final l): 
+        state = AsyncValue.error(l.message, StackTrace.current);
+        break;
+      case Right(value: final r): 
+        state = AsyncValue.data(r);
+        break;
+    };
+    //print(val);
+  }
+
 
 
 AsyncValue<UserModel> _getDataSuccess(UserModel user) {

@@ -66,6 +66,28 @@ Future<Either<AppFailure, UserModel>> login({
   }
 }
 
+Future<Either<AppFailure, UserModel>> uploadDp({
+    required String mail,
+    required String image_url,
+  }) async {
+    try {
+      final uri = Uri.parse('http://localhost/indiewave/api/ProfilePicture');
+      final response = await http.post(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"email": mail, "image_url": image_url}),
+      );
+      final res = jsonDecode(response.body) as Map<String, dynamic>;  
+      if (response.statusCode != 201) {
+        return Left(AppFailure(res['message']));
+      } else {
+        return Right(UserModel.fromMap(res).copyWith());
+      }
+  } catch (e) {
+     return Left(AppFailure(e.toString()));
+  }
+}
+
   
 
 Future<Either<AppFailure, UserModel>> getUser(String? token) async {

@@ -23,7 +23,7 @@ class AlbumPage extends ConsumerStatefulWidget {
 class _AlbumPageState extends ConsumerState<AlbumPage> {
   dynamic artistData;
   dynamic albumData;
-  String? selectedGenre; // For dropdown selection
+  String? selectedGenre; 
   File? selectedAudio;
   double dpBottom = 0;
   bool isReleased = false;
@@ -85,7 +85,7 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
 
   Future<void> loadCurrentAlbum() async {
     final container = ProviderContainer();
-    print("artisName: ${artistData.artist_name} AND albumName : ${widget.albumName}");
+    //print("artisName: ${artistData.artist_name} AND albumName : ${widget.albumName}");
     albumData = await container
         .read(albumViewmodelProvider.notifier)
         .getAlbum(artistData.artist_name, widget.albumName);
@@ -93,7 +93,7 @@ class _AlbumPageState extends ConsumerState<AlbumPage> {
     loadTracks();
     loadGenre();
     _checkReleaseStatus();
-    setState(() {}); // Update UI after fetching album data
+    setState(() {}); 
   }
 
   Future<void> loadTracks() async {
@@ -117,7 +117,7 @@ Future<void> loadGenre() async {
   if (response is AsyncData<List<GenreModel>>) {
     setState(() {
       genres = response.value;
-      print("Genres: ${tracks}");
+      // print("Genres: ${tracks}");
     });
   } else if (response is AsyncError) {
     showSnackBar(context, 'Failed to load tracks: ${response?.error}', Pallete.errorColor);
@@ -128,6 +128,14 @@ Future<void> loadGenre() async {
 
   @override
   Widget build(BuildContext context) {
+    if (artistData == null || albumData == null) {
+    
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
@@ -164,6 +172,7 @@ Future<void> loadGenre() async {
                                       final track = tracks[index];
                                       return Column(
                                         children: [
+                                          if(index==0)
                                           SizedBox(
                                             height: dpBottom,
                                           ),
@@ -411,6 +420,7 @@ Future<void> loadGenre() async {
                                                         tag: selectedGenre, 
                                                         track_url: await uploadTrack(selectedAudio), 
                                                         album_id: albumData.album_id);
+                                                      loadTracks();
                                                       Navigator.of(context)
                                                           .pop(); // Close the dialog
                                                     },

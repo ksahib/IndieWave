@@ -34,14 +34,12 @@ class AlbumViewmodel extends _$AlbumViewmodel {
 
   Future<void> addAlbum({
     required String name,
-    required String price,
     required String cover_art,
     required String artist_name,
   }) async {
     state = const AsyncValue.loading();
     final res = await _albumRemoteRepository.createAlbum(
       name: name,
-      price: price,
       cover_art: cover_art,
       artist_name: artist_name
       

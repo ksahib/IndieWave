@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:client/core/providers/current_stream_notifier.dart';
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/widgets/utils.dart';
 import 'package:client/features/Artist/view/pages/artist_registration.dart';
@@ -78,7 +79,7 @@ class _Homepage extends ConsumerState<Homepage> {
       trackTrendList = trackResponse.value;
       banner = bannerResponse;
       // print("Artists: ${artistTrendList}");
-      // print("Tracks: ${trackTrendList}");
+      print("Tracks: ${trackTrendList}");
     });
   } else if (artistResponse is AsyncError) {
     showSnackBar(context, 'Failed to load tracks: ${artistResponse?.error}', Pallete.errorColor);
@@ -115,7 +116,6 @@ Future<void> loadPlaylists() async {
   }
 
 Future<void> loadPlaylistsTracks(String playlistid) async {
-  //print("Calling loadAlbums with artistName: ${artistData?.artist_name}");
   final response = await ref.read(queueViewmodelProvider.notifier).getInPlaylistkData(playlistid: playlistid);
 
   if (response is AsyncData<List<QueueModel>>) {
@@ -230,28 +230,22 @@ Future<void> loadPlaylistsTracks(String playlistid) async {
                                                           ),
                                                           Stack(
                                                             children: [
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  print("Tap that");
-                                                                },
-                                                                child: selectedImage != null
-                                                                    ? Center(
-                                                                        child: SizedBox(
-                                                                          height: 150,
-                                                                          width: 140,
-                                                                          child: Image.file(
-                                                                            selectedImage!,
-                                                                            fit: BoxFit.cover,
-                                                                          ),
+                                                              selectedImage != null
+                                                                  ? Center(
+                                                                      child: SizedBox(
+                                                                        height: 150,
+                                                                        width: 140,
+                                                                        child: Image.file(
+                                                                          selectedImage!,
+                                                                          fit: BoxFit.cover,
                                                                         ),
-                                                                      )
-                                                                    : const SizedBox(
-                                                                        height: 200, // Ensures tap area is properly defined
-                                                                        width: 400,
                                                                       ),
-                                                              ),
+                                                                    )
+                                                                  : const SizedBox(
+                                                                      height: 200, 
+                                                                      width: 400,
+                                                                    ),
                                                               Center(
-                                                                // Wrapping the Card in GestureDetector to make it clickable
                                                                 child: GestureDetector(
                                                                   onTap: () {
                                                                     selectImage();
@@ -311,6 +305,7 @@ Future<void> loadPlaylistsTracks(String playlistid) async {
                                                               String? imageUrl = await uploadImage(selectedImage); 
                                                               await ref.read(playlistViewmodelProvider.notifier).addPlaylist(name: nameController.text, cover_pic: imageUrl!, email: userData.email);
                                                               setDialogState(() {},);
+                                                              loadPlaylists();
                                                               Navigator.pop(context);
                                                             },
                                                             style: ElevatedButton
@@ -344,6 +339,7 @@ Future<void> loadPlaylistsTracks(String playlistid) async {
                                         )
                                       ],
                                     ),
+                                    const SizedBox(height: 20,),
                                     SizedBox(
                                       height: MediaQuery.of(context).size.height * 0.52,
                                       child: ListView.builder(
@@ -353,7 +349,7 @@ Future<void> loadPlaylistsTracks(String playlistid) async {
                                           return Column(
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                              padding: const EdgeInsets.fromLTRB(30, 0, 0, 20),
                                               child: ListTile(
                                                 title: Text(playlist.name),
                                                 leading:Image(image: NetworkImage(playlist.cover_pic)), 
@@ -450,7 +446,119 @@ Future<void> loadPlaylistsTracks(String playlistid) async {
                                                 ),
                                                 TextButton(
                                                   onPressed: () async {
+                                                    showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return StatefulBuilder(
+                                                    builder: (BuildContext context, void Function(void Function()) setDialogState) {
+                                                      return AlertDialog(
+                                                    contentPadding:
+                                                        const EdgeInsets.all(20),
+                                                    backgroundColor: Colors.grey[900],
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(20),
+                                                    ),
+                                                    content: SizedBox(
+                                                      width: 300,
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          const Text(
+                                                            "Choose a picture.",
+                                                            style: TextStyle(
+                                                                fontSize: 22,
+                                                                fontWeight:
+                                                                    FontWeight.bold,
+                                                                color: Colors.white),
+                                                          ),
+                                                          Stack(
+                                                            children: [
+                                                              selectedImage != null
+                                                                  ? Center(
+                                                                      child: SizedBox(
+                                                                        height: 150,
+                                                                        width: 140,
+                                                                        child: Image.file(
+                                                                          selectedImage!,
+                                                                          fit: BoxFit.cover,
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : const SizedBox(
+                                                                      height: 200, // Ensures tap area is properly defined
+                                                                      width: 400,
+                                                                    ),
+                                                              Center(
+                                                                child: GestureDetector(
+                                                                  onTap: () {
+                                                                    selectImage();
+                                                                    setState(() {
+                                                                      
+                                                                    });
+                                                                  },
+                                                                  child: const Card(
+                                                                    elevation: 10,
+                                                                    shadowColor: Color.fromARGB(255, 51, 51, 51),
+                                                                    color: Color.fromARGB(25, 255, 255, 255),
+                                                                    shape: CircleBorder(),
+                                                                    child: SizedBox(
+                                                                      width: 150,
+                                                                      height: 140,
+                                                                      child: Icon(
+                                                                        Icons.add,
+                                                                        size: 50,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(height: 15),
+                                                          ElevatedButton(
+                                                            onPressed: () async {
+                                                              // calling create playlist api
+                                                              String? imageUrl = await uploadImage(selectedImage); 
+                                                              await ref.read(authViewmodelProvider.notifier).changeDp(email: userData.email, image_url: imageUrl!);
+                                                              Navigator.pop(context);
+                                                            },
+                                                            style: ElevatedButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  Pallete.greenColor,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(20),
+                                                              ),
+                                                            ),
+                                                            child: const Text(
+                                                              "Upload",
+                                                              style: TextStyle(
+                                                                  color: Colors.black),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                    },
+                                                  );
+                                                },
+                                              );
+
+                                                  },
+                                                  child: const Text(
+                                                    "Change Profile Picture",
+                                                    style: TextStyle(color: Colors.white),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
                                                     ref.read(authViewmodelProvider.notifier).logoutUser();
+                                                    ref.read(currentStreamNotifierProvider.notifier).stop();
                                                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const LoginPage()));
                                                   },
                                                   child: const Text(

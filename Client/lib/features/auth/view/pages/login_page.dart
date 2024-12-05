@@ -1,5 +1,4 @@
 import 'package:client/core/theme/app_pallete.dart';
-import 'package:client/features/auth/repositories/auth_remote_repository.dart';
 import 'package:client/features/auth/view/pages/signup_page.dart';
 import 'package:client/features/auth/view/widgets/button.dart';
 import 'package:client/features/auth/view/widgets/custom_text_field.dart';

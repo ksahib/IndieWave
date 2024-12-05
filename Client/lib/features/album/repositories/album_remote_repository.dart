@@ -23,7 +23,6 @@ class AlbumRemoteRepository {
 
   Future<Either<AppFailure, AlbumModel>> createAlbum({
     required String name,
-    required String price,
     required String cover_art,
     required String artist_name,
   }) async {
@@ -31,7 +30,7 @@ class AlbumRemoteRepository {
       final response = await http.post(
         Uri.parse('${ServerConstant.serverUrl}/AlbumAdd'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"name": name, "cover_art": cover_art, "price": price, 'artist_name': artist_name}),
+        body: jsonEncode({"name": name, "cover_art": cover_art, 'artist_name': artist_name}),
       );
 
       final res = jsonDecode(response.body) as Map<String, dynamic>;

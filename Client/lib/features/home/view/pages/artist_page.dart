@@ -3,16 +3,11 @@ import 'package:client/core/providers/current_artistview_notifier.dart';
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/widgets/loader.dart';
 import 'package:client/core/widgets/utils.dart';
-import 'package:client/features/album/view/pages/album_page.dart';
-import 'package:client/features/Artist/view/widgets/artist_title_bar.dart';
-import 'package:client/features/album/model/album_model.dart';
-import 'package:client/features/album/view_model/album_viewmodel.dart';
 import 'package:client/features/auth/view_model/auth_viewmodel.dart';
 import 'package:client/features/home/view/pages/album_view.dart';
 import 'package:client/features/home/view/widgets/user_titlebar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:client/features/Artist/view/widgets/textfield.dart';
 
 class ArtistPage extends ConsumerStatefulWidget {
   dynamic artistData;
@@ -55,15 +50,14 @@ Future<void> loadAlbums() async {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authViewmodelProvider.select((val) => val?.isLoading == true));
-  //   if (artistData. == null) {
-  //     print("ArtisData is now null");
+    if (userData == null || albums == []) {
     
-  //   return const Scaffold(
-  //     body: Center(
-  //       child: CircularProgressIndicator(),
-  //     ),
-  //   );
-  // }
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
 
     return Scaffold(
       body: Center(

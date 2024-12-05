@@ -95,12 +95,37 @@ Widget build(BuildContext context) {
             color: Pallete.backgroundColor,
             child: Stack(
               children: [
-                const Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Minimize(),
-                        Maximize(),
-                        Close(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(width: 10),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                              
+                            icon: const Icon(Icons.arrow_back_ios),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              
+                            },
+                            icon: const Icon(Icons.arrow_forward_ios),
+                          ),
+                        ],
+                      ),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Minimize(),
+                            Maximize(),
+                            Close(),
+                          ],
+                        )
                       ],
                     ),
                     Positioned.fill(child: MoveWindow()),

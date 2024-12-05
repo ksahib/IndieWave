@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:client/core/providers/current_stream_notifier.dart';
 import 'package:client/core/widgets/utils.dart';
-import 'package:client/features/Artist/model/artist_model.dart';
 import 'package:client/features/album/model/album_model.dart';
 import 'package:client/features/home/models/trend_model.dart';
 import 'package:client/features/home/view/pages/album_view.dart';
 import 'package:client/features/home/view/pages/artist_page.dart';
+import 'package:client/features/home/view/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -31,6 +31,23 @@ class UserTitlebar extends ConsumerStatefulWidget {
 
   @override
   _UserTitlebarState createState() => _UserTitlebarState();
+}
+
+class NavigationHistory {
+  static final List<String> _historyStack = [];
+
+  static void pushRoute(String route) {
+    _historyStack.add(route);
+  }
+
+  static String? popRoute() {
+    if (_historyStack.isNotEmpty) {
+      return _historyStack.removeLast();
+    }
+    return null;
+  }
+
+  static bool hasForwardRoute() => _historyStack.isNotEmpty;
 }
 
 class _UserTitlebarState extends ConsumerState<UserTitlebar> {
@@ -90,7 +107,7 @@ Future<List<TrendModel>> parseArtistsFromResponse(String responseBody, String ty
     try{
       return artistList.map((artistMap) => TrendModel.fromMap(artistMap)).toList();
     } catch(e) {
-      print('Error during parsing: $e');
+      //print('Error during parsing: $e');
       return [];
     }
   } else if(type== 'tracks' && jsonData['data'] != null && jsonData['data']['tracks'] != null) {
@@ -113,13 +130,15 @@ Future<List<AlbumModel>> parseAlbumsFromResponse(String responseBody) async {
       try{
         return albumList.map((artistMap) => AlbumModel.fromMap(artistMap)).toList();
       } catch(e) {
-        print('Error during parsing: $e');
+        //print('Error during parsing: $e');
         return [];
       }
   } else {
       return [];
   }
 }
+
+
 
 
   Future<void> _search(String query, String type) async {
@@ -148,7 +167,6 @@ Future<List<AlbumModel>> parseAlbumsFromResponse(String responseBody) async {
         _clearResults();
       }
     } catch (e) {
-      print('Error during search: $e');  // Debugging line
       _clearResults();
     }
 
@@ -162,24 +180,6 @@ Future<List<AlbumModel>> parseAlbumsFromResponse(String responseBody) async {
       artistSearchResults.clear();
     });
   }
-
-  void _handleItemTap(TrendModel item, String category) {
-  switch (category) {
-    case 'Tracks':
-      // Handle track tap logic
-      //print('Track tapped: ${item['track_name'] ?? item['name']}');
-      // Navigate to track details or perform desired action
-      break;
-    case 'Albums':
-      Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: item.album_name, artist: item.artist_name,)));
-      break;
-    case 'Artists':
-      
-      break;
-    default:
-      print('Unknown category tapped');
-  }
-}
 
 Widget _buildPillButton(String text, {required VoidCallback onPressed}) {
   return ElevatedButton(
@@ -359,12 +359,20 @@ Widget _buildSection(String title, List<dynamic> items) {
                           const SizedBox(width: 10),
                           IconButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              if(context.widget.runtimeType != Homepage)
+                                Navigator.pop(context);
                             },
                             icon: const Icon(Icons.arrow_back_ios),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              final forwardRoute = NavigationHistory.popRoute();
+                                if (forwardRoute != null) {
+                                  Navigator.pushNamed(context, forwardRoute);
+                                } else {
+                                  //print("No forward route available");
+                                }
+                            },
                             icon: const Icon(Icons.arrow_forward_ios),
                           ),
                         ],

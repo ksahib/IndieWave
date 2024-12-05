@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:client/core/constants/server_constant.dart';
 import 'package:client/core/providers/current_stream_notifier.dart';
+import 'package:client/core/providers/rgb_provider.dart';
+import 'package:client/features/home/view/pages/album_view.dart';
 import 'package:client/features/home/view/pages/artist_page.dart';
 import 'package:client/features/home/view/widgets/album_display_widget.dart';
 import 'package:client/features/home/view/widgets/artist_display_widget.dart';
@@ -6,6 +11,7 @@ import 'package:client/features/home/view/widgets/list_cards.dart';
 import 'package:client/features/home/view/widgets/pointed_rectangle_clipper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
 
 class MainFeed extends ConsumerWidget{
@@ -13,9 +19,37 @@ class MainFeed extends ConsumerWidget{
   final dynamic userData;
   final dynamic trackTrendList;
   final dynamic bannerData;
+  dynamic url;
+  double r = 99.0, g = 102.0, b = 106.0;
   MainFeed({super.key, required this.artistTrendList, required this.userData, required this.trackTrendList, required this.bannerData});
+
+  Future<void> getRGB(WidgetRef ref, String image_url) async {
+  try {
+    final uri = Uri.parse('${ServerConstant.serverUrl}/getAvgRGB');
+    final response = await http.get(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'image-url': image_url,
+      },
+    );
+    final res = jsonDecode(response.body) as Map<String, dynamic>;
+    final newColor = Color.fromARGB(
+      100,
+      res['data']['R'].toInt(),
+      res['data']['G'].toInt(),
+      res['data']['B'].toInt(),
+    );
+    ref.read(rgbProvider.notifier).state = newColor; // Update the provider
+  } catch (e) {
+    print(e);
+  }
+}
+
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final backgroundColor = ref.watch(rgbProvider);
     return 
     Expanded(
       flex: 4,
@@ -37,7 +71,16 @@ class MainFeed extends ConsumerWidget{
                           Container(
                             height: bannerContainerHeight,
                             width: constraints.maxWidth,
-                            color: Colors.red,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  backgroundColor, 
+                                  Colors.black,
+                                ],
+                              ),
+                            ),
                             child: Column(
                               children: [
                                 //BANNER
@@ -98,29 +141,70 @@ class MainFeed extends ConsumerWidget{
                                           SizedBox(
                                             height: bannerContainerHeight * 0.005,
                                           ),
-                                          ListCards(
-                                            url: trackTrendList[1].album_cover, 
-                                            title: trackTrendList[1].album_name, 
-                                            height: bannerContainerHeight, 
-                                            width: constraints.maxWidth
+                                          MouseRegion(
+                                            onEnter: (event) async {
+                                              await getRGB(ref, trackTrendList[1].album_cover); // Pass ref to update the provider
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: trackTrendList[1].album_name, artist: trackTrendList[1])));
+                                              },
+                                              child: ListCards(
+                                                url: trackTrendList[1].album_cover,
+                                                title: trackTrendList[1].album_name,
+                                                height: bannerContainerHeight,
+                                                width: constraints.maxWidth,
+                                              ),
+                                            ),
                                           ),
-                                          ListCards(
-                                            url: trackTrendList[2].album_cover, 
-                                            title: trackTrendList[2].album_name, 
-                                            height: bannerContainerHeight, 
-                                            width: constraints.maxWidth
+
+                                          MouseRegion(
+                                            onEnter: (event) async {
+                                              await getRGB(ref, trackTrendList[9].album_cover); // Pass ref to update the provider
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: trackTrendList[9].album_name, artist: trackTrendList[9])));
+                                              },
+                                              child: ListCards(
+                                                url: trackTrendList[9].album_cover, 
+                                                title: trackTrendList[9].album_name, 
+                                                height: bannerContainerHeight, 
+                                                width: constraints.maxWidth
+                                              ),
+                                            ),
                                           ),
-                                          ListCards(
-                                            url: userData.image_url, 
-                                            title: "album 3", 
-                                            height: bannerContainerHeight, 
-                                            width: constraints.maxWidth
+                                          MouseRegion(
+                                            onEnter: (event) async {
+                                              await getRGB(ref, trackTrendList[10].album_cover); // Pass ref to update the provider
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: trackTrendList[10].album_name, artist: trackTrendList[10])));
+                                              },
+                                              child: ListCards(
+                                                url: trackTrendList[10].album_cover, 
+                                                title: trackTrendList[10].album_name,
+                                                height: bannerContainerHeight, 
+                                                width: constraints.maxWidth
+                                              ),
+                                            ),
                                           ),
-                                          ListCards(
-                                            url: userData.image_url, 
-                                            title: "album 4", 
-                                            height: bannerContainerHeight, 
-                                            width: constraints.maxWidth
+                                          MouseRegion(
+                                            onEnter: (event) async {
+                                              await getRGB(ref, trackTrendList[4].album_cover); // Pass ref to update the provider
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: trackTrendList[4].album_name, artist: trackTrendList[4])));
+                                              },
+                                              child: ListCards(
+                                                url: trackTrendList[4].album_cover, 
+                                                title: trackTrendList[4].album_name,
+                                                height: bannerContainerHeight, 
+                                                width: constraints.maxWidth
+                                              ),
+                                            ),
                                           ),
                                           
                                         ],
@@ -135,29 +219,69 @@ class MainFeed extends ConsumerWidget{
                                           SizedBox(
                                             height: bannerContainerHeight * 0.005,
                                           ),
-                                          ListCards(
-                                            url: userData.image_url, 
-                                            title: "album 5", 
-                                            height: bannerContainerHeight, 
-                                            width: constraints.maxWidth
+                                          MouseRegion(
+                                            onEnter: (event) async {
+                                              await getRGB(ref, trackTrendList[5].album_cover); // Pass ref to update the provider
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: trackTrendList[5].album_name, artist: trackTrendList[5])));
+                                              },
+                                              child: ListCards(
+                                                url: trackTrendList[5].album_cover, 
+                                                title: trackTrendList[5].album_name, 
+                                                height: bannerContainerHeight, 
+                                                width: constraints.maxWidth
+                                              ),
+                                            ),
                                           ),
-                                          ListCards(
-                                            url: userData.image_url, 
-                                            title: "album 6", 
-                                            height: bannerContainerHeight, 
-                                            width: constraints.maxWidth
+                                          MouseRegion(
+                                            onEnter: (event) async {
+                                              await getRGB(ref, trackTrendList[6].album_cover); // Pass ref to update the provider
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: trackTrendList[6].album_name, artist: trackTrendList[6])));
+                                              },
+                                              child: ListCards(
+                                                url: trackTrendList[6].album_cover, 
+                                                title: trackTrendList[6].album_name, 
+                                                height: bannerContainerHeight, 
+                                                width: constraints.maxWidth
+                                              ),
+                                            ),
                                           ),
-                                          ListCards(
-                                            url: userData.image_url, 
-                                            title: "album 7", 
-                                            height: bannerContainerHeight, 
-                                            width: constraints.maxWidth
+                                          MouseRegion(
+                                            onEnter: (event) async {
+                                              await getRGB(ref, trackTrendList[7].album_cover); // Pass ref to update the provider
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: trackTrendList[7].album_name, artist: trackTrendList[7])));
+                                              },
+                                              child: ListCards(
+                                                url: trackTrendList[7].album_cover, 
+                                                title: trackTrendList[7].album_name, 
+                                                height: bannerContainerHeight, 
+                                                width: constraints.maxWidth
+                                              ),
+                                            ),
                                           ),
-                                          ListCards(
-                                            url: userData.image_url, 
-                                            title: "album 8", 
-                                            height: bannerContainerHeight, 
-                                            width: constraints.maxWidth
+                                          MouseRegion(
+                                            onEnter: (event) async {
+                                              await getRGB(ref, trackTrendList[8].album_cover); // Pass ref to update the provider
+                                            },
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumView(albumName: trackTrendList[8].album_name, artist: trackTrendList[8])));
+                                              },
+                                              child: ListCards(
+                                                url: trackTrendList[8].album_cover, 
+                                                title: trackTrendList[8].album_name, 
+                                                height: bannerContainerHeight, 
+                                                width: constraints.maxWidth
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),

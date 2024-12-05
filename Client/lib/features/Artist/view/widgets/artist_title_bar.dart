@@ -3,6 +3,7 @@ import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/widgets/close.dart';
 import 'package:client/core/widgets/maximize.dart';
 import 'package:client/core/widgets/minimize.dart';
+import 'package:client/features/home/view/pages/homepage.dart';
 import 'package:flutter/material.dart';
 
 class ArtistTitleBar extends StatelessWidget{
@@ -61,7 +62,7 @@ class ArtistTitleBar extends StatelessWidget{
                                   children: [
                                     TextButton(
                                       onPressed: () async {
-                                        
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Homepage()));
                                       },
                                       child: const Text(
                                         'Home',

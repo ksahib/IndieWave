@@ -96,8 +96,17 @@ class _AlbumViewState extends ConsumerState<AlbumView> {
   }
 }
 
+
   @override
   Widget build(BuildContext context) {
+    if (userData == null || albumData == null) {
+    
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
@@ -146,6 +155,7 @@ class _AlbumViewState extends ConsumerState<AlbumView> {
                                           // };
                                           return Column(
                                             children: [
+                                              if(index==0)
                                               SizedBox(
                                                 height: dpBottom,
                                               ),

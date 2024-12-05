@@ -23,7 +23,7 @@ class PlaylistViewWidget extends StatelessWidget{
                       flex: 2,
                       child: Container(
                         width: double.infinity,
-                        color: Colors.blue,
+                        color: Color.fromARGB(200, selectedPlaylist.R.round(), selectedPlaylist.G.round(), selectedPlaylist.B.round()),
                         child: Stack(
                           children: [
                             Row(
@@ -42,7 +42,7 @@ class PlaylistViewWidget extends StatelessWidget{
                                 const SizedBox(width: 20,),
                                 Text(
                                   selectedPlaylist.name,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w600
                                   ),

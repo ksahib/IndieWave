@@ -4,13 +4,11 @@ import 'dart:convert';
 class AlbumModel {
   final String album_id;
   final String name;
-  final String price;
   final String cover_art;
   final String artist_name;
   AlbumModel({
     required this.album_id,
     required this.name,
-    required this.price,
     required this.cover_art,
     required this.artist_name,
   });
@@ -18,14 +16,12 @@ class AlbumModel {
   AlbumModel copyWith({
     String? album_id,
     String? name,
-    String? price,
     String? cover_art,
     String? artist_name,
   }) {
     return AlbumModel(
       album_id: album_id ?? this.album_id,
       name: name ?? this.name,
-      price: price ?? this.price,
       cover_art: cover_art ?? this.cover_art,
       artist_name: artist_name ?? this.artist_name,
     );
@@ -35,7 +31,6 @@ class AlbumModel {
     return <String, dynamic>{
       'album_id': album_id,
       'name': name,
-      'price': price,
       'cover_art': cover_art,
       'artist_name': artist_name,
     };
@@ -45,7 +40,6 @@ class AlbumModel {
     return AlbumModel(
       album_id: map['album_id'] ?? "",
       name: map['name'] ?? "",
-      price: map['price'] ?? "",
       cover_art: map['cover_art'] ?? "",
       artist_name: map['artist_name'] ?? "",
     );
@@ -57,7 +51,7 @@ class AlbumModel {
 
   @override
   String toString() {
-    return 'AlbumModel(album_id: $album_id, name: $name, price: $price, cover_art: $cover_art, artist_name: $artist_name)';
+    return 'AlbumModel(album_id: $album_id, name: $name, cover_art: $cover_art, artist_name: $artist_name)';
   }
 
   @override
@@ -67,7 +61,6 @@ class AlbumModel {
     return 
       other.album_id == album_id &&
       other.name == name &&
-      other.price == price &&
       other.cover_art == cover_art &&
       other.artist_name == artist_name;
   }
@@ -76,7 +69,6 @@ class AlbumModel {
   int get hashCode {
     return album_id.hashCode ^
       name.hashCode ^
-      price.hashCode ^
       cover_art.hashCode ^
       artist_name.hashCode;
   }

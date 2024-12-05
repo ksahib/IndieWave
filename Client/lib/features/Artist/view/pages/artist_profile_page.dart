@@ -110,7 +110,6 @@ Future<void> loadAlbums() async {
     );
 
     if (artistData == null) {
-      print("ArtisData is now null");
     
     return const Scaffold(
       body: Center(
@@ -218,18 +217,22 @@ Future<void> loadAlbums() async {
                                                     ),
                                                   )
                                                 : SizedBox(
-                                                    height: MediaQuery.of(context).size.height * 0.52, // Set a fixed height or wrap in a Flexible
+                                                    height: MediaQuery.of(context).size.height * 0.52, 
                                                     child: ListView.builder(
                                                       itemCount: albums.length,
                                                       itemBuilder: (context, index) {
                                                         final album = albums[index];
-                                                        return ListTile(
-                                                          title: Text(album.name),
-                                                          subtitle: Text('Price: \$${album.price}'),
-                                                          leading: Image.network(album.cover_art),
-                                                          onTap: () {
-                                                            Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumPage(albumName: album.name)));
-                                                          },
+                                                        return Column(
+                                                          children: [
+                                                            ListTile(
+                                                              title: Text(album.name),
+                                                              leading: Image.network(album.cover_art),
+                                                              onTap: () {
+                                                                Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumPage(albumName: album.name)));
+                                                              },
+                                                            ),
+                                                            const SizedBox(height: 10,)
+                                                          ],
                                                         );
                                                       },
                                                     ),
@@ -282,8 +285,6 @@ Future<void> loadAlbums() async {
                                          
                                         Textfield(controller: nameController, labelText: "Album Name"),
                                         const SizedBox(height: 15,),
-                                        Textfield(controller: priceController, labelText: "Set Price"),
-                                        const SizedBox(height: 15,),
                                         ElevatedButton(
                                           onPressed: () async {
                                             String? cover_art;
@@ -292,7 +293,6 @@ Future<void> loadAlbums() async {
                                             }
                                             await ref.read(albumViewmodelProvider.notifier).addAlbum(
                                               name: nameController.text,
-                                              price: priceController.text,
                                               cover_art: cover_art ?? '',
                                               artist_name: artistData.artist_name,
                                             );
