@@ -46,6 +46,8 @@ dependencies:
   audioplayers: ^6.1.0
   just_audio: ^0.9.42
   just_audio_windows: ^0.2.2
+  palette_generator: ^0.3.3+5
+  image: ^4.3.0
   
 
   # The following adds the Cupertino Icons font to your application.
