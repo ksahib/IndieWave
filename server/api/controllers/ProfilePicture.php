@@ -23,25 +23,38 @@ class ProfilePicture extends BaseController {
             // Get input data
             $data = json_decode(file_get_contents("php://input"), true);
             $this->validateRequiredFields($data, ['email', 'image_url']);
-            $image = $data['image_url'];
-            $info = [
-                'image_id' => uniqid(),
-                'image_url' => $image,
-                'image_type' => 'profile_pic',
-            ];
-            if($this->imagemodel->create($info)) {
-                $this->userModel->profile_pic_update($data['email'], $info['image_id']);
-                
+            $query = "SELECT * FROM users WHERE email = :hint";
+            $stmt = $this->db->prepare($query);
+
+            $searchTerm = $data['email'];
+        
+            //binds to %hint% to ? in query
+            $stmt->bindParam(":hint", $searchTerm);
+            if ($stmt->execute())
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            $query = "UPDATE images SET image_url = :iurl WHERE image_id = :hint";
+            $stmt = $this->db->prepare($query);
+
+            $searchTerm = $result['profile_pic'];
+        
+            //binds to %hint% to ? in query
+            $stmt->bindParam(":hint", $searchTerm);
+            $stmt->bindParam(":iurl", $data['image_url']);
+            
+            
+            if($stmt->execute()) {
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
                 $this->sendResponse(201, "Profile Picture Changed");
-                return;
             }
             else
             {
-                $this->sendResponse(500, "Failed to upload image");
+                $this->sendResponse(505, "Error");
+                return;
             }
 
         } catch (PDOException $e){
-            $this->sendResponse(500, 'Error uploading image');
+            $this->sendResponse(500, $e);
         }
     }
 
