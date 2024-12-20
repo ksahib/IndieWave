@@ -13,6 +13,6 @@ Tech Stack:
 User Side demo:
 
   <video width="640" height="360" controls>
-  <source src="demo/Screen Recording 2024-12-05 095512 (1).mp4" type="video/mp4">
+  <source src="IndieWave/demo/Screen Recording 2024-12-05 095512 (1).mp4" type="video/mp4">
   </video>
 
