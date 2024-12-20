@@ -2,13 +2,13 @@ A fully functional music streaming platform built from scratch, modeled after Sp
 
 Tech Stack:
 
-  Front-end: Flutter
+      Front-end: Flutter
   
-  Back-end: PHP
+      Back-end: PHP
   
-  Database: MySQL
+      Database: MySQL
   
-  Cloud: Cloudinary
+      Cloud: Cloudinary
 
 User Side demo:
 
